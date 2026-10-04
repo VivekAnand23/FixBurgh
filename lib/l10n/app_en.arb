@@ -1,0 +1,84 @@
+{
+  "@@locale": "en",
+  "appTitle": "FixBurgh",
+  "navMap": "Map",
+  "navReport": "Report",
+  "navMyReports": "My Reports",
+  "navProfile": "Profile",
+  "notForEmergencies": "FixBurgh is not monitored for emergencies. Call 911.",
+  "comingSoon": "Coming soon",
+  "welcomeTitle": "Spot it. Snap it. FixBurgh.",
+  "welcomeBody": "Report potholes, landslides, dark streetlights and more anywhere in Allegheny County. We tell you exactly who fixes it.",
+  "welcomePrivacy": "No ads. We never sell your data. Your name is never shown on the map.",
+  "welcomeContinue": "Get started",
+  "ageTitle": "When were you born?",
+  "ageBody": "We ask everyone this question.",
+  "ageMonth": "Month",
+  "ageYear": "Year",
+  "ageContinue": "Continue",
+  "ageBlockedTitle": "Sorry, you can't use FixBurgh yet",
+  "ageBlockedBody": "Ask a parent or guardian to report the problem for you. Nothing you entered was saved.",
+  "mapTitle": "Community map",
+  "mapPlaceholder": "Reports near you will appear here.",
+  "reportTitle": "Report a problem",
+  "reportPlaceholder": "The photo, location and details flow comes next.",
+  "myReportsTitle": "My Reports",
+  "myReportsEmpty": "You haven't reported anything yet.",
+  "profileTitle": "Profile",
+  "profileGuest": "You're using FixBurgh as a guest",
+  "profileGuestBody": "Sign in to keep your reports on every device and get updates.",
+  "profileSignedInAs": "Signed in as {who}",
+  "@profileSignedInAs": {
+    "placeholders": {
+      "who": {
+        "type": "String"
+      }
+    }
+  },
+  "profileEmailUnverified": "Check your inbox to verify your email.",
+  "signIn": "Sign in",
+  "signOut": "Sign out",
+  "deleteAccount": "Delete my account",
+  "deleteAccountTitle": "Delete your account?",
+  "deleteAccountBody": "This permanently deletes your account. This can't be undone.",
+  "delete": "Delete",
+  "cancel": "Cancel",
+  "accountDeleted": "Your account was deleted.",
+  "dataSources": "Data sources",
+  "dataSourcesBody": "Municipal boundaries and County roads: Allegheny County GIS via the Western Pennsylvania Regional Data Center. State roads: PennDOT open data.",
+  "signInTitle": "Sign in",
+  "signInBody": "Your guest reports stay with you.",
+  "continueWithGoogle": "Continue with Google",
+  "orUseEmail": "or use email",
+  "email": "Email",
+  "password": "Password",
+  "passwordHint": "At least 8 characters",
+  "createAccount": "Create account",
+  "haveAccount": "I already have an account",
+  "needAccount": "I need a new account",
+  "forgotPassword": "Forgot password?",
+  "resetEmailSent": "We sent a reset link to {email}.",
+  "@resetEmailSent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "verifyEmailSent": "Account created. We sent a verification link to {email}.",
+  "@verifyEmailSent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "errorInvalidEmail": "Enter a valid email address.",
+  "errorWeakPassword": "Use at least 8 characters.",
+  "errorInvalidCredentials": "That email and password don't match.",
+  "errorEmailInUse": "That email already has an account. Sign in instead.",
+  "errorCredentialInUse": "That account already exists, so we signed you in to it.",
+  "errorRequiresRecentLogin": "For your security, sign in again and then retry.",
+  "errorNetwork": "No connection. Check your signal and try again.",
+  "errorGeneric": "Something went wrong. Please try again."
+}

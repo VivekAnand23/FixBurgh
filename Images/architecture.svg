@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 790" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="790" fill="#FFFFFF"/>
+  <text x="600" y="32" text-anchor="middle" font-size="26" font-weight="700" fill="#1B4F86">FixBurgh: System Architecture (free-tier stack)</text>
+  <text x="600" y="56" text-anchor="middle" font-size="14" fill="#4A5568">One Flutter codebase for iOS and Android, Firebase backend, public GIS data for routing</text>
+
+  <!-- Mobile app -->
+  <rect x="30" y="95" width="360" height="540" rx="18" fill="#EAF1F8" stroke="#1B4F86" stroke-width="2"/>
+  <text x="210" y="125" text-anchor="middle" font-size="18" font-weight="700" fill="#1B4F86">Mobile app (Flutter, iOS + Android)</text>
+  <g font-size="14" fill="#1A202C">
+    <rect x="55" y="145" width="310" height="58" rx="10" fill="#FFFFFF" stroke="#1B4F86"/>
+    <text x="210" y="169" text-anchor="middle" font-weight="600">UI layer (Material 3, adaptive)</text>
+    <text x="210" y="189" text-anchor="middle" font-size="12" fill="#4A5568">Map, Report wizard, My Reports, Profile</text>
+
+    <rect x="55" y="213" width="310" height="58" rx="10" fill="#FFFFFF" stroke="#1B4F86"/>
+    <text x="210" y="237" text-anchor="middle" font-weight="600">State + domain (Riverpod)</text>
+    <text x="210" y="257" text-anchor="middle" font-size="12" fill="#4A5568">Use cases, repositories, go_router</text>
+
+    <rect x="55" y="281" width="310" height="58" rx="10" fill="#FFFFFF" stroke="#3A9284"/>
+    <text x="210" y="305" text-anchor="middle" font-weight="600">Smart routing engine</text>
+    <text x="210" y="325" text-anchor="middle" font-size="12" fill="#4A5568">Point-in-polygon + road owner + category rules</text>
+
+    <rect x="55" y="349" width="310" height="58" rx="10" fill="#FFFFFF" stroke="#3A9284"/>
+    <text x="210" y="373" text-anchor="middle" font-weight="600">Bundled GIS assets</text>
+    <text x="210" y="393" text-anchor="middle" font-size="12" fill="#4A5568">130 municipal boundaries (simplified GeoJSON)</text>
+
+    <rect x="55" y="417" width="310" height="58" rx="10" fill="#FFFFFF" stroke="#F47B20"/>
+    <text x="210" y="441" text-anchor="middle" font-weight="600">On-device ML (Google ML Kit)</text>
+    <text x="210" y="461" text-anchor="middle" font-size="12" fill="#4A5568">Category suggestion, face/plate blur (Phase 2)</text>
+
+    <rect x="55" y="485" width="310" height="58" rx="10" fill="#FFFFFF" stroke="#F47B20"/>
+    <text x="210" y="509" text-anchor="middle" font-weight="600">Offline queue + local cache</text>
+    <text x="210" y="529" text-anchor="middle" font-size="12" fill="#4A5568">Firestore persistence, Drift/SQLite outbox</text>
+
+    <rect x="55" y="553" width="310" height="58" rx="10" fill="#FFFFFF" stroke="#1B4F86"/>
+    <text x="210" y="577" text-anchor="middle" font-weight="600">Device services</text>
+    <text x="210" y="597" text-anchor="middle" font-size="12" fill="#4A5568">Camera, GPS, tel: and mailto: intents, speech</text>
+  </g>
+
+  <!-- Firebase -->
+  <rect x="440" y="95" width="370" height="540" rx="18" fill="#FFF4EC" stroke="#F47B20" stroke-width="2"/>
+  <text x="625" y="125" text-anchor="middle" font-size="18" font-weight="700" fill="#B4530E">Firebase (Google Cloud)</text>
+  <g font-size="14" fill="#1A202C">
+    <rect x="465" y="145" width="320" height="50" rx="10" fill="#FFFFFF" stroke="#F47B20"/>
+    <text x="625" y="167" text-anchor="middle" font-weight="600">Authentication</text>
+    <text x="625" y="185" text-anchor="middle" font-size="12" fill="#4A5568">Anonymous, Google, Apple, Email (+ SMS opt.)</text>
+
+    <rect x="465" y="205" width="320" height="50" rx="10" fill="#FFFFFF" stroke="#F47B20"/>
+    <text x="625" y="227" text-anchor="middle" font-weight="600">Cloud Firestore</text>
+    <text x="625" y="245" text-anchor="middle" font-size="12" fill="#4A5568">Reports, upvotes, agencies, users (geohash)</text>
+
+    <rect x="465" y="265" width="320" height="50" rx="10" fill="#FFFFFF" stroke="#F47B20"/>
+    <text x="625" y="287" text-anchor="middle" font-weight="600">Cloud Storage</text>
+    <text x="625" y="305" text-anchor="middle" font-size="12" fill="#4A5568">Compressed photos + thumbnails</text>
+
+    <rect x="465" y="325" width="320" height="50" rx="10" fill="#FFFFFF" stroke="#F47B20"/>
+    <text x="625" y="347" text-anchor="middle" font-weight="600">App Check</text>
+    <text x="625" y="365" text-anchor="middle" font-size="12" fill="#4A5568">Play Integrity / App Attest bot defense</text>
+
+    <rect x="465" y="385" width="320" height="50" rx="10" fill="#FFFFFF" stroke="#F47B20"/>
+    <text x="625" y="407" text-anchor="middle" font-weight="600">Cloud Messaging (FCM)</text>
+    <text x="625" y="425" text-anchor="middle" font-size="12" fill="#4A5568">Status + nearby hazard alerts (Phase 2)</text>
+
+    <rect x="465" y="445" width="320" height="50" rx="10" fill="#FFFFFF" stroke="#F47B20" stroke-dasharray="6 4"/>
+    <text x="625" y="467" text-anchor="middle" font-weight="600">Cloud Functions (Phase 2+)</text>
+    <text x="625" y="485" text-anchor="middle" font-size="12" fill="#4A5568">Triggers: notify, counters, moderation</text>
+
+    <rect x="465" y="505" width="320" height="50" rx="10" fill="#FFFFFF" stroke="#F47B20"/>
+    <text x="625" y="527" text-anchor="middle" font-weight="600">Crashlytics, Analytics, Remote Config</text>
+    <text x="625" y="545" text-anchor="middle" font-size="12" fill="#4A5568">Quality, privacy-safe metrics, feature flags</text>
+
+    <rect x="465" y="565" width="320" height="50" rx="10" fill="#FFFFFF" stroke="#F47B20" stroke-dasharray="6 4"/>
+    <text x="625" y="587" text-anchor="middle" font-weight="600">Hosting (Phase 3)</text>
+    <text x="625" y="605" text-anchor="middle" font-size="12" fill="#4A5568">Municipal dashboard (Flutter Web)</text>
+  </g>
+
+  <!-- External -->
+  <rect x="860" y="95" width="310" height="540" rx="18" fill="#E9F5F2" stroke="#3A9284" stroke-width="2"/>
+  <text x="1015" y="125" text-anchor="middle" font-size="18" font-weight="700" fill="#1F6B5F">Public data + services</text>
+  <g font-size="14" fill="#1A202C">
+    <rect x="882" y="145" width="266" height="70" rx="10" fill="#FFFFFF" stroke="#3A9284"/>
+    <text x="1015" y="170" text-anchor="middle" font-weight="600">Allegheny County GIS</text>
+    <text x="1015" y="189" text-anchor="middle" font-size="12" fill="#4A5568">Municipal boundaries, county roads</text>
+    <text x="1015" y="205" text-anchor="middle" font-size="12" fill="#4A5568">(downloaded at build time)</text>
+
+    <rect x="882" y="230" width="266" height="70" rx="10" fill="#FFFFFF" stroke="#3A9284"/>
+    <text x="1015" y="255" text-anchor="middle" font-weight="600">PennDOT open data</text>
+    <text x="1015" y="274" text-anchor="middle" font-size="12" fill="#4A5568">State road segments (ArcGIS REST)</text>
+    <text x="1015" y="290" text-anchor="middle" font-size="12" fill="#4A5568">(live query + cached fallback)</text>
+
+    <rect x="882" y="315" width="266" height="70" rx="10" fill="#FFFFFF" stroke="#3A9284"/>
+    <text x="1015" y="340" text-anchor="middle" font-weight="600">Map SDK</text>
+    <text x="1015" y="359" text-anchor="middle" font-size="12" fill="#4A5568">Google Maps SDK (mobile, $0)</text>
+    <text x="1015" y="375" text-anchor="middle" font-size="12" fill="#4A5568">or MapLibre + OpenFreeMap</text>
+
+    <rect x="882" y="400" width="266" height="70" rx="10" fill="#FFFFFF" stroke="#3A9284"/>
+    <text x="1015" y="425" text-anchor="middle" font-weight="600">Agency directory</text>
+    <text x="1015" y="444" text-anchor="middle" font-size="12" fill="#4A5568">Curated contacts: municipalities,</text>
+    <text x="1015" y="460" text-anchor="middle" font-size="12" fill="#4A5568">PennDOT D11, County DPW, utilities</text>
+
+    <rect x="882" y="485" width="266" height="70" rx="10" fill="#FFFFFF" stroke="#C53030"/>
+    <text x="1015" y="510" text-anchor="middle" font-weight="600" fill="#C53030">Emergency: 911</text>
+    <text x="1015" y="529" text-anchor="middle" font-size="12" fill="#4A5568">Direct dial, never stored as</text>
+    <text x="1015" y="545" text-anchor="middle" font-size="12" fill="#4A5568">a FixBurgh report</text>
+
+    <rect x="882" y="570" width="266" height="50" rx="10" fill="#FFFFFF" stroke="#3A9284"/>
+    <text x="1015" y="592" text-anchor="middle" font-weight="600">Agency inboxes / phones</text>
+    <text x="1015" y="609" text-anchor="middle" font-size="12" fill="#4A5568">Reached via user's own email/phone</text>
+  </g>
+
+  <!-- arrows -->
+  <line x1="390" y1="240" x2="462" y2="200" stroke="#4A5568" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="390" y1="300" x2="462" y2="290" stroke="#4A5568" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="390" y1="510" x2="462" y2="415" stroke="#4A5568" stroke-width="2" marker-end="url(#arr)"/>
+  <path d="M150 95 L150 88 L1185 88 L1185 265 L1152 265" fill="none" stroke="#3A9284" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+  <text x="640" y="82" text-anchor="middle" font-size="12" fill="#1F6B5F">live road-owner lookup from routing engine (HTTPS, cached)</text>
+  <path d="M1170 180 L1190 180 L1190 690 L120 690 L120 639" fill="none" stroke="#3A9284" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+  <text x="640" y="706" text-anchor="middle" font-size="12" fill="#1F6B5F">build time: county boundaries downloaded, simplified and bundled into the app</text>
+  <path d="M300 635 L300 660 L1015 660 L1015 639" fill="none" stroke="#4A5568" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="640" y="654" text-anchor="middle" font-size="12" fill="#4A5568">one-tap call / pre-filled email / 911 dial</text>
+  <!-- legend -->
+  <g font-size="12" fill="#4A5568">
+    <rect x="30" y="742" width="26" height="14" rx="3" fill="#FFFFFF" stroke="#F47B20"/>
+    <text x="64" y="754">Phase 1 service</text>
+    <rect x="180" y="742" width="26" height="14" rx="3" fill="#FFFFFF" stroke="#F47B20" stroke-dasharray="6 4"/>
+    <text x="214" y="754">Later phase</text>
+    <line x1="470" y1="749" x2="500" y2="749" stroke="#3A9284" stroke-width="2" stroke-dasharray="5 4"/>
+    <text x="508" y="754">Public data flow</text>
+  </g>
+</svg>

@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <rect width="1200" height="560" fill="#FFFFFF"/>
+  <text x="600" y="38" text-anchor="middle" font-size="26" font-weight="700" fill="#1B4F86">Phased Roadmap</text>
+  <text x="600" y="62" text-anchor="middle" font-size="14" fill="#4A5568">Ship a polished Phase 1 for submission; each later phase is independently releasable</text>
+
+  <g font-size="13" fill="#1A202C">
+    <rect x="30" y="90" width="360" height="440" rx="16" fill="#EAF1F8" stroke="#1B4F86" stroke-width="2"/>
+    <rect x="30" y="90" width="360" height="56" rx="16" fill="#1B4F86"/>
+    <text x="210" y="116" text-anchor="middle" font-size="18" font-weight="700" fill="#FFFFFF">Phase 1: Core</text>
+    <text x="210" y="136" text-anchor="middle" font-size="12" fill="#DCE8F5">Must have for submission (MVP)</text>
+    <text x="50" y="176">• Photo + GPS + draggable pin</text>
+    <text x="50" y="200">• 8 categories, severity, description</text>
+    <text x="50" y="224">• Emergency check routes to 911</text>
+    <text x="50" y="248">• Smart routing: municipality,</text>
+    <text x="64" y="266">state / county / local road owner</text>
+    <text x="50" y="290">• Office card: call, email, website</text>
+    <text x="50" y="314">• Community map, color-coded pins</text>
+    <text x="50" y="338">• "Me too" + 50 m duplicate check</text>
+    <text x="50" y="362">• Status: Reported, Sent, Resolved</text>
+    <text x="50" y="386">• My Reports history</text>
+    <text x="50" y="410">• Guest, Google, Apple, Email login</text>
+    <text x="50" y="434">• 13+ age gate, privacy policy,</text>
+    <text x="64" y="452">delete account, report/flag content</text>
+    <text x="50" y="476">• App Check, baseline accessibility</text>
+    <text x="50" y="500">• English UI, light + dark themes</text>
+
+    <rect x="420" y="90" width="360" height="440" rx="16" fill="#FFF4EC" stroke="#F47B20" stroke-width="2"/>
+    <rect x="420" y="90" width="360" height="56" rx="16" fill="#F47B20"/>
+    <text x="600" y="116" text-anchor="middle" font-size="18" font-weight="700" fill="#FFFFFF">Phase 2: Strong additions</text>
+    <text x="600" y="136" text-anchor="middle" font-size="12" fill="#FFF0E3">Differentiators after MVP is stable</text>
+    <text x="440" y="176">• AI category suggestion (ML Kit,</text>
+    <text x="454" y="194">on-device, custom TFLite model)</text>
+    <text x="440" y="218">• Push notifications (FCM):</text>
+    <text x="454" y="236">status changes, nearby hazards,</text>
+    <text x="454" y="254">upvoted issue resolved</text>
+    <text x="440" y="278">• Saved places: home, school, work</text>
+    <text x="440" y="302">• Offline mode with outbox queue</text>
+    <text x="440" y="326">• Full accessibility pass (WCAG 2.2</text>
+    <text x="454" y="344">AA), voice input for description</text>
+    <text x="440" y="368">• Auto-blur faces + license plates</text>
+    <text x="440" y="392">• Optional phone + SMS sign-in</text>
+    <text x="440" y="416">• Cloud Functions for counters,</text>
+    <text x="454" y="434">notifications, moderation</text>
+
+    <rect x="810" y="90" width="360" height="440" rx="16" fill="#E9F5F2" stroke="#3A9284" stroke-width="2"/>
+    <rect x="810" y="90" width="360" height="56" rx="16" fill="#3A9284"/>
+    <text x="990" y="116" text-anchor="middle" font-size="18" font-weight="700" fill="#FFFFFF">Phase 3: Stretch goals</text>
+    <text x="990" y="136" text-anchor="middle" font-size="12" fill="#E3F4EF">Impressive if time allows</text>
+    <text x="830" y="176">• Municipal dashboard (Flutter Web</text>
+    <text x="844" y="194">on Firebase Hosting): area filter,</text>
+    <text x="844" y="212">status updates, CSV export</text>
+    <text x="830" y="236">• Heatmap + trends: hotspots,</text>
+    <text x="844" y="254">landslide-prone roads, by month</text>
+    <text x="830" y="278">• Spanish language (ARB files,</text>
+    <text x="844" y="296">in-app language switch)</text>
+    <text x="830" y="320">• Modest gamification: badges like</text>
+    <text x="844" y="338">"Community Guardian" for verified</text>
+    <text x="844" y="356">reports, no public leaderboard</text>
+    <text x="830" y="380">• Agency-verified resolution</text>
+    <text x="830" y="404">• Open data export (anonymized)</text>
+  </g>
+</svg>

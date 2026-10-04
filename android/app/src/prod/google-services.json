@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "993895991827",
+    "project_id": "fixburgh-prod",
+    "storage_bucket": "fixburgh-prod.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993895991827:android:389b042a04a75aec5c8de6",
+        "android_client_info": {
+          "package_name": "com.fixburgh.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "993895991827-kktbkqa09bb3lt5pmg5cq06n1mgjec9k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9p41sB5RPZpjU4LYdJWdV_bgp-NFeIOw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "993895991827-kktbkqa09bb3lt5pmg5cq06n1mgjec9k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "993895991827-kfuirn0lifs3e61gt05f41bvogn3pg6t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.fixburgh.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

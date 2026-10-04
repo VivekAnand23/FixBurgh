@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="520" fill="#FFFFFF"/>
+  <text x="600" y="38" text-anchor="middle" font-size="26" font-weight="700" fill="#1B4F86">Report an Issue: target under 60 seconds</text>
+  <text x="600" y="62" text-anchor="middle" font-size="14" fill="#4A5568">Four short steps with a Back button on each; the safety check always comes first</text>
+
+  <g font-size="14" fill="#1A202C">
+    <!-- step boxes -->
+    <rect x="30" y="100" width="200" height="150" rx="14" fill="#FDECEC" stroke="#C53030" stroke-width="2"/>
+    <text x="130" y="128" text-anchor="middle" font-weight="700" fill="#C53030">0. Safety check</text>
+    <text x="130" y="156" text-anchor="middle" font-size="12">"Is anyone in danger?"</text>
+    <text x="130" y="176" text-anchor="middle" font-size="12">Downed wire, gas smell,</text>
+    <text x="130" y="194" text-anchor="middle" font-size="12">fire, crash, deep water</text>
+    <text x="130" y="224" text-anchor="middle" font-size="12" font-weight="600">Yes: call 911</text>
+
+    <rect x="260" y="100" width="200" height="150" rx="14" fill="#EAF1F8" stroke="#1B4F86" stroke-width="2"/>
+    <text x="360" y="128" text-anchor="middle" font-weight="700" fill="#1B4F86">1. Photo</text>
+    <text x="360" y="156" text-anchor="middle" font-size="12">Camera or gallery</text>
+    <text x="360" y="176" text-anchor="middle" font-size="12">Compress to ~1600 px</text>
+    <text x="360" y="194" text-anchor="middle" font-size="12">Strip EXIF (keep GPS</text>
+    <text x="360" y="212" text-anchor="middle" font-size="12">in report, not in file)</text>
+    <text x="360" y="234" text-anchor="middle" font-size="12" fill="#B4530E">P2: AI tag + auto-blur</text>
+
+    <rect x="490" y="100" width="200" height="150" rx="14" fill="#EAF1F8" stroke="#1B4F86" stroke-width="2"/>
+    <text x="590" y="128" text-anchor="middle" font-weight="700" fill="#1B4F86">2. Location</text>
+    <text x="590" y="156" text-anchor="middle" font-size="12">GPS (or photo EXIF)</text>
+    <text x="590" y="176" text-anchor="middle" font-size="12">Draggable pin</text>
+    <text x="590" y="194" text-anchor="middle" font-size="12">Address preview</text>
+    <text x="590" y="212" text-anchor="middle" font-size="12">Accuracy ring shown</text>
+    <text x="590" y="234" text-anchor="middle" font-size="12" fill="#1F6B5F">Duplicate check (50 m)</text>
+
+    <rect x="720" y="100" width="200" height="150" rx="14" fill="#EAF1F8" stroke="#1B4F86" stroke-width="2"/>
+    <text x="820" y="128" text-anchor="middle" font-weight="700" fill="#1B4F86">3. Details</text>
+    <text x="820" y="156" text-anchor="middle" font-size="12">Category (8 icons)</text>
+    <text x="820" y="176" text-anchor="middle" font-size="12">Severity: low/med/urgent</text>
+    <text x="820" y="194" text-anchor="middle" font-size="12">Description (280 chars,</text>
+    <text x="820" y="212" text-anchor="middle" font-size="12">voice input in P2)</text>
+
+    <rect x="950" y="100" width="220" height="150" rx="14" fill="#E9F5F2" stroke="#3A9284" stroke-width="2"/>
+    <text x="1060" y="128" text-anchor="middle" font-weight="700" fill="#1F6B5F">4. Review + route</text>
+    <text x="1060" y="156" text-anchor="middle" font-size="12">Responsible office card</text>
+    <text x="1060" y="176" text-anchor="middle" font-size="12">Submit to community map</text>
+    <text x="1060" y="194" text-anchor="middle" font-size="12">Then: Call, Email, or</text>
+    <text x="1060" y="212" text-anchor="middle" font-size="12">Open agency web form</text>
+    <text x="1060" y="234" text-anchor="middle" font-size="12" fill="#1F6B5F">Status: Sent to agency</text>
+  </g>
+  <g stroke="#4A5568" stroke-width="2">
+    <line x1="230" y1="175" x2="256" y2="175" marker-end="url(#a)"/>
+    <line x1="460" y1="175" x2="486" y2="175" marker-end="url(#a)"/>
+    <line x1="690" y1="175" x2="716" y2="175" marker-end="url(#a)"/>
+    <line x1="920" y1="175" x2="946" y2="175" marker-end="url(#a)"/>
+  </g>
+
+  <!-- duplicate branch -->
+  <path d="M590 250 L590 300" stroke="#3A9284" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#a)"/>
+  <rect x="440" y="305" width="300" height="80" rx="12" fill="#FFFFFF" stroke="#3A9284" stroke-width="2"/>
+  <text x="590" y="332" text-anchor="middle" font-size="14" font-weight="700" fill="#1F6B5F">Possible duplicate found</text>
+  <text x="590" y="354" text-anchor="middle" font-size="12" fill="#1A202C">Same category within 50 m, still open</text>
+  <text x="590" y="372" text-anchor="middle" font-size="12" fill="#1A202C">"Me too" (upvote) or "Different issue"</text>
+
+  <!-- lifecycle -->
+  <text x="600" y="430" text-anchor="middle" font-size="16" font-weight="700" fill="#1B4F86">Report status lifecycle</text>
+  <g font-size="13" font-weight="600">
+    <rect x="200" y="450" width="180" height="44" rx="22" fill="#F47B20"/>
+    <text x="290" y="477" text-anchor="middle" fill="#FFFFFF">Reported</text>
+    <rect x="510" y="450" width="180" height="44" rx="22" fill="#1B4F86"/>
+    <text x="600" y="477" text-anchor="middle" fill="#FFFFFF">Sent to agency</text>
+    <rect x="820" y="450" width="180" height="44" rx="22" fill="#3A9284"/>
+    <text x="910" y="477" text-anchor="middle" fill="#FFFFFF">Resolved</text>
+  </g>
+  <g stroke="#4A5568" stroke-width="2">
+    <line x1="380" y1="472" x2="506" y2="472" marker-end="url(#a)"/>
+    <line x1="690" y1="472" x2="816" y2="472" marker-end="url(#a)"/>
+  </g>
+  <text x="445" y="465" text-anchor="middle" font-size="11" fill="#4A5568">user contacts office</text>
+  <text x="755" y="465" text-anchor="middle" font-size="11" fill="#4A5568">reporter or 3 neighbors</text>
+  <text x="755" y="508" text-anchor="middle" font-size="11" fill="#4A5568">confirm fixed (P3: agency)</text>
+</svg>

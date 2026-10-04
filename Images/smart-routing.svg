@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="900" fill="#FFFFFF"/>
+  <text x="600" y="38" text-anchor="middle" font-size="26" font-weight="700" fill="#1B4F86">Smart Routing: who fixes this?</text>
+  <text x="600" y="62" text-anchor="middle" font-size="14" fill="#4A5568">Runs on the device in under a second; works offline except the live state-road check, which falls back to cache</text>
+
+  <g font-size="14" fill="#1A202C">
+    <!-- start -->
+    <rect x="450" y="85" width="300" height="50" rx="25" fill="#1B4F86"/>
+    <text x="600" y="116" text-anchor="middle" fill="#FFFFFF" font-weight="600">Pin location + category</text>
+
+    <!-- emergency -->
+    <polygon points="600,160 760,215 600,270 440,215" fill="#FDECEC" stroke="#C53030" stroke-width="2"/>
+    <text x="600" y="210" text-anchor="middle" font-weight="600">Emergency?</text>
+    <text x="600" y="228" text-anchor="middle" font-size="12">(wires, gas, fire, injury)</text>
+    <rect x="870" y="190" width="290" height="50" rx="10" fill="#C53030"/>
+    <text x="1015" y="212" text-anchor="middle" fill="#FFFFFF" font-weight="600">Call 911 now</text>
+    <text x="1015" y="230" text-anchor="middle" fill="#FFFFFF" font-size="12">+ utility emergency line; no report filed</text>
+
+    <!-- in county -->
+    <polygon points="600,300 760,355 600,410 440,355" fill="#EAF1F8" stroke="#1B4F86" stroke-width="2"/>
+    <text x="600" y="350" text-anchor="middle" font-weight="600">Inside Allegheny</text>
+    <text x="600" y="368" text-anchor="middle" font-weight="600">County?</text>
+    <rect x="870" y="330" width="290" height="50" rx="10" fill="#EDF2F7" stroke="#4A5568"/>
+    <text x="1015" y="352" text-anchor="middle" font-weight="600">Outside service area</text>
+    <text x="1015" y="370" text-anchor="middle" font-size="12">Show PennDOT statewide + local 311 tips</text>
+
+    <!-- municipality -->
+    <rect x="440" y="435" width="320" height="60" rx="10" fill="#FFFFFF" stroke="#1B4F86" stroke-width="2"/>
+    <text x="600" y="460" text-anchor="middle" font-weight="600">Find municipality</text>
+    <text x="600" y="480" text-anchor="middle" font-size="12">Point-in-polygon on 130 bundled boundaries</text>
+
+    <!-- category rule -->
+    <polygon points="600,520 760,575 600,630 440,575" fill="#FFF4EC" stroke="#F47B20" stroke-width="2"/>
+    <text x="600" y="570" text-anchor="middle" font-weight="600">Category handled by</text>
+    <text x="600" y="588" text-anchor="middle" font-weight="600">a utility / authority?</text>
+    <rect x="40" y="550" width="300" height="50" rx="10" fill="#FFF4EC" stroke="#F47B20"/>
+    <text x="190" y="572" text-anchor="middle" font-weight="600">Utility or authority</text>
+    <text x="190" y="590" text-anchor="middle" font-size="12">e.g. streetlight owner, water authority</text>
+
+    <!-- road owner -->
+    <polygon points="600,655 760,710 600,765 440,710" fill="#E9F5F2" stroke="#3A9284" stroke-width="2"/>
+    <text x="600" y="705" text-anchor="middle" font-weight="600">Nearest road within</text>
+    <text x="600" y="723" text-anchor="middle" font-weight="600">25 m: who owns it?</text>
+
+    <rect x="80" y="800" width="300" height="70" rx="10" fill="#3A9284"/>
+    <text x="230" y="826" text-anchor="middle" fill="#FFFFFF" font-weight="600">State road: PennDOT District 11</text>
+    <text x="230" y="846" text-anchor="middle" fill="#FFFFFF" font-size="12">1-800-FIX-ROAD, online customer care</text>
+    <text x="230" y="862" text-anchor="middle" fill="#FFFFFF" font-size="12">(source: PennDOT RMS segments)</text>
+
+    <rect x="450" y="800" width="300" height="70" rx="10" fill="#3A9284"/>
+    <text x="600" y="826" text-anchor="middle" fill="#FFFFFF" font-weight="600">County road: Allegheny Co. DPW</text>
+    <text x="600" y="846" text-anchor="middle" fill="#FFFFFF" font-size="12">County-maintained road layer</text>
+    <text x="600" y="862" text-anchor="middle" fill="#FFFFFF" font-size="12">(source: Allegheny County GIS)</text>
+
+    <rect x="820" y="800" width="300" height="70" rx="10" fill="#3A9284"/>
+    <text x="970" y="826" text-anchor="middle" fill="#FFFFFF" font-weight="600">Local road / off-road: municipality</text>
+    <text x="970" y="846" text-anchor="middle" fill="#FFFFFF" font-size="12">Public works or 311 (Pittsburgh)</text>
+    <text x="970" y="862" text-anchor="middle" fill="#FFFFFF" font-size="12">(source: agency directory)</text>
+  </g>
+
+  <g stroke="#4A5568" stroke-width="2" fill="none">
+    <line x1="600" y1="135" x2="600" y2="158" marker-end="url(#a)"/>
+    <line x1="760" y1="215" x2="868" y2="215" marker-end="url(#a)"/>
+    <line x1="600" y1="270" x2="600" y2="298" marker-end="url(#a)"/>
+    <line x1="760" y1="355" x2="868" y2="355" marker-end="url(#a)"/>
+    <line x1="600" y1="410" x2="600" y2="433" marker-end="url(#a)"/>
+    <line x1="600" y1="495" x2="600" y2="518" marker-end="url(#a)"/>
+    <line x1="440" y1="575" x2="342" y2="575" marker-end="url(#a)"/>
+    <line x1="600" y1="630" x2="600" y2="653" marker-end="url(#a)"/>
+    <path d="M440 710 L230 710 L230 798" marker-end="url(#a)"/>
+    <line x1="600" y1="765" x2="600" y2="798" marker-end="url(#a)"/>
+    <path d="M760 710 L970 710 L970 798" marker-end="url(#a)"/>
+  </g>
+  <g font-size="12" font-weight="700" fill="#4A5568">
+    <text x="800" y="207">Yes</text>
+    <text x="612" y="290">No</text>
+    <text x="800" y="347">No</text>
+    <text x="612" y="428">Yes</text>
+    <text x="380" y="567">Yes</text>
+    <text x="612" y="648">No</text>
+    <text x="300" y="702">State</text>
+    <text x="612" y="788">County</text>
+    <text x="840" y="702">Local / none</text>
+  </g>
+  <text x="1150" y="560" text-anchor="end" font-size="12" fill="#4A5568">Every result card shows: office name, phone,</text>
+  <text x="1150" y="578" text-anchor="end" font-size="12" fill="#4A5568">email, website, hours, "Why this office?" note,</text>
+  <text x="1150" y="596" text-anchor="end" font-size="12" fill="#4A5568">and a link to report a wrong match.</text>
+</svg>

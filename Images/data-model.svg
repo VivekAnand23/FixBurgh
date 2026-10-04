@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <rect width="1200" height="760" fill="#FFFFFF"/>
+  <text x="600" y="38" text-anchor="middle" font-size="26" font-weight="700" fill="#1B4F86">Firestore Data Model (Phase 1 + 2)</text>
+  <text x="600" y="62" text-anchor="middle" font-size="14" fill="#4A5568">Collections in bold; subcollections nest under their parent document</text>
+
+  <g font-size="12" fill="#1A202C">
+    <!-- users -->
+    <rect x="30" y="90" width="330" height="300" rx="12" fill="#EAF1F8" stroke="#1B4F86" stroke-width="2"/>
+    <rect x="30" y="90" width="330" height="34" rx="12" fill="#1B4F86"/>
+    <text x="195" y="113" text-anchor="middle" font-size="15" font-weight="700" fill="#FFFFFF">users/{uid}</text>
+    <text x="45" y="146">displayName, email?, photoUrl?</text>
+    <text x="45" y="166">isAnonymous: bool, providers: [ ]</text>
+    <text x="45" y="186">ageConfirmed13: bool, ageConfirmedAt</text>
+    <text x="45" y="206">role: resident | moderator | agency | admin</text>
+    <text x="45" y="226">locale: en | es, a11yPrefs: { }</text>
+    <text x="45" y="246">reportsToday, reportsTotal, badges: [ ]</text>
+    <text x="45" y="266">createdAt, lastActiveAt, deletedAt?</text>
+    <text x="45" y="296" font-weight="700" fill="#1B4F86">places/{placeId}  (P2)</text>
+    <text x="60" y="314">label, geo{lat,lng,geohash}, radiusM</text>
+    <text x="45" y="340" font-weight="700" fill="#1B4F86">devices/{deviceId}  (P2)</text>
+    <text x="60" y="358">fcmToken, platform, updatedAt</text>
+
+    <!-- reports -->
+    <rect x="420" y="90" width="360" height="430" rx="12" fill="#FFF4EC" stroke="#F47B20" stroke-width="2"/>
+    <rect x="420" y="90" width="360" height="34" rx="12" fill="#F47B20"/>
+    <text x="600" y="113" text-anchor="middle" font-size="15" font-weight="700" fill="#FFFFFF">reports/{reportId}</text>
+    <text x="435" y="146">authorUid, authorIsGuest</text>
+    <text x="435" y="166">category: pothole | landslide | flooding | ...</text>
+    <text x="435" y="186">severity: low | medium | urgent</text>
+    <text x="435" y="206">description (≤ 280 chars)</text>
+    <text x="435" y="226">geo { lat, lng, geohash, accuracyM }</text>
+    <text x="435" y="246">address, municipalityId, roadOwner</text>
+    <text x="435" y="266">roadName, stateRoute?, agencyId</text>
+    <text x="435" y="286">photos: [ {path, thumbPath, blurred} ]</text>
+    <text x="435" y="306">status: reported | sent | resolved</text>
+    <text x="435" y="326">upvoteCount, flagCount, duplicateOf?</text>
+    <text x="435" y="346">moderation: visible | hidden | removed</text>
+    <text x="435" y="366">ai { suggested, confidence, accepted } (P2)</text>
+    <text x="435" y="386">createdAt, updatedAt, sentAt?, resolvedAt?</text>
+    <text x="435" y="416" font-weight="700" fill="#B4530E">upvotes/{uid}</text>
+    <text x="450" y="434">createdAt</text>
+    <text x="435" y="460" font-weight="700" fill="#B4530E">events/{eventId}</text>
+    <text x="450" y="478">type: created | sent | resolved | reopened</text>
+    <text x="450" y="496">byUid, channel: call | email | web, at</text>
+
+    <!-- agencies -->
+    <rect x="840" y="90" width="330" height="250" rx="12" fill="#E9F5F2" stroke="#3A9284" stroke-width="2"/>
+    <rect x="840" y="90" width="330" height="34" rx="12" fill="#3A9284"/>
+    <text x="1005" y="113" text-anchor="middle" font-size="15" font-weight="700" fill="#FFFFFF">agencies/{agencyId}</text>
+    <text x="855" y="146">name, type: municipal | state | county</text>
+    <text x="855" y="166">           | utility | authority | 311</text>
+    <text x="855" y="186">phone, email?, website, webFormUrl?</text>
+    <text x="855" y="206">hours, afterHoursPhone?</text>
+    <text x="855" y="226">categories: [ ], municipalityIds: [ ]</text>
+    <text x="855" y="246">emailTemplateId</text>
+    <text x="855" y="266">source, lastVerifiedAt, verifiedBy</text>
+    <text x="855" y="296" font-weight="700" fill="#1F6B5F">Read-only to the app; edited by admins</text>
+
+    <!-- municipalities -->
+    <rect x="840" y="370" width="330" height="150" rx="12" fill="#E9F5F2" stroke="#3A9284" stroke-width="2"/>
+    <rect x="840" y="370" width="330" height="34" rx="12" fill="#3A9284"/>
+    <text x="1005" y="393" text-anchor="middle" font-size="15" font-weight="700" fill="#FFFFFF">municipalities/{muniId}</text>
+    <text x="855" y="426">name, type: city | borough | township</text>
+    <text x="855" y="446">countyMuniCode, defaultAgencyId</text>
+    <text x="855" y="466">categoryOverrides { category: agencyId }</text>
+    <text x="855" y="486">boundaryVersion (polygon in app bundle)</text>
+
+    <!-- flags -->
+    <rect x="30" y="420" width="330" height="100" rx="12" fill="#FDECEC" stroke="#C53030" stroke-width="2"/>
+    <rect x="30" y="420" width="330" height="34" rx="12" fill="#C53030"/>
+    <text x="195" y="443" text-anchor="middle" font-size="15" font-weight="700" fill="#FFFFFF">flags/{flagId}</text>
+    <text x="45" y="476">reportId, reporterUid, reason</text>
+    <text x="45" y="496">(spam | offensive | private info | wrong)</text>
+
+    <!-- storage -->
+    <rect x="30" y="560" width="1140" height="80" rx="12" fill="#F7FAFC" stroke="#4A5568" stroke-width="2" stroke-dasharray="6 4"/>
+    <text x="50" y="588" font-size="15" font-weight="700" fill="#2D3748">Cloud Storage</text>
+    <text x="50" y="612">reports/{reportId}/{photoId}.jpg (≤ 600 KB, EXIF stripped)   ·   reports/{reportId}/{photoId}_thumb.jpg (≤ 40 KB)</text>
+    <text x="50" y="630">Rules: write once by author, size + content-type checked, public read only while report is visible</text>
+  </g>
+
+  <!-- relations -->
+  <g stroke="#4A5568" stroke-width="2" fill="none" stroke-dasharray="4 3">
+    <line x1="360" y1="150" x2="420" y2="150"/>
+    <line x1="780" y1="260" x2="840" y2="230"/>
+    <line x1="780" y1="250" x2="840" y2="420"/>
+    <line x1="360" y1="470" x2="420" y2="470"/>
+    <line x1="1005" y1="340" x2="1005" y2="370"/>
+  </g>
+  <g font-size="11" fill="#4A5568">
+    <text x="365" y="143">authorUid</text>
+    <text x="785" y="235">agencyId</text>
+    <text x="790" y="360">municipalityId</text>
+    <text x="365" y="463">reportId</text>
+  </g>
+
+  <text x="600" y="680" text-anchor="middle" font-size="13" fill="#4A5568">Map queries use geohash ranges (geoflutterfire_plus) on reports.geo.geohash + status, so a screen only reads pins in view.</text>
+  <text x="600" y="702" text-anchor="middle" font-size="13" fill="#4A5568">Duplicate check: same category, status ≠ resolved, geohash neighbors, then exact distance ≤ 50 m on device.</text>
+</svg>
