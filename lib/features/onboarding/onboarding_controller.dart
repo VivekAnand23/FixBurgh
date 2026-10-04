@@ -53,7 +53,11 @@ class OnboardingController extends Notifier<OnboardingState> {
 
   Future<void> markWelcomeSeen() async {
     await ref.read(sharedPreferencesProvider).setBool(_welcomeKey, true);
-    ref.invalidateSelf();
+    state = OnboardingState(
+      welcomeSeen: true,
+      ageConfirmed: state.ageConfirmed,
+      ageBlocked: state.ageBlocked,
+    );
   }
 
   /// Records only the outcome; the birth date itself is never stored.
@@ -69,7 +73,11 @@ class OnboardingController extends Notifier<OnboardingState> {
     );
     final prefs = ref.read(sharedPreferencesProvider);
     await prefs.setBool(ok ? _ageKey : _blockedKey, true);
-    ref.invalidateSelf();
+    state = OnboardingState(
+      welcomeSeen: state.welcomeSeen,
+      ageConfirmed: ok,
+      ageBlocked: !ok,
+    );
     return ok;
   }
 }
