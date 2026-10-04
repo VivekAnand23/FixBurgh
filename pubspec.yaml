@@ -46,6 +46,7 @@ dependencies:
   shared_preferences: ^2.5.5
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.14.4
   flutter_test:
     sdk: flutter
   mocktail: ^1.0.5
@@ -65,7 +66,7 @@ flutter:
 
   assets:
     - assets/gis/
-    - Images/Logo.jpeg
+    - Images/AppIcon.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

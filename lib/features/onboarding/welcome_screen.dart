@@ -21,7 +21,7 @@ class WelcomeScreen extends ConsumerWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(28),
                 child: Image.asset(
-                  'Images/Logo.jpeg',
+                  'Images/AppIcon.png',
                   height: 120,
                   excludeFromSemantics: true,
                 ),
