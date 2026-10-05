@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fixburgh/features/auth/auth_repository.dart';
+import 'package:fixburgh/features/moderation/text_filter.dart';
 import 'package:fixburgh/features/report/domain/geohash.dart';
 import 'package:fixburgh/features/report/domain/report.dart';
 import 'package:fixburgh/features/routing/domain/municipality_locator.dart'
@@ -12,6 +13,22 @@ import 'package:fixburgh/features/routing/domain/routing_engine.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
+
+const guestDailyLimit = 3;
+const userDailyLimit = 10;
+
+/// Thrown before upload when today's report limit is used up.
+class DailyLimitReached implements Exception {
+  const DailyLimitReached({required this.isGuest});
+
+  final bool isGuest;
+}
+
+/// UTC date as the rules compute it, e.g. "2026-10-5".
+String _today() {
+  final now = DateTime.now().toUtc();
+  return '${now.year}-${now.month}-${now.day}';
+}
 
 /// Distinct "Looks fixed" votes that resolve a report (BRD FR-MYR-06).
 const communityResolveVotes = 3;
@@ -76,6 +93,19 @@ class ReportRepository {
     final steps = draft.photoPaths.length * 2;
     var done = 0;
 
+    // The report and today's counter are written together; security rules
+    // reject the pair when the daily limit is reached.
+    final limitRef = _db.collection('rateLimits').doc(uid);
+    final limit = await limitRef.get();
+    final day = _today();
+    final prev = limit.data();
+    final count = prev != null && prev['day'] == day
+        ? (prev['count'] as num).toInt() + 1
+        : 1;
+    if (count > (isGuest ? guestDailyLimit : userDailyLimit)) {
+      throw DailyLimitReached(isGuest: isGuest);
+    }
+
     for (final path in draft.photoPaths) {
       final photoId = const Uuid().v4();
       final base = 'reports/$uid/$reportId/$photoId';
@@ -96,37 +126,40 @@ class ReportRepository {
       });
     }
 
-    final description = draft.description.trim();
-    await _reports.doc(reportId).set({
-      'authorUid': uid,
-      'authorIsGuest': isGuest,
-      'category': draft.category!.id,
-      'severity': draft.severity.name,
-      'description': description,
-      'geo': {
-        'lat': location.lat,
-        'lng': location.lng,
-        'geohash': encodeGeohash(location.lat, location.lng),
-        'accuracyM': draft.accuracyM,
-      },
-      'address': draft.address,
-      'municipalityId': draft.municipality!.id,
-      'municipalityName': draft.municipality!.name,
-      'photos': photos,
-      if (routing != null) ...{
-        'agencyId': routing.agency.id,
-        'agencyName': routing.agency.name,
-        'roadOwner': routing.road.owner.name,
-        'roadName': routing.road.name,
-        'stateRoute': routing.road.route,
-      },
-      'status': ReportStatus.reported.name,
-      'upvoteCount': 0,
-      'flagCount': 0,
-      'moderation': 'visible',
-      'createdAt': FieldValue.serverTimestamp(),
-      'updatedAt': FieldValue.serverTimestamp(),
-    });
+    final description = cleanUserText(draft.description.trim());
+    final batch = _db.batch()
+      ..set(limitRef, {'day': day, 'count': count})
+      ..set(_reports.doc(reportId), {
+        'authorUid': uid,
+        'authorIsGuest': isGuest,
+        'category': draft.category!.id,
+        'severity': draft.severity.name,
+        'description': description,
+        'geo': {
+          'lat': location.lat,
+          'lng': location.lng,
+          'geohash': encodeGeohash(location.lat, location.lng),
+          'accuracyM': draft.accuracyM,
+        },
+        'address': draft.address,
+        'municipalityId': draft.municipality!.id,
+        'municipalityName': draft.municipality!.name,
+        'photos': photos,
+        if (routing != null) ...{
+          'agencyId': routing.agency.id,
+          'agencyName': routing.agency.name,
+          'roadOwner': routing.road.owner.name,
+          'roadName': routing.road.name,
+          'stateRoute': routing.road.route,
+        },
+        'status': ReportStatus.reported.name,
+        'upvoteCount': 0,
+        'flagCount': 0,
+        'moderation': 'visible',
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    await batch.commit();
     return reportId;
   }
 
@@ -246,13 +279,20 @@ class ReportRepository {
     required String uid,
     required String reason,
     String note = '',
-  }) => _db.collection('flags').add({
-    'reportId': reportId,
-    'reporterUid': uid,
-    'reason': reason,
-    'note': note,
-    'createdAt': FieldValue.serverTimestamp(),
-  });
+  }) async {
+    try {
+      await _db.collection('flags').doc('${reportId}_$uid').set({
+        'reportId': reportId,
+        'reporterUid': uid,
+        'reason': reason,
+        'note': note,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    } on FirebaseException catch (e) {
+      // Flagging twice is rejected by the rules; the first flag stands.
+      if (e.code != 'permission-denied') rethrow;
+    }
+  }
 
   /// The reporter contacted the office through the app (BRD section 8.5).
   Future<void> markSent(String reportId, String channel) =>

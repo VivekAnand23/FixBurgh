@@ -1245,6 +1245,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'It\'s different'**
   String get thisIsDifferent;
+
+  /// No description provided for @guestLimitReached.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve sent {count} reports today. Sign in under Profile to send more and get updates.'**
+  String guestLimitReached(int count);
+
+  /// No description provided for @userLimitReached.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve reached today\'s limit of {count} reports. Thanks for helping! You can report more tomorrow.'**
+  String userLimitReached(int count);
+
+  /// No description provided for @blockReporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide reports from this person'**
+  String get blockReporter;
+
+  /// No description provided for @blocked.
+  ///
+  /// In en, this message translates to:
+  /// **'You won\'t see reports from this person.'**
+  String get blocked;
+
+  /// No description provided for @blockedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 person hidden} other{{count} people hidden}}'**
+  String blockedCount(int count);
+
+  /// No description provided for @unblockAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Show again'**
+  String get unblockAll;
 }
 
 class _AppLocalizationsDelegate

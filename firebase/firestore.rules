@@ -47,7 +47,8 @@ service cloud.firestore {
         || (signedIn() && resource.data.authorUid == request.auth.uid)
         || isModerator();
 
-      allow create: if signedIn() && validNewReport(request.resource.data);
+      allow create: if signedIn() && validNewReport(request.resource.data)
+        && withinDailyLimit();
 
       // Authors can change status and description.
       allow update: if signedIn()
@@ -100,8 +101,10 @@ service cloud.firestore {
           || (after == before - 1 && exists(path) && !existsAfter(path));
     }
 
+    // One flag per person per report: the doc id is "<reportId>_<uid>".
     match /flags/{flagId} {
       allow create: if signedIn()
+        && flagId == request.resource.data.reportId + '_' + request.auth.uid
         && request.resource.data.keys().hasOnly(['reportId', 'reporterUid', 'reason', 'note', 'createdAt'])
         && request.resource.data.reporterUid == request.auth.uid
         && request.resource.data.reason in ['spam', 'offensive', 'private_info',
@@ -119,6 +122,35 @@ service cloud.firestore {
     match /municipalities/{id} {
       allow read: if true;
       allow write: if false;
+    }
+
+    // Daily report limits (BRD FR-MOD-06): each new report must bump the
+    // caller's counter for today by exactly one in the same batch.
+    function today() {
+      return string(request.time.year()) + '-' + string(request.time.month())
+        + '-' + string(request.time.day());
+    }
+
+    function dailyLimit() {
+      return request.auth.token.firebase.sign_in_provider == 'anonymous' ? 3 : 10;
+    }
+
+    function withinDailyLimit() {
+      let path = /databases/$(database)/documents/rateLimits/$(request.auth.uid);
+      let after = getAfter(path).data;
+      let before = exists(path) ? get(path).data : {'day': '', 'count': 0};
+      return after.day == today()
+        && after.count == (before.day == today() ? before.count + 1 : 1)
+        && after.count <= dailyLimit();
+    }
+
+    match /rateLimits/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow create, update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['day', 'count'])
+        && request.resource.data.day == today()
+        && request.resource.data.count is int
+        && request.resource.data.count <= dailyLimit();
     }
 
     match /users/{uid} {

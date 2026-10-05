@@ -697,4 +697,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get thisIsDifferent => 'It\'s different';
+
+  @override
+  String guestLimitReached(int count) {
+    return 'You\'ve sent $count reports today. Sign in under Profile to send more and get updates.';
+  }
+
+  @override
+  String userLimitReached(int count) {
+    return 'You\'ve reached today\'s limit of $count reports. Thanks for helping! You can report more tomorrow.';
+  }
+
+  @override
+  String get blockReporter => 'Hide reports from this person';
+
+  @override
+  String get blocked => 'You won\'t see reports from this person.';
+
+  @override
+  String blockedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count people hidden',
+      one: '1 person hidden',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get unblockAll => 'Show again';
 }

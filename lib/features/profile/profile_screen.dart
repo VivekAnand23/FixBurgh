@@ -1,5 +1,6 @@
 import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/auth/sign_in_screen.dart';
+import 'package:fixburgh/features/moderation/blocked_users.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -92,6 +93,18 @@ class ProfileScreen extends ConsumerWidget {
             leading: const Icon(Icons.emergency_outlined),
             title: Text(l10n.notForEmergencies),
           ),
+          if (ref.watch(blockedUsersProvider).isNotEmpty)
+            ListTile(
+              leading: const Icon(Icons.block),
+              title: Text(
+                l10n.blockedCount(ref.watch(blockedUsersProvider).length),
+              ),
+              trailing: TextButton(
+                onPressed: () =>
+                    ref.read(blockedUsersProvider.notifier).unblockAll(),
+                child: Text(l10n.unblockAll),
+              ),
+            ),
           ListTile(
             leading: const Icon(Icons.map_outlined),
             title: Text(l10n.dataSources),

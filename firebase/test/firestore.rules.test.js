@@ -10,8 +10,6 @@ import {
   initializeTestEnvironment,
 } from '@firebase/rules-unit-testing';
 import {
-  addDoc,
-  collection,
   deleteDoc,
   doc,
   getDoc,
@@ -82,26 +80,53 @@ beforeEach(() => dbs.clear());
 
 beforeEach(() => env.clearFirestore());
 
+// Same date format as the rules' today() (UTC, no zero padding).
+const today = () => {
+  const d = new Date();
+  return `${d.getUTCFullYear()}-${d.getUTCMonth() + 1}-${d.getUTCDate()}`;
+};
+
+/** Creates a report together with the daily counter, as the app does. */
+const createReport = (uid, id, count, data = report(uid)) => {
+  const d = db(uid);
+  const b = writeBatch(d);
+  b.set(doc(d, 'rateLimits', uid), { day: today(), count });
+  b.set(doc(d, 'reports', id), data);
+  return b.commit();
+};
+
 describe('creating reports', () => {
   it('lets a user create a valid report in the county', async () => {
-    await assertSucceeds(setDoc(doc(db('alice'), 'reports', 'r1'), report('alice')));
+    await assertSucceeds(createReport('alice', 'r1', 1));
+  });
+
+  it('requires the daily counter to move with the report', async () => {
+    await assertFails(setDoc(doc(db('alice'), 'reports', 'r1'), report('alice')));
+  });
+
+  it('stops guests after 3 reports a day', async () => {
+    for (let i = 1; i <= 3; i++) await assertSucceeds(createReport('alice', `r${i}`, i));
+    await assertFails(createReport('alice', 'r4', 4));
+  });
+
+  it('blocks skipping the counter back', async () => {
+    await assertSucceeds(createReport('alice', 'r1', 1));
+    await assertFails(createReport('alice', 'r2', 1));
   });
 
   it('rejects a report for someone else', async () => {
-    await assertFails(setDoc(doc(db('alice'), 'reports', 'r1'), report('bob')));
+    await assertFails(createReport('alice', 'r1', 1, report('bob')));
   });
 
   it('rejects a report outside Allegheny County', async () => {
     const outside = report('alice', {
       geo: { lat: 40.17, lng: -80.24, geohash: 'dpnz0000a', accuracyM: 5 },
     });
-    await assertFails(setDoc(doc(db('alice'), 'reports', 'r1'), outside));
+    await assertFails(createReport('alice', 'r1', 1, outside));
   });
 
   it('rejects a report that starts with upvotes', async () => {
-    await assertFails(
-      setDoc(doc(db('alice'), 'reports', 'r1'), report('alice', { upvoteCount: 5 })),
-    );
+    await assertFails(createReport('alice', 'r1', 1, report('alice', { upvoteCount: 5 })));
   });
 });
 
@@ -207,7 +232,7 @@ describe('author changes', () => {
 describe('flags', () => {
   it('accepts a valid flag and hides flags from residents', async () => {
     await assertSucceeds(
-      addDoc(collection(db('bob'), 'flags'), {
+      setDoc(doc(db('bob'), 'flags', 'r1_bob'), {
         reportId: 'r1',
         reporterUid: 'bob',
         reason: 'wrong_routing',
@@ -218,9 +243,16 @@ describe('flags', () => {
     await assertFails(getDoc(doc(db('bob'), 'flags/any')));
   });
 
+  it('allows only one flag per person per report', async () => {
+    const flag = { reportId: 'r1', reporterUid: 'bob', reason: 'spam', note: '', createdAt: serverTimestamp() };
+    await assertSucceeds(setDoc(doc(db('bob'), 'flags', 'r1_bob'), flag));
+    await assertFails(setDoc(doc(db('bob'), 'flags', 'r1_bob'), flag));
+    await assertFails(setDoc(doc(db('bob'), 'flags', 'r1_other'), flag));
+  });
+
   it('rejects an unknown reason', async () => {
     await assertFails(
-      addDoc(collection(db('bob'), 'flags'), {
+      setDoc(doc(db('bob'), 'flags', 'r1_bob'), {
         reportId: 'r1',
         reporterUid: 'bob',
         reason: 'boring',

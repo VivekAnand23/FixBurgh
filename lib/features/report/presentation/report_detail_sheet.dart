@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:fixburgh/features/auth/auth_repository.dart';
+import 'package:fixburgh/features/moderation/blocked_users.dart';
+import 'package:fixburgh/features/moderation/text_filter.dart';
 import 'package:fixburgh/features/report/data/report_repository.dart';
 import 'package:fixburgh/features/report/domain/report.dart';
 import 'package:fixburgh/features/report/presentation/report_labels.dart';
@@ -244,7 +246,10 @@ class _Body extends ConsumerWidget {
           ),
           if (r.description.isNotEmpty) ...[
             const SizedBox(height: 8),
-            Text(r.description, style: theme.textTheme.bodyLarge),
+            Text(
+              cleanUserText(r.description),
+              style: theme.textTheme.bodyLarge,
+            ),
           ],
           if (r.agencyName != null) ...[
             const SizedBox(height: 8),
@@ -313,6 +318,19 @@ class _Body extends ConsumerWidget {
             icon: const Icon(Icons.flag_outlined),
             label: Text(l10n.flagReport),
           ),
+          if (!isAuthor && r.authorUid.isNotEmpty)
+            TextButton.icon(
+              onPressed: () async {
+                final messenger = ScaffoldMessenger.of(context);
+                Navigator.of(context).pop();
+                await ref
+                    .read(blockedUsersProvider.notifier)
+                    .block(r.authorUid);
+                messenger.showSnackBar(SnackBar(content: Text(l10n.blocked)));
+              },
+              icon: const Icon(Icons.block),
+              label: Text(l10n.blockReporter),
+            ),
           if (isAuthor)
             TextButton.icon(
               style: TextButton.styleFrom(

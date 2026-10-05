@@ -401,5 +401,32 @@
       }
     }
   },
-  "thisIsDifferent": "It's different"
+  "thisIsDifferent": "It's different",
+  "guestLimitReached": "You've sent {count} reports today. Sign in under Profile to send more and get updates.",
+  "@guestLimitReached": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "userLimitReached": "You've reached today's limit of {count} reports. Thanks for helping! You can report more tomorrow.",
+  "@userLimitReached": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "blockReporter": "Hide reports from this person",
+  "blocked": "You won't see reports from this person.",
+  "blockedCount": "{count, plural, =1{1 person hidden} other{{count} people hidden}}",
+  "@blockedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unblockAll": "Show again"
 }

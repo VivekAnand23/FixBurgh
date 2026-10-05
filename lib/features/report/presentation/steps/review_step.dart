@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:fixburgh/features/auth/auth_repository.dart';
+import 'package:fixburgh/features/moderation/text_filter.dart';
 import 'package:fixburgh/features/report/data/report_repository.dart';
 import 'package:fixburgh/features/report/domain/report.dart';
 import 'package:fixburgh/features/report/presentation/report_draft_controller.dart';
@@ -89,6 +90,16 @@ class _ReviewStepState extends ConsumerState<ReviewStep> {
       widget.onSubmitted();
       messenger.showSnackBar(SnackBar(content: Text(l10n.reportSubmitted)));
       router.go('/my-reports');
+    } on DailyLimitReached catch (e) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            e.isGuest
+                ? l10n.guestLimitReached(guestDailyLimit)
+                : l10n.userLimitReached(userDailyLimit),
+          ),
+        ),
+      );
     } on Exception {
       messenger.showSnackBar(SnackBar(content: Text(l10n.submitFailed)));
     } finally {
@@ -213,7 +224,8 @@ class _ReviewStepState extends ConsumerState<ReviewStep> {
           child: Text(
             [
               '${d.category?.label(l10n) ?? ''} · ${d.severity.label(l10n)}',
-              if (d.description.trim().isNotEmpty) d.description.trim(),
+              if (d.description.trim().isNotEmpty)
+                cleanUserText(d.description.trim()),
             ].join('\n'),
           ),
         ),

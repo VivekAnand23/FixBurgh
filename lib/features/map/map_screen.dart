@@ -1,3 +1,4 @@
+import 'package:fixburgh/features/moderation/blocked_users.dart';
 import 'package:fixburgh/features/report/data/report_repository.dart';
 import 'package:fixburgh/features/report/domain/report.dart';
 import 'package:fixburgh/features/report/presentation/report_detail_sheet.dart';
@@ -41,11 +42,12 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     ReportCategory.other => BitmapDescriptor.hueRose,
   };
 
-  List<Report> _filter(List<Report> all) {
+  List<Report> _filter(List<Report> all, Set<String> blocked) {
     final cutoff = DateTime.now().subtract(_resolvedVisibleFor);
     return [
       for (final r in all)
-        if ((_categories.isEmpty || _categories.contains(r.category)) &&
+        if (!blocked.contains(r.authorUid) &&
+            (_categories.isEmpty || _categories.contains(r.category)) &&
             (r.isOpen ||
                 (_showFixed && (r.resolvedAt ?? r.createdAt).isAfter(cutoff))))
           r,
@@ -56,7 +58,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final all = ref.watch(mapReportsProvider).value ?? const <Report>[];
-    final reports = _filter(all);
+    final reports = _filter(all, ref.watch(blockedUsersProvider));
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.mapTitle),
