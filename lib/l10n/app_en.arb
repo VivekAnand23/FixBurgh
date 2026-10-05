@@ -302,5 +302,104 @@
   "nowTellThem": "Now tell them",
   "nowTellThemBody": "Your report is on the map. Contacting the office is what gets it fixed. We copy the details for you.",
   "later": "Later",
-  "contactOffice": "Contact office"
+  "contactOffice": "Contact office",
+  "reportGone": "This report was removed.",
+  "photoOf": "Photo of the {category}",
+  "@photoOf": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "routedTo": "Responsible office: {name}",
+  "@routedTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "meToo": "{count, plural, =0{Me too} other{Me too ({count})}}",
+  "@meToo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "meTooDone": "{count, plural, =1{You said me too} other{You and {count} neighbors said me too}}",
+  "@meTooDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "meTooCount": "{count} ✋",
+  "@meTooCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "meTooShort": "Me too",
+  "meTooAdded": "Thanks! Your \"Me too\" was added to the existing report.",
+  "looksFixed": "Looks fixed ({count} of {needed})",
+  "@looksFixed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "needed": {
+        "type": "int"
+      }
+    }
+  },
+  "alreadyFixed": "This was marked fixed.",
+  "yourReportStats": "{count, plural, =0{This is your report.} =1{Your report. 1 neighbor said me too.} other{Your report. {count} neighbors said me too.}}",
+  "@yourReportStats": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reopen": "Not fixed? Reopen",
+  "flagReport": "Report a problem with this",
+  "flagTitle": "What's wrong?",
+  "flagWrongOffice": "Wrong office",
+  "flagWrongLocation": "Wrong location",
+  "flagWrongCategory": "Wrong category",
+  "flagSpam": "Spam or fake",
+  "flagOffensive": "Offensive",
+  "flagPrivate": "Shows private information",
+  "flagThanks": "Thanks. We'll review it.",
+  "deleteReport": "Delete report",
+  "deleteReportTitle": "Delete this report?",
+  "deleteReportBody": "It will be removed from the map, along with its photos.",
+  "showFixed": "Show fixed",
+  "showListView": "Show list",
+  "showMapView": "Show map",
+  "noReportsMatch": "No reports match these filters.",
+  "duplicateTitle": "Already reported?",
+  "duplicateBody": "{category} reported {meters} m away {days, plural, =0{today} =1{yesterday} other{{days} days ago}}{upvotes, plural, =0{.} =1{, and 1 neighbor said me too.} other{, and {upvotes} neighbors said me too.}} Is it the same problem?",
+  "@duplicateBody": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "meters": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      },
+      "upvotes": {
+        "type": "int"
+      }
+    }
+  },
+  "thisIsDifferent": "It's different"
 }

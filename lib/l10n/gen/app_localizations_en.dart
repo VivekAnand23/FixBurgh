@@ -553,4 +553,148 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get contactOffice => 'Contact office';
+
+  @override
+  String get reportGone => 'This report was removed.';
+
+  @override
+  String photoOf(String category) {
+    return 'Photo of the $category';
+  }
+
+  @override
+  String routedTo(String name) {
+    return 'Responsible office: $name';
+  }
+
+  @override
+  String meToo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Me too ($count)',
+      zero: 'Me too',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String meTooDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'You and $count neighbors said me too',
+      one: 'You said me too',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String meTooCount(int count) {
+    return '$count ✋';
+  }
+
+  @override
+  String get meTooShort => 'Me too';
+
+  @override
+  String get meTooAdded =>
+      'Thanks! Your \"Me too\" was added to the existing report.';
+
+  @override
+  String looksFixed(int count, int needed) {
+    return 'Looks fixed ($count of $needed)';
+  }
+
+  @override
+  String get alreadyFixed => 'This was marked fixed.';
+
+  @override
+  String yourReportStats(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Your report. $count neighbors said me too.',
+      one: 'Your report. 1 neighbor said me too.',
+      zero: 'This is your report.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reopen => 'Not fixed? Reopen';
+
+  @override
+  String get flagReport => 'Report a problem with this';
+
+  @override
+  String get flagTitle => 'What\'s wrong?';
+
+  @override
+  String get flagWrongOffice => 'Wrong office';
+
+  @override
+  String get flagWrongLocation => 'Wrong location';
+
+  @override
+  String get flagWrongCategory => 'Wrong category';
+
+  @override
+  String get flagSpam => 'Spam or fake';
+
+  @override
+  String get flagOffensive => 'Offensive';
+
+  @override
+  String get flagPrivate => 'Shows private information';
+
+  @override
+  String get flagThanks => 'Thanks. We\'ll review it.';
+
+  @override
+  String get deleteReport => 'Delete report';
+
+  @override
+  String get deleteReportTitle => 'Delete this report?';
+
+  @override
+  String get deleteReportBody =>
+      'It will be removed from the map, along with its photos.';
+
+  @override
+  String get showFixed => 'Show fixed';
+
+  @override
+  String get showListView => 'Show list';
+
+  @override
+  String get showMapView => 'Show map';
+
+  @override
+  String get noReportsMatch => 'No reports match these filters.';
+
+  @override
+  String get duplicateTitle => 'Already reported?';
+
+  @override
+  String duplicateBody(String category, int meters, int days, int upvotes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days ago',
+      one: 'yesterday',
+      zero: 'today',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      upvotes,
+      locale: localeName,
+      other: ', and $upvotes neighbors said me too.',
+      one: ', and 1 neighbor said me too.',
+      zero: '.',
+    );
+    return '$category reported $meters m away $_temp0$_temp1 Is it the same problem?';
+  }
+
+  @override
+  String get thisIsDifferent => 'It\'s different';
 }

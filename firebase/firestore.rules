@@ -49,17 +49,66 @@ service cloud.firestore {
 
       allow create: if signedIn() && validNewReport(request.resource.data);
 
-      // Authors can change status and description only.
+      // Authors can change status and description.
       allow update: if signedIn()
         && resource.data.authorUid == request.auth.uid
         && request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['status', 'description', 'resolvedAt', 'sentAt',
-                    'contactChannel', 'updatedAt'])
+             .hasOnly(['status', 'description', 'resolvedAt', 'resolvedBy',
+                       'sentAt', 'contactChannel', 'updatedAt'])
         && request.resource.data.status in ['reported', 'sent', 'resolved']
         && request.resource.data.description.size() <= 280
         && request.resource.data.updatedAt == request.time;
 
+      // Anyone signed in can "Me too" once, paired with their upvote doc.
+      allow update: if signedIn()
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['upvoteCount'])
+        && voteChanged('upvotes', 'upvoteCount', reportId);
+
+      // "Looks fixed" votes; the vote that reaches 3 resolves the report.
+      allow update: if signedIn()
+        && voteChanged('fixedVotes', 'fixedVoteCount', reportId)
+        && (
+          request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['fixedVoteCount'])
+          || (request.resource.data.diff(resource.data).affectedKeys()
+                .hasOnly(['fixedVoteCount', 'status', 'resolvedBy', 'resolvedAt'])
+              && request.resource.data.fixedVoteCount >= 3
+              && request.resource.data.status == 'resolved'
+              && request.resource.data.resolvedBy == 'community'
+              && request.resource.data.resolvedAt == request.time)
+        );
+
       allow delete: if signedIn() && resource.data.authorUid == request.auth.uid;
+
+      match /upvotes/{uid} {
+        allow read: if true;
+        allow create, delete: if signedIn() && request.auth.uid == uid;
+      }
+      match /fixedVotes/{uid} {
+        allow read: if true;
+        allow create, delete: if signedIn() && request.auth.uid == uid;
+      }
+    }
+
+    // A count moves by exactly one, together with the caller's vote doc.
+    function voteChanged(coll, field, rid) {
+      let path = /databases/$(database)/documents/reports/$(rid)/$(coll)/$(request.auth.uid);
+      let before = resource.data.get(field, 0);
+      let after = request.resource.data.get(field, 0);
+      return (after == before + 1 && !exists(path) && existsAfter(path))
+          || (after == before - 1 && exists(path) && !existsAfter(path));
+    }
+
+    match /flags/{flagId} {
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['reportId', 'reporterUid', 'reason', 'note', 'createdAt'])
+        && request.resource.data.reporterUid == request.auth.uid
+        && request.resource.data.reason in ['spam', 'offensive', 'private_info',
+             'wrong_location', 'wrong_category', 'wrong_routing']
+        && request.resource.data.get('note', '').size() <= 280
+        && request.resource.data.createdAt == request.time;
+      allow read: if isModerator();
     }
 
     // Read-only directory data, edited by admins in the console.

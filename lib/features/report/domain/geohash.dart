@@ -38,3 +38,19 @@ String encodeGeohash(double lat, double lng, {int precision = 9}) {
   }
   return out.toString();
 }
+
+/// Geohash cells covering the point and its 8 neighbours at [precision].
+/// Precision 7 cells are about 150 m by 150 m, comfortably wider than the
+/// 50 m duplicate radius.
+Set<String> neighborGeohashes(double lat, double lng, {int precision = 7}) {
+  // Cell size in degrees for this precision.
+  final lngBits = (precision * 5 + 1) ~/ 2;
+  final latBits = precision * 5 ~/ 2;
+  final dLat = 180 / (1 << latBits);
+  final dLng = 360 / (1 << lngBits);
+  return {
+    for (final y in [-1, 0, 1])
+      for (final x in [-1, 0, 1])
+        encodeGeohash(lat + y * dLat, lng + x * dLng, precision: precision),
+  };
+}

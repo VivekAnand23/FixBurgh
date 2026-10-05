@@ -1,6 +1,7 @@
 import 'package:fixburgh/app/widgets/placeholder_view.dart';
 import 'package:fixburgh/features/report/data/report_repository.dart';
 import 'package:fixburgh/features/report/domain/report.dart';
+import 'package:fixburgh/features/report/presentation/report_detail_sheet.dart';
 import 'package:fixburgh/features/report/presentation/report_labels.dart';
 import 'package:fixburgh/features/report/presentation/steps/review_step.dart';
 import 'package:fixburgh/features/routing/data/routing_providers.dart';
@@ -107,74 +108,77 @@ class _ReportCard extends ConsumerWidget {
     };
     return Card(
       clipBehavior: Clip.antiAlias,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: SizedBox.square(
-                dimension: 72,
-                child: r.thumbUrl == null
-                    ? ColoredBox(
-                        color: theme.colorScheme.surfaceContainerHighest,
-                        child: Icon(r.category.icon),
-                      )
-                    : Image.network(
-                        r.thumbUrl!,
-                        fit: BoxFit.cover,
-                        excludeFromSemantics: true,
-                        errorBuilder: (_, _, _) => Icon(r.category.icon),
-                      ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    r.category.label(l10n),
-                    style: theme.textTheme.titleMedium,
-                  ),
-                  Text(
-                    [r.address ?? r.municipalityName, date].join(' · '),
-                    style: theme.textTheme.bodySmall,
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Chip(
-                        label: Text(r.status.label(l10n)),
-                        backgroundColor: chipBg,
-                        labelStyle: TextStyle(color: chipFg),
-                        side: BorderSide.none,
-                        visualDensity: VisualDensity.compact,
-                      ),
-                      const Spacer(),
-                      if (r.status != ReportStatus.resolved)
-                        TextButton(
-                          onPressed: () => ref
-                              .read(reportRepositoryProvider)
-                              .markResolved(r.id),
-                          child: Text(l10n.markFixed),
+      child: InkWell(
+        onTap: () => showReportSheet(context, r.id),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: SizedBox.square(
+                  dimension: 72,
+                  child: r.thumbUrl == null
+                      ? ColoredBox(
+                          color: theme.colorScheme.surfaceContainerHighest,
+                          child: Icon(r.category.icon),
+                        )
+                      : Image.network(
+                          r.thumbUrl!,
+                          fit: BoxFit.cover,
+                          excludeFromSemantics: true,
+                          errorBuilder: (_, _, _) => Icon(r.category.icon),
                         ),
-                    ],
-                  ),
-                  if (r.status != ReportStatus.resolved)
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: TextButton.icon(
-                        onPressed: () => _contact(context, ref),
-                        icon: const Icon(Icons.support_agent, size: 18),
-                        label: Text(l10n.contactOffice),
-                      ),
-                    ),
-                ],
+                ),
               ),
-            ),
-          ],
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      r.category.label(l10n),
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    Text(
+                      [r.address ?? r.municipalityName, date].join(' · '),
+                      style: theme.textTheme.bodySmall,
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Chip(
+                          label: Text(r.status.label(l10n)),
+                          backgroundColor: chipBg,
+                          labelStyle: TextStyle(color: chipFg),
+                          side: BorderSide.none,
+                          visualDensity: VisualDensity.compact,
+                        ),
+                        const Spacer(),
+                        if (r.status != ReportStatus.resolved)
+                          TextButton(
+                            onPressed: () => ref
+                                .read(reportRepositoryProvider)
+                                .markResolved(r.id),
+                            child: Text(l10n.markFixed),
+                          ),
+                      ],
+                    ),
+                    if (r.status != ReportStatus.resolved)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton.icon(
+                          onPressed: () => _contact(context, ref),
+                          icon: const Icon(Icons.support_agent, size: 18),
+                          label: Text(l10n.contactOffice),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

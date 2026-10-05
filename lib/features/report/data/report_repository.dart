@@ -13,6 +13,9 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
+/// Distinct "Looks fixed" votes that resolve a report (BRD FR-MYR-06).
+const communityResolveVotes = 3;
+
 final reportRepositoryProvider = Provider<ReportRepository>(
   (ref) => ReportRepository(
     FirebaseFirestore.instance,
@@ -27,10 +30,27 @@ final myReportsProvider = StreamProvider<List<Report>>((ref) {
   return ref.watch(reportRepositoryProvider).watchMine(user.uid);
 });
 
-/// Recent open reports for the community map.
-final openReportsProvider = StreamProvider<List<Report>>(
-  (ref) => ref.watch(reportRepositoryProvider).watchOpen(),
+/// Recent visible reports for the community map (open and recently fixed).
+final mapReportsProvider = StreamProvider<List<Report>>(
+  (ref) => ref.watch(reportRepositoryProvider).watchVisible(),
 );
+
+/// One report, live.
+// ignore: specify_nonobvious_property_types, family type isn't exported.
+final reportProvider = StreamProvider.autoDispose.family<Report?, String>(
+  (ref, id) => ref.watch(reportRepositoryProvider).watch(id),
+);
+
+/// Whether the current user has voted in `upvotes` or `fixedVotes`.
+// ignore: specify_nonobvious_property_types, family type isn't exported.
+final myVoteProvider = StreamProvider.autoDispose
+    .family<bool, ({String reportId, String collection})>((ref, k) {
+      final uid = ref.watch(authUserProvider).value?.uid;
+      if (uid == null) return Stream.value(false);
+      return ref
+          .watch(reportRepositoryProvider)
+          .watchVote(k.reportId, k.collection, uid);
+    });
 
 class ReportRepository {
   ReportRepository(this._db, this._storage);
@@ -118,13 +138,121 @@ class ReportRepository {
       .map((s) => s.docs.map(_fromDoc).toList());
 
   /// Must filter on `moderation` so the query matches the read rule.
-  Stream<List<Report>> watchOpen() => _reports
+  /// Viewport queries come with clustering at scale; 300 recent reports is
+  /// plenty for the pilot.
+  Stream<List<Report>> watchVisible() => _reports
       .where('moderation', isEqualTo: 'visible')
-      .where('status', whereIn: ['reported', 'sent'])
       .orderBy('createdAt', descending: true)
-      .limit(200)
+      .limit(300)
       .snapshots()
       .map((s) => s.docs.map(_fromDoc).toList());
+
+  /// Open reports near [p] with the same category, nearest first. Queries
+  /// the geohash cells around the point, then filters by exact distance.
+  Future<List<Report>> nearbyDuplicates(
+    geo.GeoPoint p,
+    ReportCategory category,
+  ) async {
+    final prefixes = neighborGeohashes(p.lat, p.lng);
+    final snaps = await Future.wait([
+      for (final prefix in prefixes)
+        _reports
+            .where('moderation', isEqualTo: 'visible')
+            .orderBy('geo.geohash')
+            .startAt([prefix])
+            .endAt(['$prefix\uf8ff'])
+            .limit(50)
+            .get(),
+    ]);
+    final seen = <String>{};
+    final out = <Report>[];
+    for (final doc in snaps.expand((s) => s.docs)) {
+      if (!seen.add(doc.id)) continue;
+      final r = _fromDoc(doc);
+      if (r.isOpen &&
+          r.category == category &&
+          distanceM(p, r.location) <= duplicateRadiusM) {
+        out.add(r);
+      }
+    }
+    out.sort(
+      (a, b) => distanceM(p, a.location).compareTo(distanceM(p, b.location)),
+    );
+    return out;
+  }
+
+  Stream<Report?> watch(String id) =>
+      _reports.doc(id).snapshots().map((d) => d.exists ? _fromDoc(d) : null);
+
+  /// Whether [uid] has a vote doc in [collection] for the report.
+  Stream<bool> watchVote(String reportId, String collection, String uid) =>
+      _reports
+          .doc(reportId)
+          .collection(collection)
+          .doc(uid)
+          .snapshots()
+          .map((d) => d.exists);
+
+  /// Adds or removes a "Me too" in one batch so rules can pair them.
+  Future<void> setUpvote(String reportId, String uid, {required bool on}) {
+    final doc = _reports.doc(reportId);
+    final vote = doc.collection('upvotes').doc(uid);
+    final batch = _db.batch();
+    if (on) {
+      batch.set(vote, {'createdAt': FieldValue.serverTimestamp()});
+    } else {
+      batch.delete(vote);
+    }
+    batch.update(doc, {'upvoteCount': FieldValue.increment(on ? 1 : -1)});
+    return batch.commit();
+  }
+
+  /// Records a "Looks fixed" vote; the third distinct vote resolves it.
+  Future<void> voteFixed(String reportId, String uid) =>
+      _db.runTransaction((tx) async {
+        final doc = _reports.doc(reportId);
+        final vote = doc.collection('fixedVotes').doc(uid);
+        if ((await tx.get(vote)).exists) return;
+        final snap = await tx.get(doc);
+        final count = ((snap.data()?['fixedVoteCount'] as num?) ?? 0) + 1;
+        tx
+          ..set(vote, {'createdAt': FieldValue.serverTimestamp()})
+          ..update(doc, {
+            'fixedVoteCount': count,
+            if (count >= communityResolveVotes) ...{
+              'status': ReportStatus.resolved.name,
+              'resolvedBy': 'community',
+              'resolvedAt': FieldValue.serverTimestamp(),
+            },
+          });
+      });
+
+  Future<void> reopen(String reportId) => _reports.doc(reportId).update({
+    'status': ReportStatus.reported.name,
+    'updatedAt': FieldValue.serverTimestamp(),
+  });
+
+  /// Deletes the report and its photos.
+  Future<void> delete(Report r) async {
+    await _reports.doc(r.id).delete();
+    await Future.wait([
+      for (final path in r.photoPaths)
+        _storage.ref(path).delete().catchError((Object _) {}),
+    ]);
+  }
+
+  Future<void> flag({
+    required String reportId,
+    required String uid,
+    required String reason,
+    String note = '',
+  }) => _db.collection('flags').add({
+    'reportId': reportId,
+    'reporterUid': uid,
+    'reason': reason,
+    'note': note,
+    'createdAt': FieldValue.serverTimestamp(),
+  });
 
   /// The reporter contacted the office through the app (BRD section 8.5).
   Future<void> markSent(String reportId, String channel) =>
@@ -157,12 +285,23 @@ class ReportRepository {
     return out ?? await File(path).readAsBytes();
   }
 
-  static Report _fromDoc(QueryDocumentSnapshot<Map<String, dynamic>> d) {
-    final m = d.data();
+  static Report _fromDoc(DocumentSnapshot<Map<String, dynamic>> d) {
+    final m = d.data()!;
     final g = (m['geo'] as Map?)?.cast<String, dynamic>() ?? const {};
     final photos = (m['photos'] as List?)?.cast<Map<String, dynamic>>();
     return Report(
       id: d.id,
+      authorUid: m['authorUid'] as String? ?? '',
+      photoPaths: [
+        for (final p in photos ?? const <Map<String, dynamic>>[]) ...[
+          if (p['path'] is String) p['path'] as String,
+          if (p['thumbPath'] is String) p['thumbPath'] as String,
+        ],
+      ],
+      upvoteCount: (m['upvoteCount'] as num?)?.toInt() ?? 0,
+      fixedVoteCount: (m['fixedVoteCount'] as num?)?.toInt() ?? 0,
+      agencyName: m['agencyName'] as String?,
+      resolvedAt: (m['resolvedAt'] as Timestamp?)?.toDate(),
       category: ReportCategory.fromId(m['category'] as String? ?? ''),
       severity: Severity.fromId(m['severity'] as String? ?? ''),
       status: ReportStatus.fromId(m['status'] as String? ?? ''),

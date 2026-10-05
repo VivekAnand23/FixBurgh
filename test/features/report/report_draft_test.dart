@@ -47,4 +47,12 @@ void main() {
     );
     expect(moved.accuracyM, isNull);
   });
+
+  test('distanceM matches a known distance', () {
+    // Two points 0.001 degrees of latitude apart are about 111 m apart.
+    expect(
+      distanceM(const GeoPoint(40.44, -79.99), const GeoPoint(40.441, -79.99)),
+      closeTo(111.2, 0.5),
+    );
+  });
 }

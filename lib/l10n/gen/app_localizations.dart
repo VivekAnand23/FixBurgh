@@ -1059,6 +1059,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Contact office'**
   String get contactOffice;
+
+  /// No description provided for @reportGone.
+  ///
+  /// In en, this message translates to:
+  /// **'This report was removed.'**
+  String get reportGone;
+
+  /// No description provided for @photoOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo of the {category}'**
+  String photoOf(String category);
+
+  /// No description provided for @routedTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Responsible office: {name}'**
+  String routedTo(String name);
+
+  /// No description provided for @meToo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Me too} other{Me too ({count})}}'**
+  String meToo(int count);
+
+  /// No description provided for @meTooDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{You said me too} other{You and {count} neighbors said me too}}'**
+  String meTooDone(int count);
+
+  /// No description provided for @meTooCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} ✋'**
+  String meTooCount(int count);
+
+  /// No description provided for @meTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Me too'**
+  String get meTooShort;
+
+  /// No description provided for @meTooAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks! Your \"Me too\" was added to the existing report.'**
+  String get meTooAdded;
+
+  /// No description provided for @looksFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Looks fixed ({count} of {needed})'**
+  String looksFixed(int count, int needed);
+
+  /// No description provided for @alreadyFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'This was marked fixed.'**
+  String get alreadyFixed;
+
+  /// No description provided for @yourReportStats.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{This is your report.} =1{Your report. 1 neighbor said me too.} other{Your report. {count} neighbors said me too.}}'**
+  String yourReportStats(int count);
+
+  /// No description provided for @reopen.
+  ///
+  /// In en, this message translates to:
+  /// **'Not fixed? Reopen'**
+  String get reopen;
+
+  /// No description provided for @flagReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Report a problem with this'**
+  String get flagReport;
+
+  /// No description provided for @flagTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s wrong?'**
+  String get flagTitle;
+
+  /// No description provided for @flagWrongOffice.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong office'**
+  String get flagWrongOffice;
+
+  /// No description provided for @flagWrongLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong location'**
+  String get flagWrongLocation;
+
+  /// No description provided for @flagWrongCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong category'**
+  String get flagWrongCategory;
+
+  /// No description provided for @flagSpam.
+  ///
+  /// In en, this message translates to:
+  /// **'Spam or fake'**
+  String get flagSpam;
+
+  /// No description provided for @flagOffensive.
+  ///
+  /// In en, this message translates to:
+  /// **'Offensive'**
+  String get flagOffensive;
+
+  /// No description provided for @flagPrivate.
+  ///
+  /// In en, this message translates to:
+  /// **'Shows private information'**
+  String get flagPrivate;
+
+  /// No description provided for @flagThanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks. We\'ll review it.'**
+  String get flagThanks;
+
+  /// No description provided for @deleteReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete report'**
+  String get deleteReport;
+
+  /// No description provided for @deleteReportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this report?'**
+  String get deleteReportTitle;
+
+  /// No description provided for @deleteReportBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It will be removed from the map, along with its photos.'**
+  String get deleteReportBody;
+
+  /// No description provided for @showFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Show fixed'**
+  String get showFixed;
+
+  /// No description provided for @showListView.
+  ///
+  /// In en, this message translates to:
+  /// **'Show list'**
+  String get showListView;
+
+  /// No description provided for @showMapView.
+  ///
+  /// In en, this message translates to:
+  /// **'Show map'**
+  String get showMapView;
+
+  /// No description provided for @noReportsMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'No reports match these filters.'**
+  String get noReportsMatch;
+
+  /// No description provided for @duplicateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Already reported?'**
+  String get duplicateTitle;
+
+  /// No description provided for @duplicateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{category} reported {meters} m away {days, plural, =0{today} =1{yesterday} other{{days} days ago}}{upvotes, plural, =0{.} =1{, and 1 neighbor said me too.} other{, and {upvotes} neighbors said me too.}} Is it the same problem?'**
+  String duplicateBody(String category, int meters, int days, int upvotes);
+
+  /// No description provided for @thisIsDifferent.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s different'**
+  String get thisIsDifferent;
 }
 
 class _AppLocalizationsDelegate

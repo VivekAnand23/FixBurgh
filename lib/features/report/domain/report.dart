@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:fixburgh/features/routing/domain/municipality_locator.dart';
 import 'package:flutter/material.dart';
 
@@ -106,12 +108,19 @@ class Report {
     required this.location,
     required this.municipalityName,
     required this.createdAt,
+    this.authorUid = '',
     this.address,
     this.description = '',
     this.thumbUrl,
+    this.photoPaths = const [],
+    this.upvoteCount = 0,
+    this.fixedVoteCount = 0,
+    this.agencyName,
+    this.resolvedAt,
   });
 
   final String id;
+  final String authorUid;
   final ReportCategory category;
   final Severity severity;
   final ReportStatus status;
@@ -120,5 +129,31 @@ class Report {
   final String? address;
   final String description;
   final String? thumbUrl;
+
+  /// Storage paths of every uploaded image (full and thumbnail).
+  final List<String> photoPaths;
+  final int upvoteCount;
+  final int fixedVoteCount;
+  final String? agencyName;
   final DateTime createdAt;
+  final DateTime? resolvedAt;
+
+  bool get isOpen => status != ReportStatus.resolved;
 }
+
+/// Great-circle distance in metres (haversine).
+double distanceM(GeoPoint a, GeoPoint b) {
+  const r = 6371000.0;
+  double rad(double d) => d * math.pi / 180;
+  final dLat = rad(b.lat - a.lat);
+  final dLng = rad(b.lng - a.lng);
+  final h =
+      math.pow(math.sin(dLat / 2), 2) +
+      math.cos(rad(a.lat)) *
+          math.cos(rad(b.lat)) *
+          math.pow(math.sin(dLng / 2), 2);
+  return 2 * r * math.asin(math.sqrt(h));
+}
+
+/// Reports closer than this with the same category are likely duplicates.
+const duplicateRadiusM = 50.0;

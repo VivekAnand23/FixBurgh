@@ -45,8 +45,28 @@ class _ReviewStepState extends ConsumerState<ReviewStep> {
       await auth.ensureGuest();
       final user = auth.currentUser!;
       final draft = ref.read(reportDraftProvider);
-      final routing = await ref.read(draftRoutingProvider.future);
       final repo = ref.read(reportRepositoryProvider);
+
+      // Offer "Me too" instead of a duplicate (BRD FR-MAP-08).
+      final dupes = await repo
+          .nearbyDuplicates(draft.location!, draft.category!)
+          .catchError((Object _) => <Report>[]);
+      final others = dupes.where((r) => r.authorUid != user.uid).toList();
+      if (others.isNotEmpty && mounted) {
+        final existing = others.first;
+        final choice = await _askDuplicate(existing, draft);
+        if (choice == null) return; // Dismissed: stay on review.
+        if (choice) {
+          await repo.setUpvote(existing.id, user.uid, on: true);
+          ref.invalidate(reportDraftProvider);
+          widget.onSubmitted();
+          messenger.showSnackBar(SnackBar(content: Text(l10n.meTooAdded)));
+          router.go('/map');
+          return;
+        }
+      }
+
+      final routing = await ref.read(draftRoutingProvider.future);
       final reportId = await repo.submit(
         draft: draft,
         uid: user.uid,
@@ -74,6 +94,58 @@ class _ReviewStepState extends ConsumerState<ReviewStep> {
     } finally {
       if (mounted) setState(() => _progress = null);
     }
+  }
+
+  /// True = "Me too", false = "This is different", null = dismissed.
+  Future<bool?> _askDuplicate(Report existing, ReportDraft draft) {
+    final l10n = AppLocalizations.of(context);
+    final meters = distanceM(draft.location!, existing.location).round();
+    final days = DateTime.now().difference(existing.createdAt).inDays;
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        icon: const Icon(Icons.groups_outlined),
+        title: Text(l10n.duplicateTitle),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.duplicateBody(
+                existing.category.label(l10n),
+                meters,
+                days,
+                existing.upvoteCount,
+              ),
+            ),
+            if (existing.thumbUrl != null) ...[
+              const SizedBox(height: 12),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  existing.thumbUrl!,
+                  height: 140,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  excludeFromSemantics: true,
+                  errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                ),
+              ),
+            ],
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.thisIsDifferent),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l10n.meTooShort),
+          ),
+        ],
+      ),
+    );
   }
 
   static String _summary(AppLocalizations l10n, ReportDraft d) => reportSummary(
@@ -224,6 +296,7 @@ Future<void> showContactSheet(
 }) {
   final l10n = AppLocalizations.of(context);
   return showModalBottomSheet<void>(
+    useRootNavigator: true,
     context: context,
     isScrollControlled: true,
     showDragHandle: true,

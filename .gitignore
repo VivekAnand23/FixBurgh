@@ -54,3 +54,6 @@ key.properties
 
 # Local Google Maps keys
 /ios/Flutter/Secrets.xcconfig
+
+# Firebase emulator logs
+*-debug.log
