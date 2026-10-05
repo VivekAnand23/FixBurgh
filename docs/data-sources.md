@@ -78,8 +78,8 @@ On macOS, if the python.org build of Python fails with
 
 The county directory is maintained by the municipalities and contains some
 errors (for example, at least one 724 area code for a 412 municipality).
-Re-run the script and spot-check numbers before each release; users can flag
-a wrong office in the app.
+Re-run the script and spot-check numbers before each release. A "Wrong office?"
+flag in the app is planned for M3.
 
 ```bash
 /usr/bin/python3 tools/directory/build_agency_directory.py
