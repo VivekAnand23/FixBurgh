@@ -70,9 +70,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mapTitle => 'Community map';
 
   @override
-  String get mapPlaceholder => 'Reports near you will appear here.';
-
-  @override
   String get reportTitle => 'Report a problem';
 
   @override
@@ -392,4 +389,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get markFixed => 'Mark fixed';
+
+  @override
+  String mapReportsSemantics(int count) {
+    return 'Map showing $count open reports';
+  }
 }

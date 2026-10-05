@@ -208,12 +208,6 @@ abstract class AppLocalizations {
   /// **'Community map'**
   String get mapTitle;
 
-  /// No description provided for @mapPlaceholder.
-  ///
-  /// In en, this message translates to:
-  /// **'Reports near you will appear here.'**
-  String get mapPlaceholder;
-
   /// No description provided for @reportTitle.
   ///
   /// In en, this message translates to:
@@ -795,6 +789,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Mark fixed'**
   String get markFixed;
+
+  /// No description provided for @mapReportsSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Map showing {count} open reports'**
+  String mapReportsSemantics(int count);
 }
 
 class _AppLocalizationsDelegate

@@ -26,6 +26,11 @@ final myReportsProvider = StreamProvider<List<Report>>((ref) {
   return ref.watch(reportRepositoryProvider).watchMine(user.uid);
 });
 
+/// Recent open reports for the community map.
+final openReportsProvider = StreamProvider<List<Report>>(
+  (ref) => ref.watch(reportRepositoryProvider).watchOpen(),
+);
+
 class ReportRepository {
   ReportRepository(this._db, this._storage);
 
@@ -100,6 +105,15 @@ class ReportRepository {
       .where('authorUid', isEqualTo: uid)
       .orderBy('createdAt', descending: true)
       .limit(100)
+      .snapshots()
+      .map((s) => s.docs.map(_fromDoc).toList());
+
+  /// Must filter on `moderation` so the query matches the read rule.
+  Stream<List<Report>> watchOpen() => _reports
+      .where('moderation', isEqualTo: 'visible')
+      .where('status', whereIn: ['reported', 'sent'])
+      .orderBy('createdAt', descending: true)
+      .limit(200)
       .snapshots()
       .map((s) => s.docs.map(_fromDoc).toList());
 

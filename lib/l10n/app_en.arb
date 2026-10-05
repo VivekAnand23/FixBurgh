@@ -19,7 +19,6 @@
   "ageBlockedTitle": "Sorry, you can't use FixBurgh yet",
   "ageBlockedBody": "Ask a parent or guardian to report the problem for you. Nothing you entered was saved.",
   "mapTitle": "Community map",
-  "mapPlaceholder": "Reports near you will appear here.",
   "reportTitle": "Report a problem",
   "myReportsTitle": "My Reports",
   "myReportsEmpty": "You haven't reported anything yet.",
@@ -175,5 +174,13 @@
   "submitting": "Sending...",
   "reportSubmitted": "Report sent. Thanks for looking out for your neighborhood.",
   "submitFailed": "We couldn't send your report. Check your connection and try again.",
-  "markFixed": "Mark fixed"
+  "markFixed": "Mark fixed",
+  "mapReportsSemantics": "Map showing {count} open reports",
+  "@mapReportsSemantics": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }
