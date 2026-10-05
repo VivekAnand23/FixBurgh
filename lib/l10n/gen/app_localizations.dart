@@ -589,7 +589,7 @@ abstract class AppLocalizations {
   /// No description provided for @locationHint.
   ///
   /// In en, this message translates to:
-  /// **'Drag the pin or tap the map to mark the exact spot.'**
+  /// **'Zoom in and drag the pin or tap the map to mark the exact spot.'**
   String get locationHint;
 
   /// No description provided for @locationDenied.
@@ -795,6 +795,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Map showing {count} open reports'**
   String mapReportsSemantics(int count);
+
+  /// No description provided for @locating.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding your location...'**
+  String get locating;
+
+  /// No description provided for @improvingAccuracy.
+  ///
+  /// In en, this message translates to:
+  /// **'Improving accuracy... now within {meters} m'**
+  String improvingAccuracy(int meters);
+
+  /// No description provided for @accurateTo.
+  ///
+  /// In en, this message translates to:
+  /// **'GPS accurate to about {meters} m. Drag the pin if it\'s off.'**
+  String accurateTo(int meters);
+
+  /// No description provided for @pinPlacedByHand.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin placed by hand.'**
+  String get pinPlacedByHand;
+
+  /// No description provided for @approximateOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Precise Location is off, so GPS is approximate. Turn it on in Settings or drag the pin to the exact spot.'**
+  String get approximateOnly;
+
+  /// No description provided for @showSatellite.
+  ///
+  /// In en, this message translates to:
+  /// **'Show satellite view'**
+  String get showSatellite;
+
+  /// No description provided for @showMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Show map view'**
+  String get showMap;
 }
 
 class _AppLocalizationsDelegate

@@ -48,6 +48,11 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>FixBurgh uses the camera to photograph the problem you are reporting.</string>
+	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
+	<dict>
+		<key>IncidentLocation</key>
+		<string>FixBurgh needs your precise location so crews can find the exact spot of the problem.</string>
+	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>FixBurgh uses your location to pin where the problem is and find the office that fixes it.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

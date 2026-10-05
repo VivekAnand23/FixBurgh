@@ -282,7 +282,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get locationHint =>
-      'Drag the pin or tap the map to mark the exact spot.';
+      'Zoom in and drag the pin or tap the map to mark the exact spot.';
 
   @override
   String get locationDenied =>
@@ -394,4 +394,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String mapReportsSemantics(int count) {
     return 'Map showing $count open reports';
   }
+
+  @override
+  String get locating => 'Finding your location...';
+
+  @override
+  String improvingAccuracy(int meters) {
+    return 'Improving accuracy... now within $meters m';
+  }
+
+  @override
+  String accurateTo(int meters) {
+    return 'GPS accurate to about $meters m. Drag the pin if it\'s off.';
+  }
+
+  @override
+  String get pinPlacedByHand => 'Pin placed by hand.';
+
+  @override
+  String get approximateOnly =>
+      'Precise Location is off, so GPS is approximate. Turn it on in Settings or drag the pin to the exact spot.';
+
+  @override
+  String get showSatellite => 'Show satellite view';
+
+  @override
+  String get showMap => 'Show map view';
 }

@@ -34,4 +34,17 @@ void main() {
     }
     expect(ReportCategory.fromId('nope'), ReportCategory.other);
   });
+
+  test('a hand-placed pin clears the GPS accuracy radius', () {
+    final gps = const ReportDraft().copyWith(
+      location: const GeoPoint(40.44, -79.99),
+      accuracyM: 4,
+    );
+    expect(gps.accuracyM, 4);
+    final moved = gps.copyWith(
+      location: const GeoPoint(40.4401, -79.9901),
+      clearAccuracy: true,
+    );
+    expect(moved.accuracyM, isNull);
+  });
 }

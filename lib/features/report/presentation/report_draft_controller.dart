@@ -29,6 +29,8 @@ class ReportDraftController extends Notifier<ReportDraft> {
     state = state.copyWith(
       location: point,
       accuracyM: accuracyM,
+      // A hand-placed pin has no GPS error radius.
+      clearAccuracy: accuracyM == null,
       municipality: muni,
       clearMunicipality: muni == null,
     );

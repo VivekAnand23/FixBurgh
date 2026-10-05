@@ -76,6 +76,7 @@ class ReportDraft {
     List<String>? photoPaths,
     GeoPoint? location,
     double? accuracyM,
+    bool clearAccuracy = false,
     String? address,
     Municipality? municipality,
     bool clearMunicipality = false,
@@ -85,7 +86,7 @@ class ReportDraft {
   }) => ReportDraft(
     photoPaths: photoPaths ?? this.photoPaths,
     location: location ?? this.location,
-    accuracyM: accuracyM ?? this.accuracyM,
+    accuracyM: clearAccuracy ? null : accuracyM ?? this.accuracyM,
     address: address ?? this.address,
     municipality: clearMunicipality ? null : municipality ?? this.municipality,
     category: category ?? this.category,

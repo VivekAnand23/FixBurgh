@@ -134,7 +134,7 @@
   "takePhoto": "Take photo",
   "chooseFromLibrary": "Choose from library",
   "locationTitle": "Where is it?",
-  "locationHint": "Drag the pin or tap the map to mark the exact spot.",
+  "locationHint": "Zoom in and drag the pin or tap the map to mark the exact spot.",
   "locationDenied": "Location is off, so we started downtown. Move the pin to the spot.",
   "mapSemantics": "Map. Drag the pin to mark the problem.",
   "inMunicipality": "In {name}",
@@ -182,5 +182,26 @@
         "type": "int"
       }
     }
-  }
+  },
+  "locating": "Finding your location...",
+  "improvingAccuracy": "Improving accuracy... now within {meters} m",
+  "@improvingAccuracy": {
+    "placeholders": {
+      "meters": {
+        "type": "int"
+      }
+    }
+  },
+  "accurateTo": "GPS accurate to about {meters} m. Drag the pin if it's off.",
+  "@accurateTo": {
+    "placeholders": {
+      "meters": {
+        "type": "int"
+      }
+    }
+  },
+  "pinPlacedByHand": "Pin placed by hand.",
+  "approximateOnly": "Precise Location is off, so GPS is approximate. Turn it on in Settings or drag the pin to the exact spot.",
+  "showSatellite": "Show satellite view",
+  "showMap": "Show map view"
 }
