@@ -589,7 +589,7 @@ abstract class AppLocalizations {
   /// No description provided for @locationHint.
   ///
   /// In en, this message translates to:
-  /// **'Zoom in and drag the pin or tap the map to mark the exact spot.'**
+  /// **'Search an address, or zoom in and drag the pin to the exact spot.'**
   String get locationHint;
 
   /// No description provided for @locationDenied.
@@ -837,6 +837,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show map view'**
   String get showMap;
+
+  /// No description provided for @searchAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Search address'**
+  String get searchAddress;
+
+  /// No description provided for @searchAddressHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 414 Grant St, Pittsburgh'**
+  String get searchAddressHint;
+
+  /// No description provided for @addressNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t find that address in Allegheny County. Try adding the street number or town.'**
+  String get addressNotFound;
+
+  /// No description provided for @zoomIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom in'**
+  String get zoomIn;
+
+  /// No description provided for @zoomOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom out'**
+  String get zoomOut;
+
+  /// No description provided for @pinFromSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin placed at the address you searched. Drag it to the exact spot.'**
+  String get pinFromSearch;
 }
 
 class _AppLocalizationsDelegate

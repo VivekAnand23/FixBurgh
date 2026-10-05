@@ -5,6 +5,7 @@ import 'package:fixburgh/features/routing/domain/municipality_locator.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -36,6 +37,9 @@ class _LocationStepState extends ConsumerState<LocationStep> {
   bool _denied = false;
   bool _approximateOnly = false;
   bool _satellite = false;
+  bool _searching = false;
+  bool _pinFromSearch = false;
+  final _search = TextEditingController();
 
   /// Set once the user moves the pin, so GPS updates stop overriding it.
   bool _pinMovedByUser = false;
@@ -50,6 +54,7 @@ class _LocationStepState extends ConsumerState<LocationStep> {
 
   @override
   void dispose() {
+    _search.dispose();
     unawaited(_sampling?.cancel());
     _map?.dispose();
     super.dispose();
@@ -63,6 +68,7 @@ class _LocationStepState extends ConsumerState<LocationStep> {
     setState(() {
       _locating = true;
       _pinMovedByUser = false;
+      _pinFromSearch = false;
     });
     final notifier = ref.read(reportDraftProvider.notifier);
     try {
@@ -138,8 +144,56 @@ class _LocationStepState extends ConsumerState<LocationStep> {
     }
   }
 
+  /// Moves the pin to a typed address, searched within Allegheny County.
+  Future<void> _searchAddress(String query) async {
+    final q = query.trim();
+    if (q.isEmpty) return;
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    FocusScope.of(context).unfocus();
+    await _sampling?.cancel();
+    _sampling = null;
+    setState(() {
+      _searching = true;
+      _locating = false;
+    });
+    try {
+      final hasRegion = RegExp(
+        r'\b(PA|Pennsylvania)\b',
+        caseSensitive: false,
+      ).hasMatch(q);
+      final results = await Geocoding().locationFromAddress(
+        hasRegion ? q : '$q, Allegheny County, PA',
+      );
+      if (results.isEmpty) throw const FormatException('no result');
+      final hit = results.first;
+      final p = LatLng(hit.latitude, hit.longitude);
+      _movePin(p);
+      setState(() => _pinFromSearch = true);
+      await _map?.animateCamera(CameraUpdate.newLatLngZoom(p, 19));
+    } on Exception {
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.addressNotFound)),
+      );
+    } finally {
+      if (mounted) setState(() => _searching = false);
+    }
+  }
+
+  /// Zooms by [delta] levels, keeping the pin centered so it never drifts
+  /// out of view.
+  Future<void> _zoom(LatLng pin, double delta) async {
+    final map = _map;
+    if (map == null) return;
+    final zoom = (await map.getZoomLevel() + delta).clamp(3.0, 21.0);
+    await map.animateCamera(CameraUpdate.newLatLngZoom(pin, zoom));
+  }
+
   void _movePin(LatLng p) {
-    setState(() => _pinMovedByUser = true);
+    setState(() {
+      _pinMovedByUser = true;
+      _pinFromSearch = false;
+    });
     // A hand-placed pin has no GPS error radius.
     unawaited(
       ref
@@ -160,6 +214,8 @@ class _LocationStepState extends ConsumerState<LocationStep> {
 
     final status = _locating
         ? (acc == null ? l10n.locating : l10n.improvingAccuracy(acc.round()))
+        : _pinFromSearch
+        ? l10n.pinFromSearch
         : _pinMovedByUser || acc == null
         ? l10n.pinPlacedByHand
         : l10n.accurateTo(acc.round());
@@ -168,8 +224,46 @@ class _LocationStepState extends ConsumerState<LocationStep> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(24, 8, 24, 12),
-          child: Text(l10n.locationTitle, style: theme.textTheme.headlineSmall),
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  l10n.locationTitle,
+                  style: theme.textTheme.headlineSmall,
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: _search,
+                textInputAction: TextInputAction.search,
+                keyboardType: TextInputType.streetAddress,
+                autofillHints: const [AutofillHints.fullStreetAddress],
+                onSubmitted: _searchAddress,
+                decoration: InputDecoration(
+                  labelText: l10n.searchAddress,
+                  hintText: l10n.searchAddressHint,
+                  prefixIcon: const Icon(Icons.search),
+                  isDense: true,
+                  suffixIcon: _searching
+                      ? const Padding(
+                          padding: EdgeInsets.all(12),
+                          child: SizedBox.square(
+                            dimension: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                        )
+                      : IconButton(
+                          tooltip: l10n.searchAddress,
+                          icon: const Icon(Icons.arrow_forward),
+                          onPressed: () => _searchAddress(_search.text),
+                        ),
+                ),
+              ),
+            ],
+          ),
         ),
         Expanded(
           child: Stack(
@@ -209,13 +303,31 @@ class _LocationStepState extends ConsumerState<LocationStep> {
               Positioned(
                 right: 12,
                 top: 12,
-                child: FloatingActionButton.small(
-                  heroTag: 'mapType',
-                  tooltip: _satellite ? l10n.showMap : l10n.showSatellite,
-                  onPressed: () => setState(() => _satellite = !_satellite),
-                  child: Icon(
-                    _satellite ? Icons.map_outlined : Icons.satellite_alt,
-                  ),
+                child: Column(
+                  children: [
+                    FloatingActionButton.small(
+                      heroTag: 'mapType',
+                      tooltip: _satellite ? l10n.showMap : l10n.showSatellite,
+                      onPressed: () => setState(() => _satellite = !_satellite),
+                      child: Icon(
+                        _satellite ? Icons.map_outlined : Icons.satellite_alt,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    FloatingActionButton.small(
+                      heroTag: 'zoomIn',
+                      tooltip: l10n.zoomIn,
+                      onPressed: () => _zoom(pin, 1),
+                      child: const Icon(Icons.add),
+                    ),
+                    const SizedBox(height: 8),
+                    FloatingActionButton.small(
+                      heroTag: 'zoomOut',
+                      tooltip: l10n.zoomOut,
+                      onPressed: () => _zoom(pin, -1),
+                      child: const Icon(Icons.remove),
+                    ),
+                  ],
                 ),
               ),
             ],

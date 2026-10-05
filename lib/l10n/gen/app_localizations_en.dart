@@ -282,7 +282,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get locationHint =>
-      'Zoom in and drag the pin or tap the map to mark the exact spot.';
+      'Search an address, or zoom in and drag the pin to the exact spot.';
 
   @override
   String get locationDenied =>
@@ -420,4 +420,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get showMap => 'Show map view';
+
+  @override
+  String get searchAddress => 'Search address';
+
+  @override
+  String get searchAddressHint => 'e.g. 414 Grant St, Pittsburgh';
+
+  @override
+  String get addressNotFound =>
+      'We couldn\'t find that address in Allegheny County. Try adding the street number or town.';
+
+  @override
+  String get zoomIn => 'Zoom in';
+
+  @override
+  String get zoomOut => 'Zoom out';
+
+  @override
+  String get pinFromSearch =>
+      'Pin placed at the address you searched. Drag it to the exact spot.';
 }
