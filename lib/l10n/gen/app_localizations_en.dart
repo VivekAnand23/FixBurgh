@@ -76,10 +76,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reportTitle => 'Report a problem';
 
   @override
-  String get reportPlaceholder =>
-      'The photo, location and details flow comes next.';
-
-  @override
   String get myReportsTitle => 'My Reports';
 
   @override
@@ -204,4 +200,196 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorGeneric => 'Something went wrong. Please try again.';
+
+  @override
+  String stepOf(int step, int total) {
+    return 'Step $step of $total';
+  }
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String editSection(String section) {
+    return 'Edit $section';
+  }
+
+  @override
+  String get safetyTitle => 'First, is anyone in danger right now?';
+
+  @override
+  String get dangerWires => 'Downed or sparking power lines';
+
+  @override
+  String get dangerGasFire => 'Gas smell, smoke or fire';
+
+  @override
+  String get dangerCrash => 'A crash or a car stuck in traffic';
+
+  @override
+  String get dangerTrapped => 'Someone hurt or trapped';
+
+  @override
+  String get dangerWater => 'Water over a road deeper than a car\'s wheels';
+
+  @override
+  String get safetyYes => 'Yes, someone could get hurt';
+
+  @override
+  String get safetyNo => 'No, continue to report';
+
+  @override
+  String get safetyPhotoTip =>
+      'Only take photos when it\'s safe. Never stop in traffic.';
+
+  @override
+  String get emergencyTitle => 'Call 911 now';
+
+  @override
+  String get emergencyBody =>
+      'This needs emergency responders. FixBurgh reports are not monitored for emergencies. Stay back from wires and water.';
+
+  @override
+  String get call911 => 'Call 911';
+
+  @override
+  String get notAnEmergency => 'It\'s not an emergency';
+
+  @override
+  String get photoTitle => 'Add a photo';
+
+  @override
+  String photoBody(int count) {
+    return 'Up to $count photos. Try to show the whole problem.';
+  }
+
+  @override
+  String photoNumber(int number) {
+    return 'Photo $number';
+  }
+
+  @override
+  String get removePhoto => 'Remove photo';
+
+  @override
+  String get takePhoto => 'Take photo';
+
+  @override
+  String get chooseFromLibrary => 'Choose from library';
+
+  @override
+  String get locationTitle => 'Where is it?';
+
+  @override
+  String get locationHint =>
+      'Drag the pin or tap the map to mark the exact spot.';
+
+  @override
+  String get locationDenied =>
+      'Location is off, so we started downtown. Move the pin to the spot.';
+
+  @override
+  String get mapSemantics => 'Map. Drag the pin to mark the problem.';
+
+  @override
+  String inMunicipality(String name) {
+    return 'In $name';
+  }
+
+  @override
+  String get outsideCounty =>
+      'This spot is outside Allegheny County. FixBurgh only covers Allegheny County for now.';
+
+  @override
+  String get useMyLocation => 'Use my location';
+
+  @override
+  String get whatIsIt => 'What is it?';
+
+  @override
+  String get howBad => 'How bad is it?';
+
+  @override
+  String get describeIt => 'Describe it (optional)';
+
+  @override
+  String get describeHint => 'e.g. Deep pothole in the right lane';
+
+  @override
+  String get catPothole => 'Pothole';
+
+  @override
+  String get catLandslide => 'Landslide';
+
+  @override
+  String get catFlooding => 'Flooding or drain';
+
+  @override
+  String get catStreetlight => 'Streetlight';
+
+  @override
+  String get catDumping => 'Illegal dumping';
+
+  @override
+  String get catFallenTree => 'Fallen tree';
+
+  @override
+  String get catSidewalk => 'Sidewalk';
+
+  @override
+  String get catOther => 'Other';
+
+  @override
+  String get sevLow => 'Low';
+
+  @override
+  String get sevMedium => 'Medium';
+
+  @override
+  String get sevUrgent => 'Urgent';
+
+  @override
+  String get statusReported => 'Reported';
+
+  @override
+  String get statusSent => 'Sent to agency';
+
+  @override
+  String get statusResolved => 'Resolved';
+
+  @override
+  String get reviewTitle => 'Check and send';
+
+  @override
+  String get photos => 'Photos';
+
+  @override
+  String get location => 'Location';
+
+  @override
+  String get details => 'Details';
+
+  @override
+  String get reviewPublicNote =>
+      'Your report goes on the community map so neighbors can say \"Me too\". Your name is never shown.';
+
+  @override
+  String get submitReport => 'Submit report';
+
+  @override
+  String get submitting => 'Sending...';
+
+  @override
+  String get reportSubmitted =>
+      'Report sent. Thanks for looking out for your neighborhood.';
+
+  @override
+  String get submitFailed =>
+      'We couldn\'t send your report. Check your connection and try again.';
+
+  @override
+  String get markFixed => 'Mark fixed';
 }

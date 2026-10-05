@@ -21,7 +21,6 @@
   "mapTitle": "Community map",
   "mapPlaceholder": "Reports near you will appear here.",
   "reportTitle": "Report a problem",
-  "reportPlaceholder": "The photo, location and details flow comes next.",
   "myReportsTitle": "My Reports",
   "myReportsEmpty": "You haven't reported anything yet.",
   "profileTitle": "Profile",
@@ -80,5 +79,101 @@
   "errorCredentialInUse": "That account already exists, so we signed you in to it.",
   "errorRequiresRecentLogin": "For your security, sign in again and then retry.",
   "errorNetwork": "No connection. Check your signal and try again.",
-  "errorGeneric": "Something went wrong. Please try again."
+  "errorGeneric": "Something went wrong. Please try again.",
+  "stepOf": "Step {step} of {total}",
+  "@stepOf": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "next": "Next",
+  "edit": "Edit",
+  "editSection": "Edit {section}",
+  "@editSection": {
+    "placeholders": {
+      "section": {
+        "type": "String"
+      }
+    }
+  },
+  "safetyTitle": "First, is anyone in danger right now?",
+  "dangerWires": "Downed or sparking power lines",
+  "dangerGasFire": "Gas smell, smoke or fire",
+  "dangerCrash": "A crash or a car stuck in traffic",
+  "dangerTrapped": "Someone hurt or trapped",
+  "dangerWater": "Water over a road deeper than a car's wheels",
+  "safetyYes": "Yes, someone could get hurt",
+  "safetyNo": "No, continue to report",
+  "safetyPhotoTip": "Only take photos when it's safe. Never stop in traffic.",
+  "emergencyTitle": "Call 911 now",
+  "emergencyBody": "This needs emergency responders. FixBurgh reports are not monitored for emergencies. Stay back from wires and water.",
+  "call911": "Call 911",
+  "notAnEmergency": "It's not an emergency",
+  "photoTitle": "Add a photo",
+  "photoBody": "Up to {count} photos. Try to show the whole problem.",
+  "@photoBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "photoNumber": "Photo {number}",
+  "@photoNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "removePhoto": "Remove photo",
+  "takePhoto": "Take photo",
+  "chooseFromLibrary": "Choose from library",
+  "locationTitle": "Where is it?",
+  "locationHint": "Drag the pin or tap the map to mark the exact spot.",
+  "locationDenied": "Location is off, so we started downtown. Move the pin to the spot.",
+  "mapSemantics": "Map. Drag the pin to mark the problem.",
+  "inMunicipality": "In {name}",
+  "@inMunicipality": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "outsideCounty": "This spot is outside Allegheny County. FixBurgh only covers Allegheny County for now.",
+  "useMyLocation": "Use my location",
+  "whatIsIt": "What is it?",
+  "howBad": "How bad is it?",
+  "describeIt": "Describe it (optional)",
+  "describeHint": "e.g. Deep pothole in the right lane",
+  "catPothole": "Pothole",
+  "catLandslide": "Landslide",
+  "catFlooding": "Flooding or drain",
+  "catStreetlight": "Streetlight",
+  "catDumping": "Illegal dumping",
+  "catFallenTree": "Fallen tree",
+  "catSidewalk": "Sidewalk",
+  "catOther": "Other",
+  "sevLow": "Low",
+  "sevMedium": "Medium",
+  "sevUrgent": "Urgent",
+  "statusReported": "Reported",
+  "statusSent": "Sent to agency",
+  "statusResolved": "Resolved",
+  "reviewTitle": "Check and send",
+  "photos": "Photos",
+  "location": "Location",
+  "details": "Details",
+  "reviewPublicNote": "Your report goes on the community map so neighbors can say \"Me too\". Your name is never shown.",
+  "submitReport": "Submit report",
+  "submitting": "Sending...",
+  "reportSubmitted": "Report sent. Thanks for looking out for your neighborhood.",
+  "submitFailed": "We couldn't send your report. Check your connection and try again.",
+  "markFixed": "Mark fixed"
 }

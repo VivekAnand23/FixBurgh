@@ -1,17 +1,70 @@
-import 'package:fixburgh/app/widgets/placeholder_view.dart';
+import 'package:fixburgh/features/report/presentation/steps/details_step.dart';
+import 'package:fixburgh/features/report/presentation/steps/location_step.dart';
+import 'package:fixburgh/features/report/presentation/steps/photo_step.dart';
+import 'package:fixburgh/features/report/presentation/steps/review_step.dart';
+import 'package:fixburgh/features/report/presentation/steps/safety_step.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
 
-class ReportScreen extends StatelessWidget {
+/// Report flow: safety check, photo, location, details, review.
+class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
+
+  @override
+  State<ReportScreen> createState() => _ReportScreenState();
+}
+
+class _ReportScreenState extends State<ReportScreen> {
+  static const _stepCount = 5;
+  int _step = 0;
+
+  void _next() => setState(() => _step = (_step + 1).clamp(0, _stepCount - 1));
+
+  void _back() => setState(() => _step = (_step - 1).clamp(0, _stepCount - 1));
+
+  void _restart() => setState(() => _step = 0);
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return PlaceholderView(
-      icon: Icons.add_a_photo_outlined,
-      title: l10n.reportTitle,
-      message: l10n.reportPlaceholder,
+    return PopScope(
+      canPop: _step == 0,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _back();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(l10n.reportTitle),
+          leading: _step == 0 ? null : BackButton(onPressed: _back),
+          bottom: _step == 0
+              ? null
+              : PreferredSize(
+                  preferredSize: const Size.fromHeight(28),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                    child: Semantics(
+                      label: l10n.stepOf(_step, _stepCount - 1),
+                      child: LinearProgressIndicator(
+                        value: _step / (_stepCount - 1),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
+                ),
+        ),
+        body: SafeArea(
+          child: switch (_step) {
+            0 => SafetyStep(onContinue: _next),
+            1 => PhotoStep(onNext: _next),
+            2 => LocationStep(onNext: _next),
+            3 => DetailsStep(onNext: _next),
+            _ => ReviewStep(
+              onEditStep: (s) => setState(() => _step = s),
+              onSubmitted: _restart,
+            ),
+          },
+        ),
+      ),
     );
   }
 }

@@ -51,3 +51,6 @@ app.*.map.json
 key.properties
 .env
 .env.*
+
+# Local Google Maps keys
+/ios/Flutter/Secrets.xcconfig

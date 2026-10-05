@@ -37,8 +37,21 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>GIDClientID</key>
 	<string>$(GOOGLE_CLIENT_ID)</string>
+	<key>GMSApiKey</key>
+	<string>$(MAPS_API_KEY)</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>tel</string>
+		<string>mailto</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>FixBurgh uses the camera to photograph the problem you are reporting.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>FixBurgh uses your location to pin where the problem is and find the office that fixes it.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>FixBurgh lets you choose a photo of the problem from your library.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

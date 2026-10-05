@@ -220,12 +220,6 @@ abstract class AppLocalizations {
   /// **'Report a problem'**
   String get reportTitle;
 
-  /// No description provided for @reportPlaceholder.
-  ///
-  /// In en, this message translates to:
-  /// **'The photo, location and details flow comes next.'**
-  String get reportPlaceholder;
-
   /// No description provided for @myReportsTitle.
   ///
   /// In en, this message translates to:
@@ -453,6 +447,354 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something went wrong. Please try again.'**
   String get errorGeneric;
+
+  /// No description provided for @stepOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} of {total}'**
+  String stepOf(int step, int total);
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// No description provided for @editSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit {section}'**
+  String editSection(String section);
+
+  /// No description provided for @safetyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'First, is anyone in danger right now?'**
+  String get safetyTitle;
+
+  /// No description provided for @dangerWires.
+  ///
+  /// In en, this message translates to:
+  /// **'Downed or sparking power lines'**
+  String get dangerWires;
+
+  /// No description provided for @dangerGasFire.
+  ///
+  /// In en, this message translates to:
+  /// **'Gas smell, smoke or fire'**
+  String get dangerGasFire;
+
+  /// No description provided for @dangerCrash.
+  ///
+  /// In en, this message translates to:
+  /// **'A crash or a car stuck in traffic'**
+  String get dangerCrash;
+
+  /// No description provided for @dangerTrapped.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone hurt or trapped'**
+  String get dangerTrapped;
+
+  /// No description provided for @dangerWater.
+  ///
+  /// In en, this message translates to:
+  /// **'Water over a road deeper than a car\'s wheels'**
+  String get dangerWater;
+
+  /// No description provided for @safetyYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, someone could get hurt'**
+  String get safetyYes;
+
+  /// No description provided for @safetyNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No, continue to report'**
+  String get safetyNo;
+
+  /// No description provided for @safetyPhotoTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Only take photos when it\'s safe. Never stop in traffic.'**
+  String get safetyPhotoTip;
+
+  /// No description provided for @emergencyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Call 911 now'**
+  String get emergencyTitle;
+
+  /// No description provided for @emergencyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This needs emergency responders. FixBurgh reports are not monitored for emergencies. Stay back from wires and water.'**
+  String get emergencyBody;
+
+  /// No description provided for @call911.
+  ///
+  /// In en, this message translates to:
+  /// **'Call 911'**
+  String get call911;
+
+  /// No description provided for @notAnEmergency.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s not an emergency'**
+  String get notAnEmergency;
+
+  /// No description provided for @photoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a photo'**
+  String get photoTitle;
+
+  /// No description provided for @photoBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to {count} photos. Try to show the whole problem.'**
+  String photoBody(int count);
+
+  /// No description provided for @photoNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo {number}'**
+  String photoNumber(int number);
+
+  /// No description provided for @removePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove photo'**
+  String get removePhoto;
+
+  /// No description provided for @takePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take photo'**
+  String get takePhoto;
+
+  /// No description provided for @chooseFromLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from library'**
+  String get chooseFromLibrary;
+
+  /// No description provided for @locationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Where is it?'**
+  String get locationTitle;
+
+  /// No description provided for @locationHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag the pin or tap the map to mark the exact spot.'**
+  String get locationHint;
+
+  /// No description provided for @locationDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Location is off, so we started downtown. Move the pin to the spot.'**
+  String get locationDenied;
+
+  /// No description provided for @mapSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Map. Drag the pin to mark the problem.'**
+  String get mapSemantics;
+
+  /// No description provided for @inMunicipality.
+  ///
+  /// In en, this message translates to:
+  /// **'In {name}'**
+  String inMunicipality(String name);
+
+  /// No description provided for @outsideCounty.
+  ///
+  /// In en, this message translates to:
+  /// **'This spot is outside Allegheny County. FixBurgh only covers Allegheny County for now.'**
+  String get outsideCounty;
+
+  /// No description provided for @useMyLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Use my location'**
+  String get useMyLocation;
+
+  /// No description provided for @whatIsIt.
+  ///
+  /// In en, this message translates to:
+  /// **'What is it?'**
+  String get whatIsIt;
+
+  /// No description provided for @howBad.
+  ///
+  /// In en, this message translates to:
+  /// **'How bad is it?'**
+  String get howBad;
+
+  /// No description provided for @describeIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe it (optional)'**
+  String get describeIt;
+
+  /// No description provided for @describeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Deep pothole in the right lane'**
+  String get describeHint;
+
+  /// No description provided for @catPothole.
+  ///
+  /// In en, this message translates to:
+  /// **'Pothole'**
+  String get catPothole;
+
+  /// No description provided for @catLandslide.
+  ///
+  /// In en, this message translates to:
+  /// **'Landslide'**
+  String get catLandslide;
+
+  /// No description provided for @catFlooding.
+  ///
+  /// In en, this message translates to:
+  /// **'Flooding or drain'**
+  String get catFlooding;
+
+  /// No description provided for @catStreetlight.
+  ///
+  /// In en, this message translates to:
+  /// **'Streetlight'**
+  String get catStreetlight;
+
+  /// No description provided for @catDumping.
+  ///
+  /// In en, this message translates to:
+  /// **'Illegal dumping'**
+  String get catDumping;
+
+  /// No description provided for @catFallenTree.
+  ///
+  /// In en, this message translates to:
+  /// **'Fallen tree'**
+  String get catFallenTree;
+
+  /// No description provided for @catSidewalk.
+  ///
+  /// In en, this message translates to:
+  /// **'Sidewalk'**
+  String get catSidewalk;
+
+  /// No description provided for @catOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get catOther;
+
+  /// No description provided for @sevLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get sevLow;
+
+  /// No description provided for @sevMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get sevMedium;
+
+  /// No description provided for @sevUrgent.
+  ///
+  /// In en, this message translates to:
+  /// **'Urgent'**
+  String get sevUrgent;
+
+  /// No description provided for @statusReported.
+  ///
+  /// In en, this message translates to:
+  /// **'Reported'**
+  String get statusReported;
+
+  /// No description provided for @statusSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to agency'**
+  String get statusSent;
+
+  /// No description provided for @statusResolved.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved'**
+  String get statusResolved;
+
+  /// No description provided for @reviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check and send'**
+  String get reviewTitle;
+
+  /// No description provided for @photos.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos'**
+  String get photos;
+
+  /// No description provided for @location.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get location;
+
+  /// No description provided for @details.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get details;
+
+  /// No description provided for @reviewPublicNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your report goes on the community map so neighbors can say \"Me too\". Your name is never shown.'**
+  String get reviewPublicNote;
+
+  /// No description provided for @submitReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit report'**
+  String get submitReport;
+
+  /// No description provided for @submitting.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending...'**
+  String get submitting;
+
+  /// No description provided for @reportSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Report sent. Thanks for looking out for your neighborhood.'**
+  String get reportSubmitted;
+
+  /// No description provided for @submitFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t send your report. Check your connection and try again.'**
+  String get submitFailed;
+
+  /// No description provided for @markFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark fixed'**
+  String get markFixed;
 }
 
 class _AppLocalizationsDelegate

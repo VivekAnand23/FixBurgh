@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "fixburgh-dev",
+    "dev": "fixburgh-dev",
+    "prod": "fixburgh-prod"
+  }
+}

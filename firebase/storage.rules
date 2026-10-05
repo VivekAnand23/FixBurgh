@@ -1,0 +1,20 @@
+rules_version = '2';
+
+// Report photos live at reports/{uid}/{reportId}/{photo}.jpg.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /reports/{uid}/{reportId}/{file} {
+      // Photos are public once uploaded (blurred in Phase 2).
+      allow read: if true;
+
+      // Write once, by the owner, JPEG only, max 2 MB.
+      allow create: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.contentType == 'image/jpeg'
+        && request.resource.size < 2 * 1024 * 1024
+        && file.matches('[0-9a-f-]+(_thumb)?\\.jpg');
+
+      allow delete: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}

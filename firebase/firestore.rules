@@ -1,0 +1,79 @@
+rules_version = '2';
+
+// FixBurgh Firestore rules (BRD section 14.3). Deny by default.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isModerator() {
+      return signedIn() && request.auth.token.get('role', '') in ['moderator', 'admin'];
+    }
+
+    // Allegheny County bounding box, with a small margin.
+    function inCounty(g) {
+      return g.lat is number && g.lng is number
+        && g.lat > 40.18 && g.lat < 40.68
+        && g.lng > -80.37 && g.lng < -79.68;
+    }
+
+    function validNewReport(d) {
+      return d.keys().hasOnly([
+          'authorUid', 'authorIsGuest', 'category', 'severity', 'description',
+          'geo', 'address', 'municipalityId', 'municipalityName', 'photos',
+          'status', 'upvoteCount', 'flagCount', 'moderation',
+          'createdAt', 'updatedAt'])
+        && d.authorUid == request.auth.uid
+        && d.authorIsGuest == (request.auth.token.firebase.sign_in_provider == 'anonymous')
+        && d.category in ['pothole', 'landslide', 'flooding', 'streetlight',
+                          'dumping', 'fallen_tree', 'sidewalk', 'other']
+        && d.severity in ['low', 'medium', 'urgent']
+        && d.description is string && d.description.size() <= 280
+        && d.geo is map && inCounty(d.geo)
+        && d.geo.geohash is string && d.geo.geohash.size() == 9
+        && d.municipalityId is string && d.municipalityName is string
+        && d.photos is list && d.photos.size() >= 1 && d.photos.size() <= 3
+        && d.status == 'reported'
+        && d.upvoteCount == 0 && d.flagCount == 0
+        && d.moderation == 'visible'
+        && d.createdAt == request.time && d.updatedAt == request.time;
+    }
+
+    match /reports/{reportId} {
+      allow read: if resource.data.moderation == 'visible'
+        || (signedIn() && resource.data.authorUid == request.auth.uid)
+        || isModerator();
+
+      allow create: if signedIn() && validNewReport(request.resource.data);
+
+      // Authors can change status and description only.
+      allow update: if signedIn()
+        && resource.data.authorUid == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['status', 'description', 'resolvedAt', 'sentAt', 'updatedAt'])
+        && request.resource.data.status in ['reported', 'sent', 'resolved']
+        && request.resource.data.description.size() <= 280
+        && request.resource.data.updatedAt == request.time;
+
+      allow delete: if signedIn() && resource.data.authorUid == request.auth.uid;
+    }
+
+    // Read-only directory data, edited by admins in the console.
+    match /agencies/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /municipalities/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /users/{uid} {
+      allow read, delete: if signedIn() && request.auth.uid == uid;
+      allow create, update: if signedIn() && request.auth.uid == uid
+        && !request.resource.data.keys().hasAny(['role']);
+    }
+  }
+}
