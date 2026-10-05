@@ -2,6 +2,9 @@ import 'package:fixburgh/app/widgets/placeholder_view.dart';
 import 'package:fixburgh/features/report/data/report_repository.dart';
 import 'package:fixburgh/features/report/domain/report.dart';
 import 'package:fixburgh/features/report/presentation/report_labels.dart';
+import 'package:fixburgh/features/report/presentation/steps/review_step.dart';
+import 'package:fixburgh/features/routing/data/routing_providers.dart';
+import 'package:fixburgh/features/routing/presentation/office_card.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,6 +50,38 @@ class _ReportCard extends ConsumerWidget {
   const _ReportCard({required this.report});
 
   final Report report;
+
+  Future<void> _contact(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context);
+    final r = report;
+    final routing = await ref.read(
+      reportRoutingProvider((
+        lat: r.location.lat,
+        lng: r.location.lng,
+        category: r.category,
+      )).future,
+    );
+    if (routing == null || !context.mounted) return;
+    await showContactSheet(
+      context,
+      routing: routing,
+      summary: reportSummary(
+        l10n,
+        category: r.category,
+        severity: r.severity,
+        location: r.location,
+        address: r.address,
+        description: r.description,
+      ),
+      subject: l10n.emailSubject(
+        r.category.label(l10n),
+        r.severity.label(l10n),
+        r.address ?? r.municipalityName,
+      ),
+      onContacted: (c) =>
+          ref.read(reportRepositoryProvider).markSent(r.id, c.name),
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -127,6 +162,15 @@ class _ReportCard extends ConsumerWidget {
                         ),
                     ],
                   ),
+                  if (r.status != ReportStatus.resolved)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton.icon(
+                        onPressed: () => _contact(context, ref),
+                        icon: const Icon(Icons.support_agent, size: 18),
+                        label: Text(l10n.contactOffice),
+                      ),
+                    ),
                 ],
               ),
             ),

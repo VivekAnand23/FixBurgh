@@ -189,7 +189,7 @@ def build_state_roads() -> dict:
                 "properties": {
                     "owner": "turnpike" if p["JURIS"] == "2" else "penndot",
                     "sr": (p.get("ST_RT_NO") or "").strip(),
-                    "name": (p.get("STREET_NAME") or "").strip().title(),
+                    "name": tidy_street((p.get("STREET_NAME") or "").strip()),
                     "route": (p.get("TRAF_RT_NO") or "").strip().lstrip("0"),
                 },
                 "geometry": simplify_line_geom(f["geometry"]),
@@ -198,6 +198,17 @@ def build_state_roads() -> dict:
             break
         offset += 2000
     return {"type": "FeatureCollection", "features": feats}
+
+
+# PennDOT abbreviates street types (e.g. "SAW MILL RUN BL").
+_STREET_WORDS = {
+    "Av": "Ave", "Bl": "Blvd", "Br": "Bridge", "Tn": "Tunnel", "Pk": "Pike",
+    "Hw": "Hwy", "Hy": "Hwy", "Py": "Pkwy", "Ex": "Expy", "Rd": "Rd",
+}
+
+
+def tidy_street(name: str) -> str:
+    return " ".join(_STREET_WORDS.get(w, w) for w in name.title().split())
 
 
 def write(name: str, fc: dict) -> int:

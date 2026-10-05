@@ -2,8 +2,12 @@ import 'dart:io';
 
 import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/report/data/report_repository.dart';
+import 'package:fixburgh/features/report/domain/report.dart';
 import 'package:fixburgh/features/report/presentation/report_draft_controller.dart';
 import 'package:fixburgh/features/report/presentation/report_labels.dart';
+import 'package:fixburgh/features/routing/data/routing_providers.dart';
+import 'package:fixburgh/features/routing/domain/routing_engine.dart';
+import 'package:fixburgh/features/routing/presentation/office_card.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,16 +44,27 @@ class _ReviewStepState extends ConsumerState<ReviewStep> {
     try {
       await auth.ensureGuest();
       final user = auth.currentUser!;
-      await ref
-          .read(reportRepositoryProvider)
-          .submit(
-            draft: ref.read(reportDraftProvider),
-            uid: user.uid,
-            isGuest: user.isAnonymous,
-            onProgress: (p) {
-              if (mounted) setState(() => _progress = p);
-            },
-          );
+      final draft = ref.read(reportDraftProvider);
+      final routing = await ref.read(draftRoutingProvider.future);
+      final repo = ref.read(reportRepositoryProvider);
+      final reportId = await repo.submit(
+        draft: draft,
+        uid: user.uid,
+        isGuest: user.isAnonymous,
+        routing: routing,
+        onProgress: (p) {
+          if (mounted) setState(() => _progress = p);
+        },
+      );
+      if (routing != null && mounted) {
+        await showContactSheet(
+          context,
+          routing: routing,
+          summary: _summary(l10n, draft),
+          subject: _subject(l10n, draft),
+          onContacted: (c) => repo.markSent(reportId, c.name),
+        );
+      }
       ref.invalidate(reportDraftProvider);
       widget.onSubmitted();
       messenger.showSnackBar(SnackBar(content: Text(l10n.reportSubmitted)));
@@ -61,11 +76,28 @@ class _ReviewStepState extends ConsumerState<ReviewStep> {
     }
   }
 
+  static String _summary(AppLocalizations l10n, ReportDraft d) => reportSummary(
+    l10n,
+    category: d.category!,
+    severity: d.severity,
+    location: d.location!,
+    address: d.address,
+    description: d.description,
+  );
+
+  static String _subject(AppLocalizations l10n, ReportDraft d) =>
+      l10n.emailSubject(
+        d.category!.label(l10n),
+        d.severity.label(l10n),
+        d.address ?? d.municipality?.name ?? '',
+      );
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final d = ref.watch(reportDraftProvider);
+    final routing = ref.watch(draftRoutingProvider);
     final busy = _progress != null;
     return ListView(
       padding: const EdgeInsets.all(24),
@@ -113,6 +145,17 @@ class _ReviewStepState extends ConsumerState<ReviewStep> {
             ].join('\n'),
           ),
         ),
+        Text(l10n.whoFixesThis, style: theme.textTheme.titleMedium),
+        const SizedBox(height: 8),
+        switch (routing) {
+          AsyncData(:final value?) => OfficeCard(
+            result: value,
+            summary: _summary(l10n, d),
+            showActions: false,
+          ),
+          AsyncLoading() => const Center(child: CircularProgressIndicator()),
+          _ => Text(l10n.routingUnavailable),
+        },
         const SizedBox(height: 8),
         Card(
           color: theme.colorScheme.secondaryContainer,
@@ -169,4 +212,51 @@ class _Section extends StatelessWidget {
       ),
     );
   }
+}
+
+/// After submitting: "Now tell them" with the office's contact buttons.
+Future<void> showContactSheet(
+  BuildContext context, {
+  required RoutingResult routing,
+  required String summary,
+  required ValueChanged<ContactChannel> onContacted,
+  String? subject,
+}) {
+  final l10n = AppLocalizations.of(context);
+  return showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    showDragHandle: true,
+    builder: (context) => SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              l10n.nowTellThem,
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            const SizedBox(height: 4),
+            Text(l10n.nowTellThemBody),
+            const SizedBox(height: 12),
+            OfficeCard(
+              result: routing,
+              summary: summary,
+              subject: subject,
+              onContacted: (c) {
+                onContacted(c);
+                Navigator.of(context).pop();
+              },
+            ),
+            const SizedBox(height: 8),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(l10n.later),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }

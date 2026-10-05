@@ -1,0 +1,1740 @@
+{
+ "generatedAt": "2026-10-04",
+ "agencies": [
+  {
+   "id": "penndot-d11",
+   "name": "PennDOT District 11",
+   "type": "state",
+   "phone": "1-800-349-7623",
+   "phoneLabel": "1-800-FIX-ROAD",
+   "website": "https://www.penndot.pa.gov/RegionalOffices/district-11/Pages/default.aspx",
+   "webFormUrl": "https://www.penndot.pa.gov/about-us/customer-care-center",
+   "hours": "24/7 for road hazards",
+   "source": "https://www.penndot.pa.gov/about-us/customer-care-center",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "pa-turnpike",
+   "name": "Pennsylvania Turnpike Commission",
+   "type": "state",
+   "phone": "1-800-331-3414",
+   "website": "https://www.paturnpike.com/contact-us",
+   "source": "https://www.paturnpike.com/contact-us",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "allegheny-dpw",
+   "name": "Allegheny County Department of Public Works",
+   "type": "county",
+   "phone": "412-350-4636",
+   "phoneLabel": "412-350-INFO (option 2)",
+   "website": "https://www.alleghenycounty.us/Projects-and-Initiatives/Public-Works",
+   "hours": "Weekdays",
+   "source": "https://nevilletownship.us/how-to-report-a-road-concern-to-penndot-or-allegheny-county/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "pittsburgh-311",
+   "name": "City of Pittsburgh 311",
+   "type": "311",
+   "phone": "412-255-2621",
+   "phoneLabel": "311 (or 412-255-2621)",
+   "website": "https://www.pittsburghpa.gov/311",
+   "webFormUrl": "https://pgh.311.request.com",
+   "hours": "Mon-Fri 7am-7pm",
+   "municipalityIds": [
+    "100"
+   ],
+   "source": "https://www.pittsburghpa.gov/311",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-901",
+   "name": "Aleppo Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "901"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=1",
+   "phone": "412-741-6555",
+   "address": "100 North Drive, Sewickley, PA 15143",
+   "website": "http://aleppotownship.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-801",
+   "name": "Aspinwall Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "801"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=2",
+   "phone": "412-781-0213",
+   "address": "217 Commercial Avenue, Pittsburgh, PA 15215",
+   "website": "http://aspinwallpa.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-802",
+   "name": "Avalon Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "802"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=3",
+   "phone": "724-761-5820",
+   "address": "640 California Avenue, Pittsburgh, PA 15202",
+   "website": "http://www.boroughofavalon.org/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-877",
+   "name": "Baldwin Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "877"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=4",
+   "phone": "412-884-0803",
+   "address": "3344 Churchview Avenue, Pittsburgh, PA 15227",
+   "website": "http://www.baldwinborough.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-902",
+   "name": "Baldwin Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "902"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=5",
+   "phone": "412-341-9597",
+   "address": "10 Community Park Drive, Pittsburgh, PA 15234",
+   "website": "http://baldwintownship.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-883",
+   "name": "Bell Acres Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "883"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=6",
+   "phone": "412-741-5448",
+   "address": "1151 Camp Meeting Road, Sewickley, PA 15143",
+   "website": "http://www.bellacresborough.org/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-803",
+   "name": "Bellevue Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "803"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=7",
+   "phone": "412-766-6164",
+   "address": "537 Bayne Avenue, Pittsburgh, PA 15202",
+   "website": "http://www.bellevuepa.org/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-804",
+   "name": "Ben Avon Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "804"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=8",
+   "phone": "412-835-5243",
+   "address": "7101 Church Avenue, Pittsburgh, PA 15202",
+   "website": "http://www.benavon.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-805",
+   "name": "Ben Avon Heights Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "805"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=9",
+   "phone": "724-731-2300",
+   "address": "6 Lynton Lane, Pittsburgh, PA 15202",
+   "website": "http://www.benavonheightsborough.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-876",
+   "name": "Bethel Park Municipality",
+   "type": "municipal",
+   "municipalityIds": [
+    "876"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=10",
+   "phone": "412-831-6800",
+   "address": "5100 W. Library Avenue, Bethel Park, PA 15102",
+   "website": "http://www.bethelpark.net",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-806",
+   "name": "Blawnox Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "806"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=11",
+   "phone": "412-499-2086",
+   "address": "376 Freeport Road, Pittsburgh, PA 15238",
+   "website": "http://www.blawnox.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-807",
+   "name": "Brackenridge Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "807"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=12",
+   "phone": "724-904-7455",
+   "address": "1000 Brackenridge Avenue, Brackenridge, PA 15014",
+   "website": "https://brackenridgeboro.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-808",
+   "name": "Braddock Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "808"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=13",
+   "phone": "412-271-1018",
+   "address": "415 Sixth Street, Braddock, PA 15104",
+   "website": "http://braddockborough.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-872",
+   "name": "Braddock Hills Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "872"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=14",
+   "phone": "724-731-2300",
+   "address": "1300 Brinton Road, Pittsburgh, PA 15221",
+   "website": "http://www.braddockhillspa.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-809",
+   "name": "Bradford Woods Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "809"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=15",
+   "phone": "724-935-2990",
+   "address": "P.O. Box 163, 4908 Wexford Run Road, Bradford Woods, PA 15015",
+   "website": "http://www.bradfordwoodspa.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-810",
+   "name": "Brentwood Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "810"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=16",
+   "phone": "412-882-5383x1117",
+   "address": "3624 Brownsville Road, Pittsburgh, PA 15227",
+   "website": "http://www.brentwoodboro.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-811",
+   "name": "Bridgeville Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "811"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=17",
+   "phone": "412-221-6055",
+   "address": "425 Bower Hill Road, Bridgeville, PA 15017",
+   "website": "http://www.bridgevilleboro.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-812",
+   "name": "Carnegie Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "812"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=18",
+   "phone": "412-835-5243",
+   "address": "One Veterans Way, Carnegie, PA 15106",
+   "website": "http://www.carnegieborough.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-813",
+   "name": "Castle Shannon Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "813"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=19",
+   "phone": "412-885-9260",
+   "address": "3310 McRoberts Road, Pittsburgh, PA 15234",
+   "website": "http://borough.castle-shannon.pa.us",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-814",
+   "name": "Chalfant Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "814"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=20",
+   "phone": "412-824-3283",
+   "address": "144 Lynnwood Avenue, East Pittsburgh, PA 15112",
+   "website": "http://www.chalfantborough.org/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-815",
+   "name": "Cheswick Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "815"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=21",
+   "phone": "724-275-7722",
+   "address": "220 South Atlantic Avenue, P.O. Box 235, Cheswick, PA 15024",
+   "website": "http://www.cheswick.us",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-816",
+   "name": "Churchill Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "816"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=22",
+   "phone": "412-241-7113",
+   "address": "2300 William Penn Highway, Pittsburgh, PA 15235",
+   "website": "http://churchillborough.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-200",
+   "name": "City of Clairton",
+   "type": "municipal",
+   "municipalityIds": [
+    "200"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=23",
+   "phone": "412-233-8113",
+   "address": "551 Ravensburg Boulevard, Clairton, PA 15025",
+   "website": "http://cityofclairton.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-905",
+   "name": "Collier Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "905"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=24",
+   "phone": "412-835-5243",
+   "address": "Dana Slizik, Assistant Manager, 2418 Hilltop Road, Presto, PA 15142",
+   "website": "http://www.colliertownship.net",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-817",
+   "name": "Coraopolis Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "817"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=25",
+   "phone": "412-835-5243",
+   "address": "1012 Fifth Avenue, Coraopolis, PA 15108",
+   "website": "http://www.coraopolispa.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-818",
+   "name": "Crafton Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "818"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=26",
+   "phone": "412-835-5243",
+   "address": "100 Stotz Avenue, Pittsburgh PA 15205",
+   "website": "http://www.crafton.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-906",
+   "name": "Crescent Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "906"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=27",
+   "phone": "724-457-8100 ex. 100",
+   "address": "225 Spring Run Road, Crescent, PA 15046",
+   "website": "http://www.crescenttownship.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-819",
+   "name": "Dormont Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "819"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=28",
+   "phone": "412-561-8900",
+   "address": "1444 Hillsdale Avenue, Suite # 10, Pittsburgh, PA 15216",
+   "website": "http://www.boro.dormont.pa.us",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-820",
+   "name": "Dravosburg Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "820"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=29",
+   "phone": "412-469-0743",
+   "address": "226 Maple Avenue, Dravosburg, PA 15034",
+   "website": "http://www.dravosburg.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-300",
+   "name": "City of Duquesne",
+   "type": "municipal",
+   "municipalityIds": [
+    "300"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=30",
+   "phone": "412-466-8545",
+   "address": "12 South Second Street, Duquesne, PA 15110",
+   "website": "http://www.duquesnepa.us/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-907",
+   "name": "East Deer Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "907"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=31",
+   "phone": "724-274-5748",
+   "address": "927 Freeport Road, Creighton, PA 15030",
+   "website": "http://eastdeertownship.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-821",
+   "name": "East McKeesport Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "821"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=32",
+   "phone": "412-829-7991",
+   "address": "907 Florence Ave., East Mckeesport, PA 15035",
+   "website": "http://eastmckeesportboro.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-822",
+   "name": "East Pittsburgh Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "822"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=33",
+   "phone": "412-823-4046",
+   "address": "813 Linden Avenue, East Pittsburgh, PA 15112",
+   "website": "http://eastpittsburghboro.com/ ",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-823",
+   "name": "Edgewood Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "823"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=34",
+   "phone": "412-835-5243",
+   "address": "Two Race Street, Pittsburgh, PA 15218",
+   "website": "http://www.edgewood.pgh.pa.us",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-824",
+   "name": "Edgeworth Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "824"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=35",
+   "phone": "412-835-5243",
+   "address": "301 Beaver Road, Sewickley, PA 15143",
+   "website": "http://www.edgeworthborough.org/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-825",
+   "name": "Elizabeth Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "825"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=36",
+   "phone": "412-384-7771",
+   "address": "206 Third Avenue, Elizabeth, PA 15037",
+   "website": "http://elizabethpa.net/home/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-908",
+   "name": "Elizabeth Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "908"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=37",
+   "phone": "412-751-2880",
+   "address": "522 Rock Run Road, Elizabeth, PA 15037",
+   "website": "http://elizabethtownshippa.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-826",
+   "name": "Emsworth Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "826"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=38",
+   "phone": "412-761-1161",
+   "address": "171 Center Avenue, Pittsburgh, PA 15202",
+   "website": "http://emsworthborough.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-827",
+   "name": "Etna Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "827"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=39",
+   "phone": "412-781-6417",
+   "address": "437 Butler Street, Pittsburgh, PA 15223",
+   "website": "http://www.etnaborough.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-909",
+   "name": "Fawn Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "909"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=40",
+   "phone": "724-226-0666",
+   "address": "3054 Howes Run Road, Tarentum, PA 15084",
+   "website": "http://www.fawntownship.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-910",
+   "name": "Findlay Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "910"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=41",
+   "phone": "724-695-0521",
+   "address": "P.O. Box W 1271 Route 30, Clinton, PA 15026",
+   "website": "http://www.findlay.pa.us",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-828",
+   "name": "Forest Hills Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "828"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=42",
+   "phone": "412-351-7330",
+   "address": "4400 Greensburg Pike, Pittsburgh, PA 15221",
+   "website": "http://www.foresthillspa.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-911",
+   "name": "Forward Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "911"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=43",
+   "phone": "412-384-2321",
+   "address": "1000 Golden Circle, Elizabeth, PA 15037",
+   "website": "http://forwardtownship.com ",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-868",
+   "name": "Fox Chapel Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "868"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=44",
+   "phone": "412-963-1100",
+   "address": "401 Fox Chapel Road, Pittsburgh, PA 15238",
+   "website": "http://www.fox-chapel.pa.us",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-884",
+   "name": "Franklin Park Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "884"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=45",
+   "phone": "412-364-4848",
+   "address": "2344 West Ingomar Road, Pittsburgh, PA 15237",
+   "website": "http://www.franklinparkborough.us/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-913",
+   "name": "Frazer Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "913"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=46",
+   "phone": "724-224-8971",
+   "address": "592 Pittsburgh Mills Circle, Tarentum PA 15084",
+   "website": "http://www.frazertownship.net/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-829",
+   "name": "Glassport Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "829"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=47",
+   "phone": "412-664-7310",
+   "address": "440 Monongahela Avenue, Glassport, PA 15045",
+   "website": "https://glassportborough.net/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-830",
+   "name": "Glenfield Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "830"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=48",
+   "phone": "412-741-9473",
+   "address": "198 E. Beaver Street, Sewickley, PA 15143",
+   "website": "http://glenfieldborough.org/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-831",
+   "name": "Green Tree Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "831"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=49",
+   "phone": "412-921-1110",
+   "address": "10 West Manilla Avenue, Pittsburgh, PA 15220",
+   "website": "http://www.greentreeboro.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-914",
+   "name": "Hampton Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "914"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=50",
+   "phone": "724-731-2300",
+   "address": "3101 McCully Road, Allison Park, PA 15101",
+   "website": "http://www.hampton-pa.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-915",
+   "name": "Harmar Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "915"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=51",
+   "phone": "724-274-4550",
+   "address": "Cheswick, PA 15024",
+   "website": "http://www.townshipofharmar.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-916",
+   "name": "Harrison Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "916"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=52",
+   "phone": "724-226-1393",
+   "address": "P.O. Box 376, Natrona Heights, PA 15065",
+   "website": "http://www.harrisontwp.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-832",
+   "name": "Haysville Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "832"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=53",
+   "phone": "412-741-5038",
+   "address": "24 River Road, Sewickley, PA 15143",
+   "website": "https://www.haysvilleborough.org/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-833",
+   "name": "Heidelberg Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "833"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=54",
+   "phone": "412-276-5653",
+   "address": "1631 East Railroad Street, Heidelberg, PA 15106",
+   "website": "http://www.heidelbergborough.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-834",
+   "name": "Homestead Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "834"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=55",
+   "phone": "412-461-1340 x101",
+   "address": "221 East 7th Avenue, Homestead, PA 15120",
+   "website": "http://www.homesteadborough.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-917",
+   "name": "Indiana Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "917"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=56",
+   "phone": "412-767-5333",
+   "address": "3710 Saxonburg Boulevard, Pittsburgh, PA 15238",
+   "website": "http://www.indianatownship.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-835",
+   "name": "Ingram Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "835"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=57",
+   "phone": "412-922-5877",
+   "address": "40 W. Prospect Avenue, Pittsburgh, PA 15205",
+   "website": "http://www.ingramborough.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-878",
+   "name": "Jefferson Hills Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "878"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=58",
+   "phone": "412-226-2230",
+   "address": "925 Old Clairton Road, Jefferson Hills, PA 15025",
+   "website": "http://www.jeffersonhillsboro.org/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-919",
+   "name": "Kennedy Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "919"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=59",
+   "phone": "412-771-3616",
+   "address": "340 Forest Grove Road, Coraopolis, PA 15108",
+   "website": "http://www.kennedytwp.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-920",
+   "name": "Kilbuck Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "920"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=60",
+   "phone": "412-835-5243",
+   "address": "343 Eicher Road, Killbuck, PA 15237",
+   "website": "http://kilbucktownship.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-921",
+   "name": "Leet Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "921"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=61",
+   "phone": "724-266-2280",
+   "address": "194 Ambridge Avenue, Fair Oaks, PA 15003",
+   "website": "http://www.leettownship.org/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-836",
+   "name": "Leetsdale Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "836"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=62",
+   "phone": "412-741-3195",
+   "address": "373 Beaver Street, Suite A, Leetsdale, PA 15056",
+   "website": "http://www.leetsdaleboro.net",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-837",
+   "name": "Liberty Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "837"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=63",
+   "phone": "412-678-3286",
+   "address": "2921 Liberty Way, McKeesport, PA 15133",
+   "website": "http://www.libertyborough.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-881",
+   "name": "Lincoln Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "881"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=64",
+   "phone": "412-751-2655",
+   "address": "45 Abe's Way, Elizabeth, PA 15037",
+   "website": "http://www.lincolnborough.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-923",
+   "name": "Marshall Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "923"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=65",
+   "phone": "724-935-3090",
+   "address": "525 Pleasant Hill Road, Suite 100, Wexford, PA 15090",
+   "website": "https://twp.marshall.pa.us/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-927",
+   "name": "McCandless Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "927"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=66",
+   "phone": "412-364-0616",
+   "address": "9955 Grubbs Road, Wexford, PA 15090",
+   "website": "http://www.townofmccandless.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-841",
+   "name": "McDonald Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "841"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=67",
+   "phone": "724-926-8284",
+   "address": "151 School St., McDonald, PA 15057",
+   "website": "http://www.mcdonaldboro.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-400",
+   "name": "City of McKeesport",
+   "type": "municipal",
+   "municipalityIds": [
+    "400"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=68",
+   "phone": "412-675-5020",
+   "address": "500 Fifth Avenue, McKeesport, PA 15132",
+   "website": "http://www.mckeesport-pa.gov",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-842",
+   "name": "McKees Rocks Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "842"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=69",
+   "phone": "412-331-2498",
+   "address": "340 Bell Avenue, McKees Rocks, PA 15136",
+   "website": "https://mckeesrockspa.us/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-838",
+   "name": "Millvale Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "838"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=70",
+   "phone": "412-821-2777",
+   "address": "501 Lincoln Avenue, Pittsburgh, PA 15209",
+   "website": "http://www.millvalepa.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-879",
+   "name": "Monroeville Municipality",
+   "type": "municipal",
+   "municipalityIds": [
+    "879"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=71",
+   "phone": "412-856-3348",
+   "address": "2700 Monroeville Boulevard, Monroeville, PA 15146",
+   "website": "http://www.monroeville.pa.us",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-925",
+   "name": "Moon Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "925"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=72",
+   "phone": "412-262-1700",
+   "address": "1000 Beaver Grade Road, Moon Township, PA 15108",
+   "website": "http://www.moontwp.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-926",
+   "name": "Mount Lebanon Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "926"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=73",
+   "phone": "412-343-3405",
+   "address": "710 Washington Road, Pittsburgh, PA 15228",
+   "website": "http://mtlebanon.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-839",
+   "name": "Mount Oliver Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "839"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=74",
+   "phone": "412-431-8107",
+   "address": "150 Brownsville Road, Pittsburgh, PA 15210",
+   "website": "http://www.mountoliver.us",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-840",
+   "name": "Munhall Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "840"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=75",
+   "phone": "412-464-7310",
+   "address": "1 Raymond Bodnar Way, Munhall, PA 15120",
+   "website": "http://www.munhallpa.us",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-928",
+   "name": "Neville Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "928"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=76",
+   "phone": "724-731-2300",
+   "address": "5050 Grand Avenue, Pittsburgh, PA 15225",
+   "website": "http://www.nevilleisland-pa.gov",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-843",
+   "name": "North Braddock Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "843"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=77",
+   "phone": "412-351-5500",
+   "address": "600 Anderson Street, North Braddock, PA 15104",
+   "website": "http://www.northbraddockborough.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-929",
+   "name": "North Fayette Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "929"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=78",
+   "phone": "724-693-3118",
+   "address": "400 North Branch Road, Oakdale, PA 15071",
+   "website": "http://www.north-fayette.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-930",
+   "name": "North Versailles Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "930"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=79",
+   "phone": "412-824-6616",
+   "address": "1401 Greensburg Avenue, North Versailles, PA 15137",
+   "website": "http://www.nvtpa.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-844",
+   "name": "Oakdale Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "844"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=80",
+   "phone": "724-693-9397",
+   "address": "104 Seminary Ave., Oakdale, PA 15057",
+   "website": "http://www.oakdaleborough.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-845",
+   "name": "Oakmont Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "845"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=81",
+   "phone": "412-828-3232",
+   "address": "767 Fifth Street, Oakmont, PA 15139",
+   "website": "http://www.oakmontborough.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-931",
+   "name": "O Hara Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "931"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=82",
+   "phone": "412-835-5243",
+   "address": "325 Fox Chapel Road, Pittsburgh, PA 15238",
+   "website": "http://www.ohara.pa.us",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-932",
+   "name": "Ohio Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "932"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=83",
+   "phone": "412-528-4858",
+   "address": "1719 Roosevelt Road, Pittsburgh, PA 15237",
+   "website": "http://www.ohiotwp.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-846",
+   "name": "Glen Osborne Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "846"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=84",
+   "phone": "724-731-2319",
+   "address": "PO Box 97, Sewickley, PA 15143",
+   "website": "http://www.glenosborneborough.org/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-934",
+   "name": "Penn Hills Municipality",
+   "type": "municipal",
+   "municipalityIds": [
+    "934"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=85",
+   "phone": "412-793-7063",
+   "address": "12245 Frankstown Road, Pittsburgh, PA 15235",
+   "website": "http://www.pennhills.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-871",
+   "name": "Pennsbury Village Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "871"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=86",
+   "phone": "412-276-6181",
+   "address": "1043 Pennsbury Boulevard, Pittsburgh, PA 15205",
+   "website": "http://www.pennsburyvillageboro.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-935",
+   "name": "Pine Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "935"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=87",
+   "phone": "724-625-1591 x115",
+   "address": "230 Pearce Mill Road, Wexford, PA 15090",
+   "website": "http://www.twp.pine.pa.us",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-847",
+   "name": "Pitcairn Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "847"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=88",
+   "phone": "412-372-3009",
+   "address": "609 Broadway Blvd., Pitcairn, PA 15140",
+   "website": "http://www.pitcairnborough.us",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-100",
+   "name": "City of Pittsburgh",
+   "type": "municipal",
+   "municipalityIds": [
+    "100"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=89",
+   "phone": "412-255-2525",
+   "website": "http://www.pittsburghpa.gov/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-873",
+   "name": "Pleasant Hills Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "873"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=90",
+   "phone": "412-653-6321",
+   "address": "410 E. Bruceton Road, Pittsburgh, PA 15236",
+   "website": "http://www.pleasanthillspa.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-880",
+   "name": "Plum Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "880"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=91",
+   "phone": "412-795-4600",
+   "address": "2000 Mike Thomas Way, Pittsburgh, PA 15239",
+   "website": "http://www.plumboro.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-848",
+   "name": "Port Vue Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "848"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=92",
+   "phone": "412-664-9323",
+   "address": "1191 Romine Avenue, Port Vue, PA 15133",
+   "website": "http://www.portvue.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-849",
+   "name": "Rankin Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "849"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=93",
+   "phone": "412-271-6605",
+   "address": "320 Hawkins Avenue, Rankin, PA 15104",
+   "website": "http://www.rankinborough.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-937",
+   "name": "Reserve Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "937"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=94",
+   "phone": "412-322-1551",
+   "address": "33 Lonsdale Street, Pittsburgh, PA 15212",
+   "website": "http://www.reservetwp.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-938",
+   "name": "Richland Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "938"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=95",
+   "phone": "724-731-2300",
+   "address": "4019 Dickey Road, Gibsonia, PA 15044",
+   "website": "http://richland.pa.us/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-939",
+   "name": "Robinson Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "939"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=96",
+   "phone": "412-788-8120",
+   "address": "1000 Church Hill Road, Pittsburgh, PA 15205",
+   "website": "http://www.townshipofrobinson.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-940",
+   "name": "Ross Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "940"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=97",
+   "phone": "412-835-5243",
+   "address": "1000 Ross Municipal Drive, Pittsburgh, PA 15237",
+   "website": "http://www.ross.pa.us/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-850",
+   "name": "Rosslyn Farms Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "850"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=98",
+   "phone": "412-312-0343",
+   "address": "200 Rosslyn Road, Carnegie, PA 15106",
+   "website": "http://www.rosslynfarms.org/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-941",
+   "name": "Scott Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "941"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=99",
+   "phone": "412-276-5302",
+   "address": "301 Lindsay Road, 2nd FL, Carnegie, PA 15106",
+   "website": "http://scott-twp.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-851",
+   "name": "Sewickley Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "851"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=100",
+   "phone": "724-731-2319",
+   "address": "601 Thorn Street PO Box 428, Sewickley, PA 15143",
+   "website": "http://www.sewickleyborough.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-869",
+   "name": "Sewickley Heights Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "869"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=101",
+   "phone": "412-741-5119",
+   "address": "Borough Hall, 238 Country Club Rd., Sewickley, PA 15143",
+   "website": "http://www.sewickleyheightsboro.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-882",
+   "name": "Sewickley Hills Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "882"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=102",
+   "phone": "412-741-7734",
+   "address": "349 Magee Road, Sewickley, PA 15143",
+   "website": "http://www.sewickleyhills.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-944",
+   "name": "Shaler Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "944"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=103",
+   "phone": "412-486-9700 x224",
+   "address": "300 Wetzel Road, Glenshaw, PA 15116",
+   "website": "http://www.shaler.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-852",
+   "name": "Sharpsburg Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "852"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=104",
+   "phone": "412-781-7749",
+   "address": "1611 Main Street, Pittsburgh, PA 15215",
+   "website": "http://www.sharpsburgborough.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-946",
+   "name": "South Fayette Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "946"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=105",
+   "phone": "412-221-8700",
+   "address": "100 Township Drive, South Fayette, PA 15017",
+   "website": "http://www.southfayettepa.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-945",
+   "name": "South Park Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "945"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=106",
+   "phone": "412-833-8292",
+   "address": "2675 Brownsville Road, South Park, PA 15129",
+   "website": "http://www.southparktwp.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-947",
+   "name": "South Versailles Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "947"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=107",
+   "phone": "412-754-2536",
+   "address": "Box 66, Coulter, PA 15028",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-853",
+   "name": "Springdale Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "853"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=108",
+   "phone": "724-274-6269",
+   "address": "325 School Street, Springdale, PA 15144",
+   "website": "http://www.springdaleborough.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-948",
+   "name": "Springdale Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "948"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=109",
+   "phone": "724-274-4416",
+   "address": "100 Plate Drive, Harwick, PA 15049",
+   "website": "http://www.springdaletownship.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-949",
+   "name": "Stowe Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "949"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=110",
+   "phone": "724-731-2311",
+   "address": "555 Broadway Avenue, McKees Rocks, PA 15136",
+   "website": "http://stowetwp.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-854",
+   "name": "Swissvale Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "854"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=111",
+   "phone": "412-351-3342",
+   "address": "7560 Roslyn Street, Pittsburgh, PA 15218",
+   "website": "http://www.swissvaleborough.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-855",
+   "name": "Tarentum Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "855"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=112",
+   "phone": "724-224-1179",
+   "address": "318 Second Avenue, Tarentum, PA 15084",
+   "website": "http://www.tarentumboro.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-856",
+   "name": "Thornburg Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "856"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=113",
+   "phone": "412-835-5243",
+   "address": "545 Hamilton Road, Pittsburgh, PA 15205",
+   "website": "http://www.thornburg-pa.gov",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-857",
+   "name": "Trafford Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "857"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=114",
+   "phone": "412-372-5361",
+   "address": "414 Brinton Avenue, Trafford, PA 15085",
+   "website": "http://www.traffordpa.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-858",
+   "name": "Turtle Creek Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "858"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=115",
+   "phone": "412-824-1835",
+   "address": "125 Monroeville Avenue, Turtle Creek, PA 15145",
+   "website": "http://www.turtlecreekborough.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-950",
+   "name": "Upper St. Clair Municipality",
+   "type": "municipal",
+   "municipalityIds": [
+    "950"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=116",
+   "phone": "412-831-9000",
+   "address": "1820 McLaughlin Run Road, Upper St. Clair, PA 15241",
+   "website": "http://www.twpusc.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-859",
+   "name": "Verona Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "859"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=117",
+   "phone": "412-828-8080",
+   "address": "736 East Railroad Avenue, Verona, PA 15147",
+   "website": "http://www.veronaborough.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-860",
+   "name": "Versailles Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "860"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=118",
+   "phone": "412-751-3922",
+   "address": "5100 Walnut Street, McKeesport, PA 15132",
+   "website": "http://www.mck-macm.org/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-861",
+   "name": "Wall Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "861"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=119",
+   "phone": "412-824-3333",
+   "address": "413 Wall Avenue, Wall, PA 15148",
+   "website": "http://www.wallborough.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-952",
+   "name": "West Deer Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "952"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=120",
+   "phone": "724-265-4250",
+   "address": "133 East Union Road, Cheswick, PA 15024",
+   "website": "http://www.westdeertownship.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-862",
+   "name": "West Elizabeth Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "862"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=121",
+   "phone": "412-384-8200",
+   "address": "PO Box 716, West Elizabeth, PA 15088",
+   "website": "https://westelizabethpa.wordpress.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-863",
+   "name": "West Homestead Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "863"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=122",
+   "phone": "412-461-1844",
+   "address": "456 West Eigth Avenue, Homestead, PA 15120",
+   "website": "http://westhomesteadpa.com/",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-870",
+   "name": "West Mifflin Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "870"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=123",
+   "phone": "412-466-8177",
+   "address": "1020 Lebanon Road, West Mifflin, PA 15122",
+   "website": "http://www.westmifflinborough.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-864",
+   "name": "West View Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "864"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=124",
+   "phone": "412-931-1633",
+   "address": "441 Perry Highway, Pittsburgh, PA 15229",
+   "website": "http://www.westviewborough.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-865",
+   "name": "Whitaker Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "865"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=125",
+   "phone": "412-464-1199",
+   "address": "1500 Ardmore Boulevard, Suite 409, Pittsburgh, PA 15221-4468",
+   "website": "http://www.alcosan.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-875",
+   "name": "White Oak Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "875"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=126",
+   "phone": "412-678-0437",
+   "address": "2280 Lincoln Way, White Oak, PA 15131",
+   "website": "http://www.woboro.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-874",
+   "name": "Whitehall Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "874"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=127",
+   "phone": "412-881-1644",
+   "address": "100 Borough Park Drive, Pittsburgh, PA 15236",
+   "website": "http://www.whitehallboro.org",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-953",
+   "name": "Wilkins Township",
+   "type": "municipal",
+   "municipalityIds": [
+    "953"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=128",
+   "phone": "412-824-6860",
+   "address": "110 Peffer Road, Turtle Creek, PA 15145",
+   "website": "http://www.wilkinstownship.com",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-866",
+   "name": "Wilkinsburg Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "866"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=129",
+   "phone": "610-599-3143",
+   "address": "605 Ross Avenue, Pittsburgh, PA 15221",
+   "website": "http://www.wilkinsburgpa.gov",
+   "lastVerifiedAt": "2026-10-04"
+  },
+  {
+   "id": "muni-867",
+   "name": "Wilmerding Borough",
+   "type": "municipal",
+   "municipalityIds": [
+    "867"
+   ],
+   "source": "https://apps.alleghenycounty.us/website/profile.asp?muni=130",
+   "phone": "412-823-4421",
+   "address": "301 Station Street, Wilmerding, PA 15148",
+   "website": "http://www.WilmerdingBoro.com",
+   "lastVerifiedAt": "2026-10-04"
+  }
+ ]
+}

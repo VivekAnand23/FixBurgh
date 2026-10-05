@@ -873,6 +873,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pin placed at the address you searched. Drag it to the exact spot.'**
   String get pinFromSearch;
+
+  /// No description provided for @whoFixesThis.
+  ///
+  /// In en, this message translates to:
+  /// **'Who fixes this?'**
+  String get whoFixesThis;
+
+  /// No description provided for @routingUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t find the responsible office for this spot.'**
+  String get routingUnavailable;
+
+  /// No description provided for @thisRoad.
+  ///
+  /// In en, this message translates to:
+  /// **'This road'**
+  String get thisRoad;
+
+  /// No description provided for @whyStateRoad.
+  ///
+  /// In en, this message translates to:
+  /// **'{road} is a state road, so PennDOT maintains it, even inside a city or borough.'**
+  String whyStateRoad(String road);
+
+  /// No description provided for @whyTurnpike.
+  ///
+  /// In en, this message translates to:
+  /// **'{road} is part of the Pennsylvania Turnpike.'**
+  String whyTurnpike(String road);
+
+  /// No description provided for @whyCountyRoad.
+  ///
+  /// In en, this message translates to:
+  /// **'{road} is maintained by Allegheny County, not the municipality.'**
+  String whyCountyRoad(String road);
+
+  /// No description provided for @whyLocalRoad.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a local street, so {municipality} handles it.'**
+  String whyLocalRoad(String municipality);
+
+  /// No description provided for @whyMunicipalService.
+  ///
+  /// In en, this message translates to:
+  /// **'{municipality} handles this kind of problem in its area.'**
+  String whyMunicipalService(String municipality);
+
+  /// No description provided for @badgeStateRoad.
+  ///
+  /// In en, this message translates to:
+  /// **'State road'**
+  String get badgeStateRoad;
+
+  /// No description provided for @badgeStateRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'State road · Route {route}'**
+  String badgeStateRoute(String route);
+
+  /// No description provided for @badgeTurnpike.
+  ///
+  /// In en, this message translates to:
+  /// **'PA Turnpike'**
+  String get badgeTurnpike;
+
+  /// No description provided for @badgeCountyRoad.
+  ///
+  /// In en, this message translates to:
+  /// **'County road'**
+  String get badgeCountyRoad;
+
+  /// No description provided for @badgeLocalRoad.
+  ///
+  /// In en, this message translates to:
+  /// **'Local street'**
+  String get badgeLocalRoad;
+
+  /// No description provided for @notTheirs.
+  ///
+  /// In en, this message translates to:
+  /// **'If they say it isn\'t theirs, contact {name}.'**
+  String notTheirs(String name);
+
+  /// No description provided for @callOffice.
+  ///
+  /// In en, this message translates to:
+  /// **'Call'**
+  String get callOffice;
+
+  /// No description provided for @emailOffice.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get emailOffice;
+
+  /// No description provided for @openWebForm.
+  ///
+  /// In en, this message translates to:
+  /// **'Web form'**
+  String get openWebForm;
+
+  /// No description provided for @website.
+  ///
+  /// In en, this message translates to:
+  /// **'Website'**
+  String get website;
+
+  /// No description provided for @copyDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy details'**
+  String get copyDetails;
+
+  /// No description provided for @detailsCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Report details copied. Paste them into the form or email.'**
+  String get detailsCopied;
+
+  /// No description provided for @summaryIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'Issue'**
+  String get summaryIssue;
+
+  /// No description provided for @summaryLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get summaryLocation;
+
+  /// No description provided for @summaryCoordinates.
+  ///
+  /// In en, this message translates to:
+  /// **'Coordinates'**
+  String get summaryCoordinates;
+
+  /// No description provided for @summaryMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Map'**
+  String get summaryMap;
+
+  /// No description provided for @summaryDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get summaryDescription;
+
+  /// No description provided for @summaryFooter.
+  ///
+  /// In en, this message translates to:
+  /// **'Reported with FixBurgh, a free community app for Allegheny County.'**
+  String get summaryFooter;
+
+  /// No description provided for @emailSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'[FixBurgh] {category} ({severity}) at {place}'**
+  String emailSubject(String category, String severity, String place);
+
+  /// No description provided for @nowTellThem.
+  ///
+  /// In en, this message translates to:
+  /// **'Now tell them'**
+  String get nowTellThem;
+
+  /// No description provided for @nowTellThemBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your report is on the map. Contacting the office is what gets it fixed. We copy the details for you.'**
+  String get nowTellThemBody;
+
+  /// No description provided for @later.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get later;
+
+  /// No description provided for @contactOffice.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact office'**
+  String get contactOffice;
 }
 
 class _AppLocalizationsDelegate

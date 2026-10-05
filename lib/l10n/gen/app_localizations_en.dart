@@ -440,4 +440,117 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get pinFromSearch =>
       'Pin placed at the address you searched. Drag it to the exact spot.';
+
+  @override
+  String get whoFixesThis => 'Who fixes this?';
+
+  @override
+  String get routingUnavailable =>
+      'We couldn\'t find the responsible office for this spot.';
+
+  @override
+  String get thisRoad => 'This road';
+
+  @override
+  String whyStateRoad(String road) {
+    return '$road is a state road, so PennDOT maintains it, even inside a city or borough.';
+  }
+
+  @override
+  String whyTurnpike(String road) {
+    return '$road is part of the Pennsylvania Turnpike.';
+  }
+
+  @override
+  String whyCountyRoad(String road) {
+    return '$road is maintained by Allegheny County, not the municipality.';
+  }
+
+  @override
+  String whyLocalRoad(String municipality) {
+    return 'This is a local street, so $municipality handles it.';
+  }
+
+  @override
+  String whyMunicipalService(String municipality) {
+    return '$municipality handles this kind of problem in its area.';
+  }
+
+  @override
+  String get badgeStateRoad => 'State road';
+
+  @override
+  String badgeStateRoute(String route) {
+    return 'State road · Route $route';
+  }
+
+  @override
+  String get badgeTurnpike => 'PA Turnpike';
+
+  @override
+  String get badgeCountyRoad => 'County road';
+
+  @override
+  String get badgeLocalRoad => 'Local street';
+
+  @override
+  String notTheirs(String name) {
+    return 'If they say it isn\'t theirs, contact $name.';
+  }
+
+  @override
+  String get callOffice => 'Call';
+
+  @override
+  String get emailOffice => 'Email';
+
+  @override
+  String get openWebForm => 'Web form';
+
+  @override
+  String get website => 'Website';
+
+  @override
+  String get copyDetails => 'Copy details';
+
+  @override
+  String get detailsCopied =>
+      'Report details copied. Paste them into the form or email.';
+
+  @override
+  String get summaryIssue => 'Issue';
+
+  @override
+  String get summaryLocation => 'Location';
+
+  @override
+  String get summaryCoordinates => 'Coordinates';
+
+  @override
+  String get summaryMap => 'Map';
+
+  @override
+  String get summaryDescription => 'Description';
+
+  @override
+  String get summaryFooter =>
+      'Reported with FixBurgh, a free community app for Allegheny County.';
+
+  @override
+  String emailSubject(String category, String severity, String place) {
+    return '[FixBurgh] $category ($severity) at $place';
+  }
+
+  @override
+  String get nowTellThem => 'Now tell them';
+
+  @override
+  String get nowTellThemBody =>
+      'Your report is on the map. Contacting the office is what gets it fixed. We copy the details for you.';
+
+  @override
+  String get later => 'Later';
+
+  @override
+  String get contactOffice => 'Contact office';
 }

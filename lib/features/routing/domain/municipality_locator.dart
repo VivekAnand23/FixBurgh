@@ -49,6 +49,15 @@ class MunicipalityLocator {
 
   int get count => _entries.length;
 
+  Iterable<String> get allIds => _entries.map((e) => e.municipality.id);
+
+  Municipality? byId(String id) {
+    for (final e in _entries) {
+      if (e.municipality.id == id) return e.municipality;
+    }
+    return null;
+  }
+
   /// Returns the municipality containing [p], or `null` when [p] is outside
   /// Allegheny County.
   Municipality? locate(GeoPoint p) {

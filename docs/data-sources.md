@@ -62,3 +62,25 @@ python3 tools/gis/build_gis_assets.py
 On macOS, if the python.org build of Python fails with
 `CERTIFICATE_VERIFY_FAILED`, use `/usr/bin/python3` or run that Python's
 `Install Certificates.command` once.
+
+## Office directory
+
+`tools/directory/build_agency_directory.py` writes `assets/directory/agencies.json`:
+
+- **130 municipalities**: phone, mailing address and website from Allegheny
+  County's official municipality directory
+  ([munimap](https://apps.alleghenycounty.us/website/munimap.asp), one
+  `profile.asp?muni=N` page each). Directory names are matched to boundary
+  `MUNICODE`s by name and municipality type.
+- **Curated offices**: PennDOT District 11 (1-800-FIX-ROAD), PA Turnpike,
+  Allegheny County Public Works (412-350-INFO, option 2), City of Pittsburgh
+  311 (412-255-2621). Each has a `source` URL.
+
+The county directory is maintained by the municipalities and contains some
+errors (for example, at least one 724 area code for a 412 municipality).
+Re-run the script and spot-check numbers before each release; users can flag
+a wrong office in the app.
+
+```bash
+/usr/bin/python3 tools/directory/build_agency_directory.py
+```

@@ -209,5 +209,98 @@
   "addressNotFound": "We couldn't find that address in Allegheny County. Try adding the street number or town.",
   "zoomIn": "Zoom in",
   "zoomOut": "Zoom out",
-  "pinFromSearch": "Pin placed at the address you searched. Drag it to the exact spot."
+  "pinFromSearch": "Pin placed at the address you searched. Drag it to the exact spot.",
+  "whoFixesThis": "Who fixes this?",
+  "routingUnavailable": "We couldn't find the responsible office for this spot.",
+  "thisRoad": "This road",
+  "whyStateRoad": "{road} is a state road, so PennDOT maintains it, even inside a city or borough.",
+  "@whyStateRoad": {
+    "placeholders": {
+      "road": {
+        "type": "String"
+      }
+    }
+  },
+  "whyTurnpike": "{road} is part of the Pennsylvania Turnpike.",
+  "@whyTurnpike": {
+    "placeholders": {
+      "road": {
+        "type": "String"
+      }
+    }
+  },
+  "whyCountyRoad": "{road} is maintained by Allegheny County, not the municipality.",
+  "@whyCountyRoad": {
+    "placeholders": {
+      "road": {
+        "type": "String"
+      }
+    }
+  },
+  "whyLocalRoad": "This is a local street, so {municipality} handles it.",
+  "@whyLocalRoad": {
+    "placeholders": {
+      "municipality": {
+        "type": "String"
+      }
+    }
+  },
+  "whyMunicipalService": "{municipality} handles this kind of problem in its area.",
+  "@whyMunicipalService": {
+    "placeholders": {
+      "municipality": {
+        "type": "String"
+      }
+    }
+  },
+  "badgeStateRoad": "State road",
+  "badgeStateRoute": "State road · Route {route}",
+  "@badgeStateRoute": {
+    "placeholders": {
+      "route": {
+        "type": "String"
+      }
+    }
+  },
+  "badgeTurnpike": "PA Turnpike",
+  "badgeCountyRoad": "County road",
+  "badgeLocalRoad": "Local street",
+  "notTheirs": "If they say it isn't theirs, contact {name}.",
+  "@notTheirs": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "callOffice": "Call",
+  "emailOffice": "Email",
+  "openWebForm": "Web form",
+  "website": "Website",
+  "copyDetails": "Copy details",
+  "detailsCopied": "Report details copied. Paste them into the form or email.",
+  "summaryIssue": "Issue",
+  "summaryLocation": "Location",
+  "summaryCoordinates": "Coordinates",
+  "summaryMap": "Map",
+  "summaryDescription": "Description",
+  "summaryFooter": "Reported with FixBurgh, a free community app for Allegheny County.",
+  "emailSubject": "[FixBurgh] {category} ({severity}) at {place}",
+  "@emailSubject": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "severity": {
+        "type": "String"
+      },
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "nowTellThem": "Now tell them",
+  "nowTellThemBody": "Your report is on the map. Contacting the office is what gets it fixed. We copy the details for you.",
+  "later": "Later",
+  "contactOffice": "Contact office"
 }

@@ -8,6 +8,7 @@ import 'package:fixburgh/features/report/domain/geohash.dart';
 import 'package:fixburgh/features/report/domain/report.dart';
 import 'package:fixburgh/features/routing/domain/municipality_locator.dart'
     as geo;
+import 'package:fixburgh/features/routing/domain/routing_engine.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
@@ -46,6 +47,7 @@ class ReportRepository {
     required ReportDraft draft,
     required String uid,
     required bool isGuest,
+    RoutingResult? routing,
     void Function(double progress)? onProgress,
   }) async {
     final location = draft.location!;
@@ -91,6 +93,13 @@ class ReportRepository {
       'municipalityId': draft.municipality!.id,
       'municipalityName': draft.municipality!.name,
       'photos': photos,
+      if (routing != null) ...{
+        'agencyId': routing.agency.id,
+        'agencyName': routing.agency.name,
+        'roadOwner': routing.road.owner.name,
+        'roadName': routing.road.name,
+        'stateRoute': routing.road.route,
+      },
       'status': ReportStatus.reported.name,
       'upvoteCount': 0,
       'flagCount': 0,
@@ -116,6 +125,15 @@ class ReportRepository {
       .limit(200)
       .snapshots()
       .map((s) => s.docs.map(_fromDoc).toList());
+
+  /// The reporter contacted the office through the app (BRD section 8.5).
+  Future<void> markSent(String reportId, String channel) =>
+      _reports.doc(reportId).update({
+        'status': ReportStatus.sent.name,
+        'contactChannel': channel,
+        'sentAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
 
   Future<void> markResolved(String reportId) => _reports.doc(reportId).update({
     'status': ReportStatus.resolved.name,

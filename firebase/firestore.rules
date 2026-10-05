@@ -24,6 +24,7 @@ service cloud.firestore {
           'authorUid', 'authorIsGuest', 'category', 'severity', 'description',
           'geo', 'address', 'municipalityId', 'municipalityName', 'photos',
           'status', 'upvoteCount', 'flagCount', 'moderation',
+          'agencyId', 'agencyName', 'roadOwner', 'roadName', 'stateRoute',
           'createdAt', 'updatedAt'])
         && d.authorUid == request.auth.uid
         && d.authorIsGuest == (request.auth.token.firebase.sign_in_provider == 'anonymous')
@@ -52,7 +53,8 @@ service cloud.firestore {
       allow update: if signedIn()
         && resource.data.authorUid == request.auth.uid
         && request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['status', 'description', 'resolvedAt', 'sentAt', 'updatedAt'])
+             .hasOnly(['status', 'description', 'resolvedAt', 'sentAt',
+                    'contactChannel', 'updatedAt'])
         && request.resource.data.status in ['reported', 'sent', 'resolved']
         && request.resource.data.description.size() <= 280
         && request.resource.data.updatedAt == request.time;

@@ -9,6 +9,8 @@ abstract final class AppTheme {
       primary: AppColors.navy,
       secondary: AppColors.orange700,
       tertiary: AppColors.teal700,
+      tertiaryContainer: const Color(0xFFD5EFEA),
+      onTertiaryContainer: const Color(0xFF0E3B33),
       error: AppColors.danger,
     ),
   );
@@ -19,6 +21,8 @@ abstract final class AppTheme {
       brightness: Brightness.dark,
       secondary: AppColors.orange,
       tertiary: AppColors.teal,
+      tertiaryContainer: const Color(0xFF1F4A43),
+      onTertiaryContainer: const Color(0xFFCDEDE6),
     ),
   );
 
