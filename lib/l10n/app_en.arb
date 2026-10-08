@@ -428,5 +428,9 @@
       }
     }
   },
-  "unblockAll": "Show again"
+  "unblockAll": "Show again",
+  "resumeDraftTitle": "Finish your report?",
+  "resumeDraftBody": "You started a report earlier but didn't send it.",
+  "continueDraft": "Continue",
+  "startOver": "Start over"
 }

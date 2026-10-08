@@ -1,3 +1,5 @@
+import 'package:fixburgh/features/report/data/draft_store.dart';
+import 'package:fixburgh/features/report/presentation/report_draft_controller.dart';
 import 'package:fixburgh/features/report/presentation/steps/details_step.dart';
 import 'package:fixburgh/features/report/presentation/steps/location_step.dart';
 import 'package:fixburgh/features/report/presentation/steps/photo_step.dart';
@@ -5,16 +7,64 @@ import 'package:fixburgh/features/report/presentation/steps/review_step.dart';
 import 'package:fixburgh/features/report/presentation/steps/safety_step.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Report flow: safety check, photo, location, details, review.
-class ReportScreen extends StatefulWidget {
+class ReportScreen extends ConsumerStatefulWidget {
   const ReportScreen({super.key});
 
   @override
-  State<ReportScreen> createState() => _ReportScreenState();
+  ConsumerState<ReportScreen> createState() => _ReportScreenState();
 }
 
-class _ReportScreenState extends State<ReportScreen> {
+class _ReportScreenState extends ConsumerState<ReportScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _offerSavedDraft());
+  }
+
+  /// Offers to continue a report left unfinished when the app closed.
+  Future<void> _offerSavedDraft() async {
+    final saved = await ref.read(draftStoreProvider).load();
+    if (saved == null || !ref.read(reportDraftProvider).isEmpty || !mounted) {
+      return;
+    }
+    final l10n = AppLocalizations.of(context);
+    final resume = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.resumeDraftTitle),
+        content: Text(l10n.resumeDraftBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.startOver),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l10n.continueDraft),
+          ),
+        ],
+      ),
+    );
+    final notifier = ref.read(reportDraftProvider.notifier);
+    if (resume != true) {
+      await notifier.discard();
+      return;
+    }
+    notifier.restore(saved);
+    setState(
+      () => _step = !saved.hasPhoto
+          ? 1
+          : !saved.hasLocation
+          ? 2
+          : saved.category == null
+          ? 3
+          : 4,
+    );
+  }
+
   static const _stepCount = 5;
   int _step = 0;
 

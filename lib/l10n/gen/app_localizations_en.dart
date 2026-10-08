@@ -727,4 +727,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unblockAll => 'Show again';
+
+  @override
+  String get resumeDraftTitle => 'Finish your report?';
+
+  @override
+  String get resumeDraftBody =>
+      'You started a report earlier but didn\'t send it.';
+
+  @override
+  String get continueDraft => 'Continue';
+
+  @override
+  String get startOver => 'Start over';
 }

@@ -19,7 +19,7 @@ class PhotoStep extends ConsumerWidget {
       requestFullMetadata: false,
     );
     if (file != null) {
-      ref.read(reportDraftProvider.notifier).addPhoto(file.path);
+      await ref.read(reportDraftProvider.notifier).addPhoto(file.path);
     }
   }
 

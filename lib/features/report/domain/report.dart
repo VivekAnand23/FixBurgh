@@ -58,6 +58,32 @@ class ReportDraft {
     this.description = '',
   });
 
+  factory ReportDraft.fromJson(Map<String, Object?> j) {
+    final m = j['municipality'] as Map<String, Object?>?;
+    final cat = j['category'] as String?;
+    return ReportDraft(
+      photoPaths: (j['photoPaths'] as List?)?.cast<String>() ?? const [],
+      location: j['lat'] is num && j['lng'] is num
+          ? GeoPoint(
+              (j['lat']! as num).toDouble(),
+              (j['lng']! as num).toDouble(),
+            )
+          : null,
+      accuracyM: (j['accuracyM'] as num?)?.toDouble(),
+      address: j['address'] as String?,
+      municipality: m == null
+          ? null
+          : Municipality(
+              id: m['id']! as String,
+              name: m['name']! as String,
+              type: m['type']! as String,
+            ),
+      category: cat == null ? null : ReportCategory.fromId(cat),
+      severity: Severity.fromId(j['severity'] as String? ?? ''),
+      description: j['description'] as String? ?? '',
+    );
+  }
+
   final List<String> photoPaths;
   final GeoPoint? location;
   final double? accuracyM;
@@ -67,9 +93,29 @@ class ReportDraft {
   final Severity severity;
   final String description;
 
+  bool get isEmpty =>
+      photoPaths.isEmpty && location == null && category == null;
+
   bool get hasPhoto => photoPaths.isNotEmpty;
   bool get hasLocation => location != null && municipality != null;
   bool get isComplete => hasPhoto && hasLocation && category != null;
+
+  Map<String, Object?> toJson() => {
+    'photoPaths': photoPaths,
+    if (location != null) 'lat': location!.lat,
+    if (location != null) 'lng': location!.lng,
+    'accuracyM': accuracyM,
+    'address': address,
+    if (municipality != null)
+      'municipality': {
+        'id': municipality!.id,
+        'name': municipality!.name,
+        'type': municipality!.type,
+      },
+    'category': category?.id,
+    'severity': severity.name,
+    'description': description,
+  };
 
   ReportDraft copyWith({
     List<String>? photoPaths,

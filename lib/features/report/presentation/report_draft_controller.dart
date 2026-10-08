@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:fixburgh/features/report/data/draft_store.dart';
 import 'package:fixburgh/features/report/domain/report.dart';
 import 'package:fixburgh/features/routing/data/routing_providers.dart';
 import 'package:fixburgh/features/routing/domain/municipality_locator.dart';
@@ -11,11 +14,34 @@ final NotifierProvider<ReportDraftController, ReportDraft> reportDraftProvider =
 
 class ReportDraftController extends Notifier<ReportDraft> {
   @override
-  ReportDraft build() => const ReportDraft();
+  ReportDraft build() {
+    // Every change is saved so the draft survives the app closing. The
+    // initial empty state (prev == null) must not overwrite a saved draft.
+    listenSelf((prev, next) {
+      if (prev != null) unawaited(ref.read(draftStoreProvider).save(next));
+    });
+    return const ReportDraft();
+  }
 
-  void addPhoto(String path) {
+  /// Continues a draft saved earlier (see DraftStore).
+  // ignore: use_setters_to_change_properties, reads better at call sites.
+  void restore(ReportDraft draft) => state = draft;
+
+  /// Starts over and deletes the saved draft and its photo copies.
+  Future<void> discard() async {
+    state = const ReportDraft();
+    await ref.read(draftStoreProvider).clear();
+  }
+
+  Future<void> addPhoto(String path) async {
     if (state.photoPaths.length >= maxPhotos) return;
-    state = state.copyWith(photoPaths: [...state.photoPaths, path]);
+    String kept;
+    try {
+      kept = await ref.read(draftStoreProvider).keepPhoto(path);
+    } on Object {
+      kept = path; // Fall back to the picker's copy.
+    }
+    state = state.copyWith(photoPaths: [...state.photoPaths, kept]);
   }
 
   void removePhoto(String path) => state = state.copyWith(

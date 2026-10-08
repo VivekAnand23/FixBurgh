@@ -1281,6 +1281,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show again'**
   String get unblockAll;
+
+  /// No description provided for @resumeDraftTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish your report?'**
+  String get resumeDraftTitle;
+
+  /// No description provided for @resumeDraftBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You started a report earlier but didn\'t send it.'**
+  String get resumeDraftBody;
+
+  /// No description provided for @continueDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueDraft;
+
+  /// No description provided for @startOver.
+  ///
+  /// In en, this message translates to:
+  /// **'Start over'**
+  String get startOver;
 }
 
 class _AppLocalizationsDelegate

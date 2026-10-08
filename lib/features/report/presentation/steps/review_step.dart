@@ -59,7 +59,7 @@ class _ReviewStepState extends ConsumerState<ReviewStep> {
         if (choice == null) return; // Dismissed: stay on review.
         if (choice) {
           await repo.setUpvote(existing.id, user.uid, on: true);
-          ref.invalidate(reportDraftProvider);
+          await ref.read(reportDraftProvider.notifier).discard();
           widget.onSubmitted();
           messenger.showSnackBar(SnackBar(content: Text(l10n.meTooAdded)));
           router.go('/map');
@@ -86,7 +86,7 @@ class _ReviewStepState extends ConsumerState<ReviewStep> {
           onContacted: (c) => repo.markSent(reportId, c.name),
         );
       }
-      ref.invalidate(reportDraftProvider);
+      await ref.read(reportDraftProvider.notifier).discard();
       widget.onSubmitted();
       messenger.showSnackBar(SnackBar(content: Text(l10n.reportSubmitted)));
       router.go('/my-reports');
