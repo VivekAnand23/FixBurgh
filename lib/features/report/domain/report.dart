@@ -12,8 +12,7 @@ enum ReportCategory {
   dumping('dumping', Icons.delete_outline),
   fallenTree('fallen_tree', Icons.park_outlined),
   sidewalk('sidewalk', Icons.directions_walk),
-  other('other', Icons.more_horiz)
-  ;
+  other('other', Icons.more_horiz);
 
   const ReportCategory(this.id, this.icon);
 
@@ -27,8 +26,7 @@ enum ReportCategory {
 enum Severity {
   low,
   medium,
-  urgent
-  ;
+  urgent;
 
   static Severity fromId(String id) =>
       values.firstWhere((s) => s.name == id, orElse: () => medium);
@@ -37,8 +35,7 @@ enum Severity {
 enum ReportStatus {
   reported,
   sent,
-  resolved
-  ;
+  resolved;
 
   static ReportStatus fromId(String id) =>
       values.firstWhere((s) => s.name == id, orElse: () => reported);

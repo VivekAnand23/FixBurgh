@@ -5,8 +5,7 @@ import 'package:fixburgh/app/firebase/firebase_options_prod.dart';
 /// Build flavor. Each flavor talks to its own Firebase project.
 enum Flavor {
   dev,
-  prod
-  ;
+  prod;
 
   FirebaseOptions get firebaseOptions => switch (this) {
     Flavor.dev => FirebaseOptionsDev.currentPlatform,

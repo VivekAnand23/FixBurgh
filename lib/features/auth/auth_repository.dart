@@ -1,3 +1,4 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fixburgh/app/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,6 +35,9 @@ final authRepositoryProvider = Provider<AuthRepository>(
     ref.watch(firebaseAuthProvider),
     GoogleSignIn.instance,
     googleServerClientId: ref.watch(flavorProvider).googleServerClientId,
+    claimGuestReports: (token) => FirebaseFunctions.instanceFor(
+      region: 'us-east1',
+    ).httpsCallable('claimGuestReports').call<void>({'guestIdToken': token}),
   ),
 );
 
@@ -50,11 +54,15 @@ class AuthRepository {
     this._auth,
     this._google, {
     required this.googleServerClientId,
+    required this.claimGuestReports,
   });
 
   final FirebaseAuth _auth;
   final GoogleSignIn _google;
   final String googleServerClientId;
+
+  /// Server call that moves a guest's reports to the signed-in account.
+  final Future<void> Function(String guestIdToken) claimGuestReports;
   bool _googleReady = false;
 
   User? get currentUser => _auth.currentUser;
@@ -105,9 +113,11 @@ class AuthRepository {
     });
   }
 
-  Future<void> signInWithEmail(String email, String password) => _guard(
-    () => _auth.signInWithEmailAndPassword(email: email, password: password),
-  );
+  Future<void> signInWithEmail(String email, String password) =>
+      _switchFromGuest(
+        () =>
+            _auth.signInWithEmailAndPassword(email: email, password: password),
+      );
 
   Future<void> sendPasswordReset(String email) =>
       _guard(() => _auth.sendPasswordResetEmail(email: email));
@@ -135,12 +145,28 @@ class AuthRepository {
       await user.linkWithCredential(credential);
     } on FirebaseAuthException catch (e) {
       if (e.code != 'credential-already-in-use') throw _map(e);
-      // The account already exists: sign in to it. Moving guest reports into
-      // the existing account is handled server-side in a later milestone.
-      await _guard(
+      // The account already exists: sign in to it and bring the guest's
+      // reports along.
+      await _switchFromGuest(
         () => _auth.signInWithCredential(e.credential ?? credential),
       );
       throw const AuthException(AuthFailure.credentialInUse);
+    }
+  }
+
+  /// Runs [signIn], then moves the previous guest's reports to the new
+  /// account. A failed move never blocks signing in.
+  Future<void> _switchFromGuest(Future<void> Function() signIn) async {
+    final guest = _auth.currentUser;
+    final token = guest != null && guest.isAnonymous
+        ? await guest.getIdToken()
+        : null;
+    await _guard(signIn);
+    if (token == null || _auth.currentUser?.uid == guest?.uid) return;
+    try {
+      await claimGuestReports(token);
+    } on Exception {
+      // Reports stay with the guest ID; nothing else to do on the device.
     }
   }
 
