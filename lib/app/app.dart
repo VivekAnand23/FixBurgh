@@ -13,7 +13,9 @@ class FixBurghApp extends ConsumerWidget {
     final flavor = ref.watch(flavorProvider);
     return MaterialApp.router(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
-      debugShowCheckedModeBanner: flavor.isDev,
+      // Hidden for store screenshots: --dart-define=SCREENSHOTS=true
+      debugShowCheckedModeBanner:
+          flavor.isDev && !const bool.fromEnvironment('SCREENSHOTS'),
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
