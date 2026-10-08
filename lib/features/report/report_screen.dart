@@ -77,6 +77,9 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    // Keeps the auto-disposing draft alive for the whole flow, including the
+    // safety step, so a restored draft isn't dropped before a step reads it.
+    ref.watch(reportDraftProvider.select((d) => d.isEmpty));
     return PopScope(
       canPop: _step == 0,
       onPopInvokedWithResult: (didPop, _) {

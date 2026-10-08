@@ -57,3 +57,6 @@ key.properties
 
 # Firebase emulator logs
 *-debug.log
+
+# Local Android keys
+/android/secrets.properties

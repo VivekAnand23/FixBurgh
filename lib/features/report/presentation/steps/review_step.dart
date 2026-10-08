@@ -117,33 +117,38 @@ class _ReviewStepState extends ConsumerState<ReviewStep> {
       builder: (context) => AlertDialog(
         icon: const Icon(Icons.groups_outlined),
         title: Text(l10n.duplicateTitle),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.duplicateBody(
-                existing.category.label(l10n),
-                meters,
-                days,
-                existing.upvoteCount,
-              ),
-            ),
-            if (existing.thumbUrl != null) ...[
-              const SizedBox(height: 12),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.network(
-                  existing.thumbUrl!,
-                  height: 140,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  excludeFromSemantics: true,
-                  errorBuilder: (_, _, _) => const SizedBox.shrink(),
+        // AlertDialog sizes content by intrinsic width, which can't hold an
+        // unbounded-width image; give it a fixed width instead.
+        content: SizedBox(
+          width: 280,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.duplicateBody(
+                  existing.category.label(l10n),
+                  meters,
+                  days,
+                  existing.upvoteCount,
                 ),
               ),
+              if (existing.thumbUrl != null) ...[
+                const SizedBox(height: 12),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    existing.thumbUrl!,
+                    height: 140,
+                    width: 280,
+                    fit: BoxFit.cover,
+                    excludeFromSemantics: true,
+                    errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
         actions: [
           TextButton(

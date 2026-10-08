@@ -2,15 +2,17 @@ import java.util.Properties
 
 plugins {
     id("com.android.application")
-    id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
 
 
-// Local, untracked keys: add MAPS_API_KEY=... to android/local.properties.
+// Local, untracked keys: put MAPS_API_KEY=... in android/secrets.properties
+// (Flutter rewrites local.properties on every build).
 val localProps = Properties().apply {
-    rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use(::load)
+    for (name in listOf("local.properties", "secrets.properties")) {
+        rootProject.file(name).takeIf { it.exists() }?.inputStream()?.use(::load)
+    }
 }
 
 android {
@@ -23,10 +25,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
-
     defaultConfig {
         applicationId = "com.fixburgh.app"
         // You can update the following values to match your application needs.
@@ -36,6 +34,11 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         manifestPlaceholders["mapsApiKey"] = localProps.getProperty("MAPS_API_KEY", "")
+    }
+
+    // AGP 9 turns resValue off by default; flavors use it for the app name.
+    buildFeatures {
+        resValues = true
     }
 
     flavorDimensions += "env"
@@ -57,6 +60,12 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
         }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
 }
 

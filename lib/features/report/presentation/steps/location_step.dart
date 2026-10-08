@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fixburgh/features/report/presentation/report_draft_controller.dart';
 import 'package:fixburgh/features/routing/domain/municipality_locator.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
@@ -104,12 +105,8 @@ class _LocationStepState extends ConsumerState<LocationStep> {
       final timer = Timer(_maxSampling, () {
         if (!done.isCompleted) done.complete();
       });
-      _sampling =
-          Geolocator.getPositionStream(
-            locationSettings: const LocationSettings(
-              accuracy: LocationAccuracy.bestForNavigation,
-            ),
-          ).listen(
+      _sampling = Geolocator.getPositionStream(locationSettings: _gpsSettings())
+          .listen(
             (pos) async {
               if (best != null && pos.accuracy >= best!.accuracy) return;
               best = pos;
@@ -188,6 +185,17 @@ class _LocationStepState extends ConsumerState<LocationStep> {
     final zoom = (await map.getZoomLevel() + delta).clamp(3.0, 21.0);
     await map.animateCamera(CameraUpdate.newLatLngZoom(pin, zoom));
   }
+
+  /// Highest-accuracy GPS. On Android this reads the GPS chip directly, so
+  /// there is no Google "Location Accuracy" consent prompt to block it.
+  static LocationSettings _gpsSettings() =>
+      defaultTargetPlatform == TargetPlatform.android
+      ? AndroidSettings(
+          accuracy: LocationAccuracy.bestForNavigation,
+          forceLocationManager: true,
+          intervalDuration: const Duration(seconds: 1),
+        )
+      : const LocationSettings(accuracy: LocationAccuracy.bestForNavigation);
 
   void _movePin(LatLng p) {
     setState(() {
@@ -276,6 +284,8 @@ class _LocationStepState extends ConsumerState<LocationStep> {
                   onMapCreated: (c) => _map = c,
                   myLocationEnabled: !_denied,
                   myLocationButtonEnabled: false,
+                  // Our own zoom buttons; hide Android's built-in ones.
+                  zoomControlsEnabled: false,
                   onTap: _movePin,
                   markers: {
                     Marker(
