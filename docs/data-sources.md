@@ -76,11 +76,30 @@ On macOS, if the python.org build of Python fails with
   Allegheny County Public Works (412-350-INFO, option 2), City of Pittsburgh
   311 (412-255-2621). Each has a `source` URL.
 
-The county directory is maintained by the municipalities and contains some
-errors (for example, at least one 724 area code for a 412 municipality).
-Re-run the script and spot-check numbers before each release. A "Wrong office?"
-flag in the app is planned for M3.
+### Verification against municipal websites (Oct 8, 2026)
+
+The County directory's "Community Contact" number is often a manager's or
+consultant's line: one number was listed for 11 different municipalities,
+and Wilkinsburg had a 610 area code. So every municipal record is checked
+against the municipality's own website:
 
 ```bash
-/usr/bin/python3 tools/directory/build_agency_directory.py
+/usr/bin/python3 tools/directory/verify_contacts.py   # writes verification_report.json
+/usr/bin/python3 tools/directory/make_overrides.py    # writes overrides.json
+/usr/bin/python3 tools/directory/build_agency_directory.py --apply-overrides
 ```
+
+| Result | Count |
+|---|---|
+| Directory phone confirmed on the municipality's site | 44 |
+| Phone replaced with the number the site shows most | 55 |
+| Shared directory number dropped (website shown instead) | 9 |
+| Site unreadable; directory phone kept, flagged `needsCheck` | 22 |
+| Office email added (own domain, general office address only) | 21 |
+
+`needsCheck` records should be confirmed by phone before launch. Users can
+also flag "Wrong office" in the app; flags are visible to moderators.
+
+Rebuilding from the County site (`build_agency_directory.py` without
+`--apply-overrides`) re-scrapes everything. The County moved its pages to
+`MuniProfile.asp` in Oct 2026; check the output before committing.

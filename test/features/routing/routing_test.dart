@@ -71,10 +71,29 @@ void main() {
   });
 
   group('routing', () {
-    test('every municipality has an office with a phone number', () {
+    test('every municipality has an office with a phone or website', () {
       for (final id in munis.allIds) {
         final office = engine.municipalOffice(munis.byId(id)!);
-        expect(office.phone, isNotNull, reason: office.name);
+        expect(
+          office.phone ?? office.website,
+          isNotNull,
+          reason: office.name,
+        );
+      }
+    });
+
+    test('no two municipalities share a phone number', () {
+      final seen = <String, String>{};
+      for (final id in munis.allIds) {
+        final office = engine.municipalOffice(munis.byId(id)!);
+        final phone = office.phone;
+        if (phone == null || office.type == '311') continue;
+        expect(
+          seen[phone],
+          isNull,
+          reason: '${office.name} and ${seen[phone]}',
+        );
+        seen[phone] = office.name;
       }
     });
 

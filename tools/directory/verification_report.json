@@ -1,0 +1,2232 @@
+[
+ {
+  "id": "muni-804",
+  "name": "Ben Avon Borough",
+  "phone": "412-835-5243",
+  "website": "http://www.benavon.com",
+  "status": "fetch_error: HTTPError"
+ },
+ {
+  "id": "muni-872",
+  "name": "Braddock Hills Borough",
+  "phone": "724-731-2300",
+  "website": "http://www.braddockhillspa.com/",
+  "status": "fetch_error: HTTPError"
+ },
+ {
+  "id": "muni-816",
+  "name": "Churchill Borough",
+  "phone": "412-241-7113",
+  "website": "http://churchillborough.com",
+  "status": "fetch_error: HTTPError"
+ },
+ {
+  "id": "muni-300",
+  "name": "City of Duquesne",
+  "phone": "412-466-8545",
+  "website": "http://www.duquesnepa.us/",
+  "status": "fetch_error: HTTPError"
+ },
+ {
+  "id": "muni-100",
+  "name": "City of Pittsburgh",
+  "phone": "412-255-2525",
+  "website": "http://www.pittsburghpa.gov/",
+  "status": "fetch_error: HTTPError"
+ },
+ {
+  "id": "muni-823",
+  "name": "Edgewood Borough",
+  "phone": "412-835-5243",
+  "website": "http://www.edgewood.pgh.pa.us",
+  "status": "fetch_error: HTTPError"
+ },
+ {
+  "id": "muni-827",
+  "name": "Etna Borough",
+  "phone": "412-781-6417",
+  "website": "http://www.etnaborough.org",
+  "status": "fetch_error: HTTPError"
+ },
+ {
+  "id": "muni-834",
+  "name": "Homestead Borough",
+  "phone": "412-461-1340 x101",
+  "website": "http://www.homesteadborough.com/",
+  "status": "fetch_error: HTTPError"
+ },
+ {
+  "id": "muni-919",
+  "name": "Kennedy Township",
+  "phone": "412-771-3616",
+  "website": "http://www.kennedytwp.com",
+  "status": "fetch_error: HTTPError"
+ },
+ {
+  "id": "muni-836",
+  "name": "Leetsdale Borough",
+  "phone": "412-741-3195",
+  "website": "http://www.leetsdaleboro.net",
+  "status": "fetch_error: HTTPError"
+ },
+ {
+  "id": "muni-931",
+  "name": "O Hara Township",
+  "phone": "412-835-5243",
+  "website": "http://www.ohara.pa.us",
+  "status": "fetch_error: HTTPError"
+ },
+ {
+  "id": "muni-847",
+  "name": "Pitcairn Borough",
+  "phone": "412-372-3009",
+  "website": "http://www.pitcairnborough.us",
+  "status": "fetch_error: HTTPError"
+ },
+ {
+  "id": "muni-880",
+  "name": "Plum Borough",
+  "phone": "412-795-4600",
+  "website": "http://www.plumboro.com",
+  "status": "fetch_error: HTTPError"
+ },
+ {
+  "id": "muni-948",
+  "name": "Springdale Township",
+  "phone": "724-274-4416",
+  "website": "http://www.springdaletownship.com",
+  "status": "fetch_error: HTTPError"
+ },
+ {
+  "id": "muni-812",
+  "name": "Carnegie Borough",
+  "phone": "412-835-5243",
+  "website": "http://www.carnegieborough.com",
+  "status": "fetch_error: URLError"
+ },
+ {
+  "id": "muni-915",
+  "name": "Harmar Township",
+  "phone": "724-274-4550",
+  "website": "http://www.townshipofharmar.com/",
+  "status": "fetch_error: URLError"
+ },
+ {
+  "id": "muni-928",
+  "name": "Neville Township",
+  "phone": "724-731-2300",
+  "website": "http://www.nevilleisland-pa.gov",
+  "status": "fetch_error: URLError"
+ },
+ {
+  "id": "muni-850",
+  "name": "Rosslyn Farms Borough",
+  "phone": "412-312-0343",
+  "website": "http://www.rosslynfarms.org/",
+  "status": "fetch_error: URLError"
+ },
+ {
+  "id": "muni-852",
+  "name": "Sharpsburg Borough",
+  "phone": "412-781-7749",
+  "website": "http://www.sharpsburgborough.com",
+  "status": "fetch_error: URLError"
+ },
+ {
+  "id": "muni-856",
+  "name": "Thornburg Borough",
+  "phone": "412-835-5243",
+  "website": "http://www.thornburg-pa.gov",
+  "status": "fetch_error: URLError"
+ },
+ {
+  "id": "muni-860",
+  "name": "Versailles Borough",
+  "phone": "412-751-3922",
+  "website": "http://www.mck-macm.org/",
+  "status": "fetch_error: URLError"
+ },
+ {
+  "id": "muni-947",
+  "name": "South Versailles Township",
+  "phone": "412-754-2536",
+  "website": null,
+  "status": "no_website"
+ },
+ {
+  "id": "muni-901",
+  "name": "Aleppo Township",
+  "phone": "412-741-6555",
+  "website": "http://aleppotownship.com",
+  "status": "phone_found",
+  "sitePhones": [
+   "4127416555",
+   "4127417062"
+  ],
+  "siteCounts": {
+   "4127416555": 2,
+   "4127417062": 1
+  },
+  "emails": [
+   "info@aleppotownship.com"
+  ]
+ },
+ {
+  "id": "muni-801",
+  "name": "Aspinwall Borough",
+  "phone": "412-781-0213",
+  "website": "http://aspinwallpa.com",
+  "status": "phone_found",
+  "sitePhones": [
+   "4127810213",
+   "4127819260"
+  ],
+  "siteCounts": {
+   "4127810213": 2,
+   "4127819260": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-902",
+  "name": "Baldwin Township",
+  "phone": "412-341-9597",
+  "website": "http://baldwintownship.com/",
+  "status": "phone_found",
+  "sitePhones": [
+   "4123419597",
+   "4127662565",
+   "4128355243",
+   "4123415937",
+   "4128847913",
+   "4123435111",
+   "4126816669",
+   "4122796911"
+  ],
+  "siteCounts": {
+   "4123419597": 10,
+   "4127662565": 1,
+   "4128355243": 1,
+   "4123415937": 1,
+   "4128847913": 1,
+   "4123435111": 1,
+   "4126816669": 1,
+   "4122796911": 1
+  },
+  "emails": [
+   "info.police@baldwintownship.com",
+   "info@baldwintownship.com"
+  ]
+ },
+ {
+  "id": "muni-883",
+  "name": "Bell Acres Borough",
+  "phone": "412-741-5448",
+  "website": "http://www.bellacresborough.org/",
+  "status": "phone_found",
+  "sitePhones": [
+   "4127415448",
+   "4127416302",
+   "4127413010",
+   "7242666151",
+   "4127411272"
+  ],
+  "siteCounts": {
+   "4127415448": 2,
+   "4127416302": 2,
+   "4127413010": 1,
+   "7242666151": 1,
+   "4127411272": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-803",
+  "name": "Bellevue Borough",
+  "phone": "412-766-6164",
+  "website": "http://www.bellevuepa.org/",
+  "status": "phone_found",
+  "sitePhones": [
+   "4127666164"
+  ],
+  "siteCounts": {
+   "4127666164": 5
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-876",
+  "name": "Bethel Park Municipality",
+  "phone": "412-831-6800",
+  "website": "http://www.bethelpark.net",
+  "status": "phone_found",
+  "sitePhones": [
+   "4128316800",
+   "7249780300",
+   "4128311328",
+   "4128512910",
+   "4128313304"
+  ],
+  "siteCounts": {
+   "4128316800": 3,
+   "7249780300": 1,
+   "4128311328": 1,
+   "4128512910": 1,
+   "4128313304": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-808",
+  "name": "Braddock Borough",
+  "phone": "412-271-1018",
+  "website": "http://braddockborough.com/",
+  "status": "phone_found",
+  "sitePhones": [
+   "4122711018",
+   "4122717414"
+  ],
+  "siteCounts": {
+   "4122711018": 10,
+   "4122717414": 6
+  },
+  "emails": [
+   "admin@braddockborough.com"
+  ]
+ },
+ {
+  "id": "muni-809",
+  "name": "Bradford Woods Borough",
+  "phone": "724-935-2990",
+  "website": "http://www.bradfordwoodspa.org",
+  "status": "phone_found",
+  "sitePhones": [
+   "7249352990",
+   "4123506500",
+   "4123506512",
+   "4123506490",
+   "4125655700",
+   "4125652445",
+   "4127853070",
+   "4123692230"
+  ],
+  "siteCounts": {
+   "7249352990": 3,
+   "4123506500": 1,
+   "4123506512": 1,
+   "4123506490": 1,
+   "4125655700": 1,
+   "4125652445": 1,
+   "4127853070": 1,
+   "4123692230": 1,
+   "4128037370": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-200",
+  "name": "City of Clairton",
+  "phone": "412-233-8113",
+  "website": "http://cityofclairton.com/",
+  "status": "phone_found",
+  "sitePhones": [
+   "4122338113",
+   "4122336213",
+   "7244333440"
+  ],
+  "siteCounts": {
+   "4122338113": 8,
+   "7244333440": 1,
+   "4122336213": 2
+  },
+  "emails": [
+   "finance@cityofclairton.com"
+  ]
+ },
+ {
+  "id": "muni-400",
+  "name": "City of McKeesport",
+  "phone": "412-675-5020",
+  "website": "http://www.mckeesport-pa.gov",
+  "status": "phone_found",
+  "sitePhones": [
+   "4126755020"
+  ],
+  "siteCounts": {
+   "4126755020": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-819",
+  "name": "Dormont Borough",
+  "phone": "412-561-8900",
+  "website": "http://www.boro.dormont.pa.us",
+  "status": "phone_found",
+  "sitePhones": [
+   "4125618900"
+  ],
+  "siteCounts": {
+   "4125618900": 2
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-821",
+  "name": "East McKeesport Borough",
+  "phone": "412-829-7991",
+  "website": "http://eastmckeesportboro.com",
+  "status": "phone_found",
+  "sitePhones": [
+   "4128242531",
+   "4128240324",
+   "4128297991",
+   "4126900304"
+  ],
+  "siteCounts": {
+   "4128242531": 10,
+   "4128240324": 4,
+   "4128297991": 4,
+   "4126900304": 2
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-825",
+  "name": "Elizabeth Borough",
+  "phone": "412-384-7771",
+  "website": "http://elizabethpa.net/home/",
+  "status": "phone_found",
+  "sitePhones": [
+   "4123847771"
+  ],
+  "siteCounts": {
+   "4123847771": 2
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-908",
+  "name": "Elizabeth Township",
+  "phone": "412-751-2880",
+  "website": "http://elizabethtownshippa.com/",
+  "status": "phone_found",
+  "sitePhones": [
+   "4127512880"
+  ],
+  "siteCounts": {
+   "4127512880": 2
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-826",
+  "name": "Emsworth Borough",
+  "phone": "412-761-1161",
+  "website": "http://emsworthborough.com/",
+  "status": "phone_found",
+  "sitePhones": [
+   "4127611161",
+   "4127618287",
+   "4123488028",
+   "4123567127",
+   "4123442551",
+   "4123593252",
+   "4123506490"
+  ],
+  "siteCounts": {
+   "4123488028": 1,
+   "4127611161": 2,
+   "4127618287": 2,
+   "4123567127": 1,
+   "4123442551": 1,
+   "4123593252": 1,
+   "4123506490": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-909",
+  "name": "Fawn Township",
+  "phone": "724-226-0666",
+  "website": "http://www.fawntownship.com",
+  "status": "phone_found",
+  "sitePhones": [
+   "7242260666",
+   "7242263307",
+   "7242260008",
+   "7244098446",
+   "7242244613",
+   "7242248553",
+   "4124733056",
+   "4124733370"
+  ],
+  "siteCounts": {
+   "7242260666": 3,
+   "7242263307": 3,
+   "7242260008": 1,
+   "7244098446": 1,
+   "7242244613": 1,
+   "7242248553": 1,
+   "4124733056": 1,
+   "4124733370": 1
+  },
+  "emails": [
+   "roadcrew@fawntownship.com",
+   "zoning@fawntownship.com"
+  ]
+ },
+ {
+  "id": "muni-828",
+  "name": "Forest Hills Borough",
+  "phone": "412-351-7330",
+  "website": "http://www.foresthillspa.org",
+  "status": "phone_found",
+  "sitePhones": [
+   "4123517330",
+   "4123519111",
+   "4123517337",
+   "4123515475",
+   "4123517335",
+   "4128341066"
+  ],
+  "siteCounts": {
+   "4123517330": 12,
+   "4123517337": 1,
+   "4123519111": 2,
+   "4123515475": 1,
+   "4123517335": 1,
+   "4128341066": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-868",
+  "name": "Fox Chapel Borough",
+  "phone": "412-963-1100",
+  "website": "http://www.fox-chapel.pa.us",
+  "status": "phone_found",
+  "sitePhones": [
+   "4129631100"
+  ],
+  "siteCounts": {
+   "4129631100": 4
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-831",
+  "name": "Green Tree Borough",
+  "phone": "412-921-1110",
+  "website": "http://www.greentreeboro.com",
+  "status": "phone_found",
+  "sitePhones": [
+   "4129211110",
+   "4129215997",
+   "4129218624"
+  ],
+  "siteCounts": {
+   "4129211110": 4,
+   "4129215997": 4,
+   "4129218624": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-916",
+  "name": "Harrison Township",
+  "phone": "724-226-1393",
+  "website": "http://www.harrisontwp.com/",
+  "status": "phone_found",
+  "sitePhones": [
+   "7242261393",
+   "7242245540",
+   "7242249540",
+   "7242243355",
+   "7248265151",
+   "7242242131",
+   "4123445583",
+   "4128037370"
+  ],
+  "siteCounts": {
+   "7242261393": 8,
+   "7242245540": 2,
+   "7242249540": 2,
+   "7242243355": 2,
+   "7248265151": 1,
+   "7242242131": 1,
+   "4123445583": 1,
+   "4128037370": 1,
+   "4128033501": 1,
+   "4123504500": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-917",
+  "name": "Indiana Township",
+  "phone": "412-767-5333",
+  "website": "http://www.indianatownship.com",
+  "status": "phone_found",
+  "sitePhones": [
+   "4127675333",
+   "4127674773"
+  ],
+  "siteCounts": {
+   "4127675333": 5,
+   "4127674773": 3
+  },
+  "emails": [
+   "admin@indianatownship.com"
+  ]
+ },
+ {
+  "id": "muni-921",
+  "name": "Leet Township",
+  "phone": "724-266-2280",
+  "website": "http://www.leettownship.org/",
+  "status": "phone_found",
+  "sitePhones": [
+   "7242662280",
+   "7242666149",
+   "4122635278"
+  ],
+  "siteCounts": {
+   "7242662280": 6,
+   "4122635278": 1,
+   "7242666149": 2
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-881",
+  "name": "Lincoln Borough",
+  "phone": "412-751-2655",
+  "website": "http://www.lincolnborough.com",
+  "status": "phone_found",
+  "sitePhones": [
+   "4126753070",
+   "4127512655"
+  ],
+  "siteCounts": {
+   "4126753070": 1,
+   "4127512655": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-923",
+  "name": "Marshall Township",
+  "phone": "724-935-3090",
+  "website": "https://twp.marshall.pa.us/",
+  "status": "phone_found",
+  "sitePhones": [
+   "7249353090"
+  ],
+  "siteCounts": {
+   "7249353090": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-927",
+  "name": "McCandless Township",
+  "phone": "412-364-0616",
+  "website": "http://www.townofmccandless.org",
+  "status": "phone_found",
+  "sitePhones": [
+   "4123640616",
+   "4123645066",
+   "4123697992",
+   "4124733056"
+  ],
+  "siteCounts": {
+   "4123640616": 5,
+   "4123645066": 1,
+   "4123697992": 1,
+   "4124733056": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-842",
+  "name": "McKees Rocks Borough",
+  "phone": "412-331-2498",
+  "website": "https://mckeesrockspa.us/",
+  "status": "phone_found",
+  "sitePhones": [
+   "4123312498",
+   "4123910160",
+   "4123316899"
+  ],
+  "siteCounts": {
+   "4123910160": 1,
+   "4123312498": 2,
+   "4123316899": 1
+  },
+  "emails": [
+   "adminassistant@mckeesrockspa.us"
+  ]
+ },
+ {
+  "id": "muni-838",
+  "name": "Millvale Borough",
+  "phone": "412-821-2777",
+  "website": "http://www.millvalepa.com",
+  "status": "phone_found",
+  "sitePhones": [
+   "4128212777",
+   "4128212717"
+  ],
+  "siteCounts": {
+   "4128212777": 2,
+   "4128212717": 2
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-925",
+  "name": "Moon Township",
+  "phone": "412-262-1700",
+  "website": "http://www.moontwp.com",
+  "status": "phone_found",
+  "sitePhones": [
+   "4124621700",
+   "4122621700",
+   "4122653590"
+  ],
+  "siteCounts": {
+   "4124621700": 1,
+   "4122621700": 1,
+   "4122653590": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-839",
+  "name": "Mount Oliver Borough",
+  "phone": "412-431-8107",
+  "website": "http://www.mountoliver.us",
+  "status": "phone_found",
+  "sitePhones": [
+   "4124318107",
+   "4124312254"
+  ],
+  "siteCounts": {
+   "4124318107": 4,
+   "4124312254": 2
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-840",
+  "name": "Munhall Borough",
+  "phone": "412-464-7310",
+  "website": "http://www.munhallpa.us",
+  "status": "phone_found",
+  "sitePhones": [
+   "4124647310",
+   "4124647320",
+   "4124640462"
+  ],
+  "siteCounts": {
+   "4124647310": 20,
+   "4124640462": 2,
+   "4124647320": 6
+  },
+  "emails": [
+   "info@munhallpa.us"
+  ]
+ },
+ {
+  "id": "muni-930",
+  "name": "North Versailles Township",
+  "phone": "412-824-6616",
+  "website": "http://www.nvtpa.com/",
+  "status": "phone_found",
+  "sitePhones": [
+   "4128236602",
+   "4128230901",
+   "4128230629",
+   "4128246616"
+  ],
+  "siteCounts": {
+   "4128236602": 5,
+   "4128230901": 5,
+   "4128230629": 1,
+   "4128246616": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-845",
+  "name": "Oakmont Borough",
+  "phone": "412-828-3232",
+  "website": "http://www.oakmontborough.com/",
+  "status": "phone_found",
+  "sitePhones": [
+   "4128283232",
+   "4123567127",
+   "4123445583",
+   "7242064860",
+   "4122416690",
+   "4127312332",
+   "4127932448",
+   "4127937495"
+  ],
+  "siteCounts": {
+   "4128283232": 2,
+   "4123567127": 1,
+   "4123445583": 1,
+   "7242064860": 1,
+   "4122416690": 1,
+   "4127312332": 1,
+   "4127932448": 1,
+   "4127937495": 1,
+   "4123506490": 1,
+   "4123506499": 1,
+   "4128033501": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-848",
+  "name": "Port Vue Borough",
+  "phone": "412-664-9323",
+  "website": "http://www.portvue.org",
+  "status": "phone_found",
+  "sitePhones": [
+   "4126649323",
+   "4126646345"
+  ],
+  "siteCounts": {
+   "4126649323": 6,
+   "4126646345": 5
+  },
+  "emails": [
+   "manager@portvue.org"
+  ]
+ },
+ {
+  "id": "muni-937",
+  "name": "Reserve Township",
+  "phone": "412-322-1551",
+  "website": "http://www.reservetwp.com",
+  "status": "phone_found",
+  "sitePhones": [
+   "4123221551",
+   "4123222343"
+  ],
+  "siteCounts": {
+   "4123221551": 2,
+   "4123222343": 2
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-939",
+  "name": "Robinson Township",
+  "phone": "412-788-8120",
+  "website": "http://www.townshipofrobinson.com",
+  "status": "phone_found",
+  "sitePhones": [
+   "4127888120"
+  ],
+  "siteCounts": {
+   "4127888120": 5
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-869",
+  "name": "Sewickley Heights Borough",
+  "phone": "412-741-5119",
+  "website": "http://www.sewickleyheightsboro.com",
+  "status": "phone_found",
+  "sitePhones": [
+   "4127415119",
+   "4124733056",
+   "4122622620",
+   "4127419180",
+   "4127417755",
+   "4127718100",
+   "7248439373",
+   "7246251511"
+  ],
+  "siteCounts": {
+   "4127415119": 7,
+   "4124733056": 1,
+   "4122622620": 1,
+   "4127419180": 1,
+   "4127417755": 1,
+   "4127718100": 1,
+   "7248439373": 1,
+   "7246251511": 1,
+   "4127711002": 1,
+   "4127493600": 1,
+   "7247312311": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-946",
+  "name": "South Fayette Township",
+  "phone": "412-221-8700",
+  "website": "http://www.southfayettepa.com",
+  "status": "phone_found",
+  "sitePhones": [
+   "4122218700",
+   "4122217798"
+  ],
+  "siteCounts": {
+   "4122218700": 2,
+   "4122217798": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-950",
+  "name": "Upper St. Clair Municipality",
+  "phone": "412-831-9000",
+  "website": "http://www.twpusc.org",
+  "status": "phone_found",
+  "sitePhones": [
+   "4128319000",
+   "4128319882"
+  ],
+  "siteCounts": {
+   "4128319000": 4,
+   "4128319882": 3
+  },
+  "emails": [
+   "benigni@twpusc.org",
+   "besterman@twpusc.org",
+   "burch@twpusc.org",
+   "gmiter@twpusc.org",
+   "long@twpusc.org",
+   "montani@twpusc.org",
+   "noreply@twpusc.org",
+   "pdonline@twpusc.org"
+  ]
+ },
+ {
+  "id": "muni-859",
+  "name": "Verona Borough",
+  "phone": "412-828-8080",
+  "website": "http://www.veronaborough.org",
+  "status": "phone_found",
+  "sitePhones": [
+   "4128288080"
+  ],
+  "siteCounts": {
+   "4128288080": 4
+  },
+  "emails": [
+   "admin@veronaborough.org"
+  ]
+ },
+ {
+  "id": "muni-861",
+  "name": "Wall Borough",
+  "phone": "412-824-3333",
+  "website": "http://www.wallborough.com",
+  "status": "phone_found",
+  "sitePhones": [
+   "4128243333"
+  ],
+  "siteCounts": {
+   "4128243333": 2
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-862",
+  "name": "West Elizabeth Borough",
+  "phone": "412-384-8200",
+  "website": "https://westelizabethpa.wordpress.com/",
+  "status": "phone_found",
+  "sitePhones": [
+   "4123848200",
+   "4123840538"
+  ],
+  "siteCounts": {
+   "4123848200": 3,
+   "4123840538": 3
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-863",
+  "name": "West Homestead Borough",
+  "phone": "412-461-1844",
+  "website": "http://westhomesteadpa.com/",
+  "status": "phone_found",
+  "sitePhones": [
+   "4124611844"
+  ],
+  "siteCounts": {
+   "4124611844": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-875",
+  "name": "White Oak Borough",
+  "phone": "412-678-0437",
+  "website": "http://www.woboro.com",
+  "status": "phone_found",
+  "sitePhones": [
+   "4126729727",
+   "4126720760",
+   "4126729726",
+   "7249780300",
+   "4126720833",
+   "4126725900",
+   "4126723916",
+   "4123845710"
+  ],
+  "siteCounts": {
+   "4126729727": 11,
+   "7249780300": 1,
+   "4126720760": 3,
+   "4126729726": 2,
+   "4126720833": 1,
+   "4126725900": 1,
+   "4126723916": 1,
+   "4123845710": 1,
+   "4122442626": 1,
+   "4126640444": 1,
+   "7247555800": 1,
+   "7242385639": 1,
+   "4126780437": 1,
+   "7243794331": 1,
+   "4123504510": 1,
+   "4126728901": 1,
+   "4126726444": 1,
+   "4126783774": 1,
+   "4126755011": 1,
+   "7242887555": 1
+  },
+  "emails": [
+   "jpalyo@woboro.com",
+   "whiteoak@woboro.com"
+  ]
+ },
+ {
+  "id": "muni-867",
+  "name": "Wilmerding Borough",
+  "phone": "412-823-4421",
+  "website": "http://www.WilmerdingBoro.com",
+  "status": "phone_found",
+  "sitePhones": [
+   "4128230420",
+   "4128561111",
+   "4128235828",
+   "4128552072",
+   "4124176921",
+   "4128235084",
+   "4128290892",
+   "4128236728"
+  ],
+  "siteCounts": {
+   "4128230420": 3,
+   "4128561111": 1,
+   "4128235828": 1,
+   "4128552072": 1,
+   "4124176921": 1,
+   "4128235084": 1,
+   "4128290892": 1,
+   "4128236728": 1,
+   "4128232698": 1,
+   "4126096143": 1,
+   "4122240072": 1,
+   "4122612813": 1,
+   "4128245672": 1,
+   "4128234421": 1,
+   "4126602350": 1,
+   "7243841081": 1,
+   "4123353474": 1,
+   "4126287996": 1
+  },
+  "emails": [
+   "c.lang@wilmerdingboro.com"
+  ]
+ },
+ {
+  "id": "muni-802",
+  "name": "Avalon Borough",
+  "phone": "724-761-5820",
+  "website": "http://www.boroughofavalon.org/",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4127615820",
+   "4127615953",
+   "4127615959",
+   "4127662244",
+   "4127610353"
+  ],
+  "siteCounts": {
+   "4127615820": 4,
+   "4127615959": 1,
+   "4127662244": 1,
+   "4127610353": 1,
+   "4127615953": 2
+  },
+  "emails": [
+   "dregrut@boroughofavalon.org",
+   "info@boroughofavalon.org"
+  ]
+ },
+ {
+  "id": "muni-877",
+  "name": "Baldwin Borough",
+  "phone": "412-884-0803",
+  "website": "http://www.baldwinborough.org",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4128829600"
+  ],
+  "siteCounts": {
+   "4128829600": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-805",
+  "name": "Ben Avon Heights Borough",
+  "phone": "724-731-2300",
+  "website": "http://www.benavonheightsborough.com",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4127661561",
+   "4127668668"
+  ],
+  "siteCounts": {
+   "4127661561": 3,
+   "4127668668": 2
+  },
+  "emails": [
+   "communityclub@benavonheightsborough.com",
+   "webmaster@benavonheightsborough.com"
+  ]
+ },
+ {
+  "id": "muni-806",
+  "name": "Blawnox Borough",
+  "phone": "412-499-2086",
+  "website": "http://www.blawnox.com/",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4128284141",
+   "4128287138"
+  ],
+  "siteCounts": {
+   "4128284141": 1,
+   "4128287138": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-807",
+  "name": "Brackenridge Borough",
+  "phone": "724-904-7455",
+  "website": "https://brackenridgeboro.com/",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "7242240800",
+   "7242244509",
+   "7242241515",
+   "4124733056"
+  ],
+  "siteCounts": {
+   "7242240800": 8,
+   "7242244509": 5,
+   "7242241515": 2,
+   "4124733056": 2
+  },
+  "emails": [
+   "manager@brackenridgeboro.com"
+  ]
+ },
+ {
+  "id": "muni-810",
+  "name": "Brentwood Borough",
+  "phone": "412-882-5383x1117",
+  "website": "http://www.brentwoodboro.com",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4128841500"
+  ],
+  "siteCounts": {
+   "4128841500": 1
+  },
+  "emails": [
+   "gzboyovsky@brentwoodboro.com"
+  ]
+ },
+ {
+  "id": "muni-811",
+  "name": "Bridgeville Borough",
+  "phone": "412-221-6055",
+  "website": "http://www.bridgevilleboro.com",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4122216012",
+   "4122578854"
+  ],
+  "siteCounts": {
+   "4122216012": 2,
+   "4122578854": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-813",
+  "name": "Castle Shannon Borough",
+  "phone": "412-885-9260",
+  "website": "http://borough.castle-shannon.pa.us",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4128859200"
+  ],
+  "siteCounts": {
+   "4128859200": 5
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-814",
+  "name": "Chalfant Borough",
+  "phone": "412-824-3283",
+  "website": "http://www.chalfantborough.org/",
+  "status": "phone_not_found",
+  "sitePhones": [],
+  "siteCounts": {},
+  "emails": []
+ },
+ {
+  "id": "muni-815",
+  "name": "Cheswick Borough",
+  "phone": "724-275-7722",
+  "website": "http://www.cheswick.us",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "7242745125",
+   "7242748772",
+   "7242745757",
+   "7242744366",
+   "7242744155",
+   "7242744800",
+   "7248265151",
+   "4122242131"
+  ],
+  "siteCounts": {
+   "7242745125": 5,
+   "7242748772": 5,
+   "7242745757": 3,
+   "7242744366": 1,
+   "7242744155": 1,
+   "7242744800": 1,
+   "7248265151": 1,
+   "4122242131": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-905",
+  "name": "Collier Township",
+  "phone": "412-835-5243",
+  "website": "http://www.colliertownship.net",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4122792525"
+  ],
+  "siteCounts": {
+   "4122792525": 9
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-817",
+  "name": "Coraopolis Borough",
+  "phone": "412-835-5243",
+  "website": "http://www.coraopolispa.com",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4122643002",
+   "4124733056"
+  ],
+  "siteCounts": {
+   "4124733056": 6,
+   "4122643002": 11
+  },
+  "emails": [
+   "manager@coraopolispa.com"
+  ]
+ },
+ {
+  "id": "muni-818",
+  "name": "Crafton Borough",
+  "phone": "412-835-5243",
+  "website": "http://www.crafton.org",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4129210752"
+  ],
+  "siteCounts": {
+   "4129210752": 2
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-906",
+  "name": "Crescent Township",
+  "phone": "724-457-8100 ex. 100",
+  "website": "http://www.crescenttownship.com",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "7244578100",
+   "7244572045",
+   "7244577430",
+   "4129835241",
+   "4129962691",
+   "4122603994",
+   "7243751303",
+   "7247312311"
+  ],
+  "siteCounts": {
+   "7244578100": 13,
+   "7244572045": 4,
+   "7244577430": 1,
+   "4129835241": 1,
+   "4129962691": 1,
+   "4122603994": 1,
+   "7243751303": 1,
+   "7247312311": 1,
+   "4122649440": 1,
+   "4122644300": 1,
+   "4122622620": 1,
+   "4123506490": 1,
+   "4122623881": 1,
+   "4122623780": 1,
+   "7242064860": 1,
+   "4126433020": 1,
+   "4123504111": 1,
+   "4126872243": 1,
+   "4123504006": 1,
+   "4123504100": 1,
+   "4123937100": 1,
+   "7242234480": 1,
+   "7242389523": 1,
+   "4127662565": 1,
+   "4123504226": 1,
+   "7244571320": 1,
+   "4128355243": 1,
+   "4123919890": 1,
+   "7249780300": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-820",
+  "name": "Dravosburg Borough",
+  "phone": "412-469-0743",
+  "website": "http://www.dravosburg.org",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4124665200",
+   "4124666027"
+  ],
+  "siteCounts": {
+   "4124665200": 1,
+   "4124666027": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-907",
+  "name": "East Deer Township",
+  "phone": "724-274-5748",
+  "website": "http://eastdeertownship.org",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "7242243434",
+   "7244685505"
+  ],
+  "siteCounts": {
+   "7242243434": 5,
+   "7244685505": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-822",
+  "name": "East Pittsburgh Borough",
+  "phone": "412-823-4046",
+  "website": "http://eastpittsburghboro.com/ ",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4128237124",
+   "4128253299",
+   "4128235473",
+   "4122711306",
+   "4122714806",
+   "4124733056",
+   "4123514900",
+   "4124699380"
+  ],
+  "siteCounts": {
+   "4128237124": 12,
+   "4128253299": 3,
+   "4128235473": 2,
+   "4122711306": 2,
+   "4122714806": 1,
+   "4124733056": 1,
+   "4123514900": 1,
+   "4124699380": 1,
+   "4122436200": 1
+  },
+  "emails": [
+   "bwalker@eastpittsburghboro.com",
+   "secretary2@eastpittsburghboro.com",
+   "sjoseph@eastpittsburghboro.com"
+  ]
+ },
+ {
+  "id": "muni-824",
+  "name": "Edgeworth Borough",
+  "phone": "412-835-5243",
+  "website": "http://www.edgeworthborough.org/",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4127419400",
+   "4127412866",
+   "4127416998"
+  ],
+  "siteCounts": {
+   "4127419400": 3,
+   "4127412866": 3,
+   "4127416998": 2
+  },
+  "emails": [
+   "office@edgeworthborough.org"
+  ]
+ },
+ {
+  "id": "muni-910",
+  "name": "Findlay Township",
+  "phone": "724-695-0521",
+  "website": "http://www.findlay.pa.us",
+  "status": "phone_not_found",
+  "sitePhones": [],
+  "siteCounts": {},
+  "emails": []
+ },
+ {
+  "id": "muni-911",
+  "name": "Forward Township",
+  "phone": "412-384-2321",
+  "website": "http://forwardtownship.com ",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4126645200",
+   "4123841761"
+  ],
+  "siteCounts": {
+   "4126645200": 1,
+   "4123841761": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-884",
+  "name": "Franklin Park Borough",
+  "phone": "412-364-4848",
+  "website": "http://www.franklinparkborough.us/",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4123644115",
+   "4123664406"
+  ],
+  "siteCounts": {
+   "4123644115": 1,
+   "4123664406": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-913",
+  "name": "Frazer Township",
+  "phone": "724-224-8971",
+  "website": "http://www.frazertownship.net/",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "7242744202",
+   "7242744203",
+   "7242744800",
+   "7242744204",
+   "7242246262",
+   "7242243288",
+   "7245432011",
+   "4124732552"
+  ],
+  "siteCounts": {
+   "7242744202": 2,
+   "7242744203": 1,
+   "7242744800": 1,
+   "7242744204": 1,
+   "7242246262": 1,
+   "7242243288": 1,
+   "7245432011": 1,
+   "4124732552": 1,
+   "7242246562": 1,
+   "7242654287": 1,
+   "7242268320": 1,
+   "7244685505": 1,
+   "7242389523": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-829",
+  "name": "Glassport Borough",
+  "phone": "412-664-7310",
+  "website": "https://glassportborough.net/",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4126727400",
+   "4126724514"
+  ],
+  "siteCounts": {
+   "4126727400": 2,
+   "4126724514": 1
+  },
+  "emails": [
+   "office@glassportborough.net"
+  ]
+ },
+ {
+  "id": "muni-846",
+  "name": "Glen Osborne Borough",
+  "phone": "724-731-2319",
+  "website": "http://www.glenosborneborough.org/",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4126993850"
+  ],
+  "siteCounts": {
+   "4126993850": 3
+  },
+  "emails": [
+   "admin@glenosborneborough.org"
+  ]
+ },
+ {
+  "id": "muni-830",
+  "name": "Glenfield Borough",
+  "phone": "412-741-9473",
+  "website": "http://glenfieldborough.org/",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4127418566",
+   "4128558041",
+   "4127663055",
+   "4123957150",
+   "4127662565",
+   "4124940873",
+   "4127417755",
+   "4127412591"
+  ],
+  "siteCounts": {
+   "4127418566": 3,
+   "4128558041": 1,
+   "4127663055": 1,
+   "4123957150": 1,
+   "4127662565": 1,
+   "4124940873": 1,
+   "4127417755": 1,
+   "4127412591": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-914",
+  "name": "Hampton Township",
+  "phone": "724-731-2300",
+  "website": "http://www.hampton-pa.org",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4124860400"
+  ],
+  "siteCounts": {
+   "4124860400": 2
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-832",
+  "name": "Haysville Borough",
+  "phone": "412-741-5038",
+  "website": "https://www.haysvilleborough.org/",
+  "status": "phone_not_found",
+  "sitePhones": [],
+  "siteCounts": {},
+  "emails": []
+ },
+ {
+  "id": "muni-833",
+  "name": "Heidelberg Borough",
+  "phone": "412-276-5653",
+  "website": "http://www.heidelbergborough.org",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4127662565",
+   "4122760363",
+   "4124462783"
+  ],
+  "siteCounts": {
+   "4127662565": 1,
+   "4122760363": 1,
+   "4124462783": 1
+  },
+  "emails": [
+   "manager@heidelbergborough.org"
+  ]
+ },
+ {
+  "id": "muni-835",
+  "name": "Ingram Borough",
+  "phone": "412-922-5877",
+  "website": "http://www.ingramborough.org",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4129213625"
+  ],
+  "siteCounts": {
+   "4129213625": 5
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-878",
+  "name": "Jefferson Hills Borough",
+  "phone": "412-226-2230",
+  "website": "http://www.jeffersonhillsboro.org/",
+  "status": "phone_not_found",
+  "sitePhones": [],
+  "siteCounts": {},
+  "emails": []
+ },
+ {
+  "id": "muni-920",
+  "name": "Kilbuck Township",
+  "phone": "412-835-5243",
+  "website": "http://kilbucktownship.org",
+  "status": "phone_not_found",
+  "sitePhones": [],
+  "siteCounts": {},
+  "emails": [
+   "wright@kilbucktownship.org"
+  ]
+ },
+ {
+  "id": "muni-837",
+  "name": "Liberty Borough",
+  "phone": "412-678-3286",
+  "website": "http://www.libertyborough.com/",
+  "status": "phone_not_found",
+  "sitePhones": [],
+  "siteCounts": {},
+  "emails": []
+ },
+ {
+  "id": "muni-841",
+  "name": "McDonald Borough",
+  "phone": "724-926-8284",
+  "website": "http://www.mcdonaldboro.com",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "7249260133",
+   "7249297694",
+   "7249268711",
+   "7249262750"
+  ],
+  "siteCounts": {
+   "7249260133": 1,
+   "7249297694": 1,
+   "7249268711": 1,
+   "7249262750": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-879",
+  "name": "Monroeville Municipality",
+  "phone": "412-856-3348",
+  "website": "http://www.monroeville.pa.us",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4128561000"
+  ],
+  "siteCounts": {
+   "4128561000": 2
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-926",
+  "name": "Mount Lebanon Township",
+  "phone": "412-343-3405",
+  "website": "http://mtlebanon.org",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4123433400",
+   "4123433753",
+   "4123433403"
+  ],
+  "siteCounts": {
+   "4123433403": 1,
+   "4123433400": 2,
+   "4123433753": 2
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-843",
+  "name": "North Braddock Borough",
+  "phone": "412-351-5500",
+  "website": "http://www.northbraddockborough.com/",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4123514900",
+   "4128247791",
+   "4122713647",
+   "4122710832",
+   "4122711306"
+  ],
+  "siteCounts": {
+   "4123514900": 1,
+   "4128247791": 1,
+   "4122713647": 1,
+   "4122710832": 1,
+   "4122711306": 1
+  },
+  "emails": [
+   "admin@northbraddockborough.com"
+  ]
+ },
+ {
+  "id": "muni-929",
+  "name": "North Fayette Township",
+  "phone": "724-693-3118",
+  "website": "http://www.north-fayette.com",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "7246939601",
+   "7246938132"
+  ],
+  "siteCounts": {
+   "7246939601": 1,
+   "7246938132": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-844",
+  "name": "Oakdale Borough",
+  "phone": "724-693-9397",
+  "website": "http://www.oakdaleborough.com",
+  "status": "phone_not_found",
+  "sitePhones": [],
+  "siteCounts": {},
+  "emails": []
+ },
+ {
+  "id": "muni-932",
+  "name": "Ohio Township",
+  "phone": "412-528-4858",
+  "website": "http://www.ohiotwp.org",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4123646321",
+   "4123698182"
+  ],
+  "siteCounts": {
+   "4123646321": 1,
+   "4123698182": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-934",
+  "name": "Penn Hills Municipality",
+  "phone": "412-793-7063",
+  "website": "http://www.pennhills.org",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4123421086",
+   "4123420029"
+  ],
+  "siteCounts": {
+   "4123421086": 5,
+   "4123420029": 3
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-871",
+  "name": "Pennsbury Village Borough",
+  "phone": "412-276-6181",
+  "website": "http://www.pennsburyvillageboro.com",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4122765100",
+   "4122797876",
+   "7247312300",
+   "4123937000"
+  ],
+  "siteCounts": {
+   "4122765100": 2,
+   "7247312300": 1,
+   "4123937000": 1,
+   "4122797876": 2
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-935",
+  "name": "Pine Township",
+  "phone": "724-625-1591 x115",
+  "website": "http://www.twp.pine.pa.us",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "7246251591",
+   "7246251560"
+  ],
+  "siteCounts": {
+   "7246251591": 1,
+   "7246251560": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-873",
+  "name": "Pleasant Hills Borough",
+  "phone": "412-653-6321",
+  "website": "http://www.pleasanthillspa.com",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4126553300",
+   "4126555045",
+   "4126555036",
+   "4126555035"
+  ],
+  "siteCounts": {
+   "4126553300": 11,
+   "4126555045": 2,
+   "4126555036": 1,
+   "4126555035": 1
+  },
+  "emails": [
+   "amy.martin@pleasanthillspa.com"
+  ]
+ },
+ {
+  "id": "muni-849",
+  "name": "Rankin Borough",
+  "phone": "412-271-6605",
+  "website": "http://www.rankinborough.com/",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4122711017",
+   "4122718610"
+  ],
+  "siteCounts": {
+   "4122711017": 10,
+   "4122718610": 6
+  },
+  "emails": [
+   "manager@rankinborough.com"
+  ]
+ },
+ {
+  "id": "muni-938",
+  "name": "Richland Township",
+  "phone": "724-731-2300",
+  "website": "http://richland.pa.us/",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "7244435921",
+   "7244438860"
+  ],
+  "siteCounts": {
+   "7244435921": 2,
+   "7244438860": 2
+  },
+  "emails": [
+   "info@richland.pa.us"
+  ]
+ },
+ {
+  "id": "muni-940",
+  "name": "Ross Township",
+  "phone": "412-835-5243",
+  "website": "http://www.ross.pa.us/",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4129317048",
+   "4129317055",
+   "4129313956",
+   "4129317041",
+   "4129319070"
+  ],
+  "siteCounts": {
+   "4129317055": 2,
+   "4129313956": 2,
+   "4129317048": 7,
+   "4129319070": 1,
+   "4129317041": 2
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-941",
+  "name": "Scott Township",
+  "phone": "412-276-5302",
+  "website": "http://scott-twp.com",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4122765300"
+  ],
+  "siteCounts": {
+   "4122765300": 2
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-851",
+  "name": "Sewickley Borough",
+  "phone": "724-731-2319",
+  "website": "http://www.sewickleyborough.org",
+  "status": "phone_not_found",
+  "sitePhones": [],
+  "siteCounts": {},
+  "emails": []
+ },
+ {
+  "id": "muni-882",
+  "name": "Sewickley Hills Borough",
+  "phone": "412-741-7734",
+  "website": "http://www.sewickleyhills.com",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4127414891",
+   "4127414892"
+  ],
+  "siteCounts": {
+   "4127414891": 3,
+   "4127414892": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-944",
+  "name": "Shaler Township",
+  "phone": "412-486-9700 x224",
+  "website": "http://www.shaler.org",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4124869700",
+   "4124874107"
+  ],
+  "siteCounts": {
+   "4124869700": 2,
+   "4124874107": 1
+  },
+  "emails": [
+   "20webmaster@shaler.org"
+  ]
+ },
+ {
+  "id": "muni-945",
+  "name": "South Park Township",
+  "phone": "412-833-8292",
+  "website": "http://www.southparktwp.com",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4128317000",
+   "7247312311",
+   "4128355243",
+   "4128310425",
+   "4128331000",
+   "4123504636",
+   "4126872243",
+   "4127853070"
+  ],
+  "siteCounts": {
+   "4126872243": 1,
+   "4127853070": 1,
+   "4128317000": 15,
+   "4123504500": 1,
+   "7247312311": 2,
+   "4128355243": 2,
+   "4127871616": 1,
+   "7245197646": 1,
+   "4128356428": 1,
+   "4128310425": 2,
+   "4128331000": 2,
+   "4128313710": 1,
+   "4124733056": 1,
+   "4126532102": 1,
+   "4126554844": 1,
+   "4128357114": 1,
+   "4123980910": 1,
+   "4128350408": 1,
+   "4126553836": 1,
+   "7243487277": 1,
+   "4128335585": 1,
+   "7243487013": 1,
+   "7249297694": 1,
+   "4123504636": 2,
+   "4128358221": 1,
+   "4128353545": 1,
+   "4128331499": 1,
+   "4128335558": 1,
+   "4128310810": 1,
+   "4128544633": 1,
+   "4128313620": 1
+  },
+  "emails": [
+   "jamie@southparktwp.com",
+   "southparktwp@southparktwp.com"
+  ]
+ },
+ {
+  "id": "muni-853",
+  "name": "Springdale Borough",
+  "phone": "724-274-6269",
+  "website": "http://www.springdaleborough.com/",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "7242746800",
+   "7242744477"
+  ],
+  "siteCounts": {
+   "7242746800": 13,
+   "7242744477": 7
+  },
+  "emails": [
+   "dcopeland@springdaleborough.com",
+   "ddayoub@springdaleborough.com",
+   "dpiontek@springdaleborough.com",
+   "dstephens@springdaleborough.com",
+   "janderson@springdaleborough.com",
+   "jhartz@springdaleborough.com",
+   "jkern@springdaleborough.com",
+   "joverly@springdaleborough.com"
+  ]
+ },
+ {
+  "id": "muni-949",
+  "name": "Stowe Township",
+  "phone": "724-731-2311",
+  "website": "http://stowetwp.com/",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4123314050",
+   "4123314033"
+  ],
+  "siteCounts": {
+   "4123314050": 4,
+   "4123314033": 2
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-854",
+  "name": "Swissvale Borough",
+  "phone": "412-351-3342",
+  "website": "http://www.swissvaleborough.com/",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4122717101"
+  ],
+  "siteCounts": {
+   "4122717101": 2
+  },
+  "emails": [
+   "administrative@swissvaleborough.com"
+  ]
+ },
+ {
+  "id": "muni-855",
+  "name": "Tarentum Borough",
+  "phone": "724-224-1179",
+  "website": "http://www.tarentumboro.com",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "7242241876",
+   "7242241821"
+  ],
+  "siteCounts": {
+   "7242241876": 1,
+   "7242241821": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-857",
+  "name": "Trafford Borough",
+  "phone": "412-372-5361",
+  "website": "http://www.traffordpa.com",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4123727652"
+  ],
+  "siteCounts": {
+   "4123727652": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-858",
+  "name": "Turtle Creek Borough",
+  "phone": "412-824-1835",
+  "website": "http://www.turtlecreekborough.com/",
+  "status": "phone_not_found",
+  "sitePhones": [],
+  "siteCounts": {},
+  "emails": []
+ },
+ {
+  "id": "muni-952",
+  "name": "West Deer Township",
+  "phone": "724-265-4250",
+  "website": "http://www.westdeertownship.com",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "7242653680"
+  ],
+  "siteCounts": {
+   "7242653680": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-870",
+  "name": "West Mifflin Borough",
+  "phone": "412-466-8177",
+  "website": "http://www.westmifflinborough.com",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4124668170",
+   "4124613125",
+   "4124615300"
+  ],
+  "siteCounts": {
+   "4124668170": 3,
+   "4124613125": 1,
+   "4124615300": 1
+  },
+  "emails": [
+   "plans@westmifflinborough.com",
+   "web@westmifflinborough.com"
+  ]
+ },
+ {
+  "id": "muni-864",
+  "name": "West View Borough",
+  "phone": "412-931-1633",
+  "website": "http://www.westviewborough.org",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4129312800"
+  ],
+  "siteCounts": {
+   "4129312800": 1
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-865",
+  "name": "Whitaker Borough",
+  "phone": "412-464-1199",
+  "website": "http://www.alcosan.org",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4127664810"
+  ],
+  "siteCounts": {
+   "4127664810": 3
+  },
+  "emails": [
+   "amanda.mueller@alcosan.org",
+   "public.relations@alcosan.org"
+  ]
+ },
+ {
+  "id": "muni-874",
+  "name": "Whitehall Borough",
+  "phone": "412-881-1644",
+  "website": "http://www.whitehallboro.org",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4128840505"
+  ],
+  "siteCounts": {
+   "4128840505": 2
+  },
+  "emails": []
+ },
+ {
+  "id": "muni-953",
+  "name": "Wilkins Township",
+  "phone": "412-824-6860",
+  "website": "http://www.wilkinstownship.com",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4128246650",
+   "4128243808"
+  ],
+  "siteCounts": {
+   "4128246650": 3,
+   "4128243808": 3
+  },
+  "emails": [
+   "dbingham@wilkinstownship.com",
+   "lbingham@wilkinstownship.com"
+  ]
+ },
+ {
+  "id": "muni-866",
+  "name": "Wilkinsburg Borough",
+  "phone": "610-599-3143",
+  "website": "http://www.wilkinsburgpa.gov",
+  "status": "phone_not_found",
+  "sitePhones": [
+   "4122442900",
+   "4122448642",
+   "4122442913",
+   "4122442952",
+   "4122442959",
+   "4122442953",
+   "4122427251",
+   "4122442937"
+  ],
+  "siteCounts": {
+   "4122442900": 6,
+   "4122448642": 2,
+   "4122442913": 2,
+   "4122442952": 1,
+   "4122442959": 1,
+   "4122442953": 1,
+   "4122427251": 1,
+   "4122442937": 1,
+   "4122442923": 1,
+   "4122442922": 1
+  },
+  "emails": [
+   "info@wilkinsburgpa.gov"
+  ]
+ }
+]

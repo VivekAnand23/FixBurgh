@@ -1,0 +1,449 @@
+{
+ "generatedAt": "2026-10-08",
+ "overrides": {
+  "muni-804": {
+   "phone": null,
+   "was": "412-835-5243",
+   "needsCheck": "Directory number is shared with other municipalities; site unreadable."
+  },
+  "muni-872": {
+   "phone": null,
+   "was": "724-731-2300",
+   "needsCheck": "Directory number is shared with other municipalities; site unreadable."
+  },
+  "muni-816": {
+   "needsCheck": "Could not read http://churchillborough.com to confirm the phone."
+  },
+  "muni-300": {
+   "needsCheck": "Could not read http://www.duquesnepa.us/ to confirm the phone."
+  },
+  "muni-100": {
+   "needsCheck": "Could not read http://www.pittsburghpa.gov/ to confirm the phone."
+  },
+  "muni-823": {
+   "phone": null,
+   "was": "412-835-5243",
+   "needsCheck": "Directory number is shared with other municipalities; site unreadable."
+  },
+  "muni-827": {
+   "needsCheck": "Could not read http://www.etnaborough.org to confirm the phone."
+  },
+  "muni-834": {
+   "needsCheck": "Could not read http://www.homesteadborough.com/ to confirm the phone."
+  },
+  "muni-919": {
+   "needsCheck": "Could not read http://www.kennedytwp.com to confirm the phone."
+  },
+  "muni-836": {
+   "needsCheck": "Could not read http://www.leetsdaleboro.net to confirm the phone."
+  },
+  "muni-931": {
+   "phone": null,
+   "was": "412-835-5243",
+   "needsCheck": "Directory number is shared with other municipalities; site unreadable."
+  },
+  "muni-847": {
+   "needsCheck": "Could not read http://www.pitcairnborough.us to confirm the phone."
+  },
+  "muni-880": {
+   "needsCheck": "Could not read http://www.plumboro.com to confirm the phone."
+  },
+  "muni-948": {
+   "needsCheck": "Could not read http://www.springdaletownship.com to confirm the phone."
+  },
+  "muni-812": {
+   "phone": null,
+   "was": "412-835-5243",
+   "needsCheck": "Directory number is shared with other municipalities; site unreadable."
+  },
+  "muni-915": {
+   "needsCheck": "Could not read http://www.townshipofharmar.com/ to confirm the phone."
+  },
+  "muni-928": {
+   "phone": null,
+   "was": "724-731-2300",
+   "needsCheck": "Directory number is shared with other municipalities; site unreadable."
+  },
+  "muni-850": {
+   "needsCheck": "Could not read http://www.rosslynfarms.org/ to confirm the phone."
+  },
+  "muni-852": {
+   "needsCheck": "Could not read http://www.sharpsburgborough.com to confirm the phone."
+  },
+  "muni-856": {
+   "phone": null,
+   "was": "412-835-5243",
+   "needsCheck": "Directory number is shared with other municipalities; site unreadable."
+  },
+  "muni-860": {
+   "needsCheck": "Could not read http://www.mck-macm.org/ to confirm the phone."
+  },
+  "muni-947": {
+   "needsCheck": "Could not read website to confirm the phone."
+  },
+  "muni-901": {
+   "email": "info@aleppotownship.com",
+   "emailSource": "http://aleppotownship.com"
+  },
+  "muni-902": {
+   "email": "info@baldwintownship.com",
+   "emailSource": "http://baldwintownship.com/"
+  },
+  "muni-808": {
+   "email": "admin@braddockborough.com",
+   "emailSource": "http://braddockborough.com/"
+  },
+  "muni-917": {
+   "email": "admin@indianatownship.com",
+   "emailSource": "http://www.indianatownship.com"
+  },
+  "muni-842": {
+   "email": "adminassistant@mckeesrockspa.us",
+   "emailSource": "https://mckeesrockspa.us/"
+  },
+  "muni-840": {
+   "email": "info@munhallpa.us",
+   "emailSource": "http://www.munhallpa.us"
+  },
+  "muni-848": {
+   "email": "manager@portvue.org",
+   "emailSource": "http://www.portvue.org"
+  },
+  "muni-859": {
+   "email": "admin@veronaborough.org",
+   "emailSource": "http://www.veronaborough.org"
+  },
+  "muni-802": {
+   "phone": "412-761-5820",
+   "phoneSource": "http://www.boroughofavalon.org/",
+   "was": "724-761-5820",
+   "email": "info@boroughofavalon.org",
+   "emailSource": "http://www.boroughofavalon.org/"
+  },
+  "muni-877": {
+   "phone": "412-882-9600",
+   "phoneSource": "http://www.baldwinborough.org",
+   "was": "412-884-0803"
+  },
+  "muni-805": {
+   "phone": "412-766-1561",
+   "phoneSource": "http://www.benavonheightsborough.com",
+   "was": "724-731-2300"
+  },
+  "muni-806": {
+   "phone": "412-828-4141",
+   "phoneSource": "http://www.blawnox.com/",
+   "was": "412-499-2086"
+  },
+  "muni-807": {
+   "phone": "724-224-0800",
+   "phoneSource": "https://brackenridgeboro.com/",
+   "was": "724-904-7455",
+   "email": "manager@brackenridgeboro.com",
+   "emailSource": "https://brackenridgeboro.com/"
+  },
+  "muni-810": {
+   "phone": "412-884-1500",
+   "phoneSource": "http://www.brentwoodboro.com",
+   "was": "412-882-5383x1117"
+  },
+  "muni-811": {
+   "phone": "412-221-6012",
+   "phoneSource": "http://www.bridgevilleboro.com",
+   "was": "412-221-6055"
+  },
+  "muni-813": {
+   "phone": "412-885-9200",
+   "phoneSource": "http://borough.castle-shannon.pa.us",
+   "was": "412-885-9260"
+  },
+  "muni-814": {
+   "needsCheck": "Could not read http://www.chalfantborough.org/ to confirm the phone."
+  },
+  "muni-815": {
+   "phone": "724-274-5125",
+   "phoneSource": "http://www.cheswick.us",
+   "was": "724-275-7722"
+  },
+  "muni-905": {
+   "phone": "412-279-2525",
+   "phoneSource": "http://www.colliertownship.net",
+   "was": "412-835-5243"
+  },
+  "muni-817": {
+   "phone": "412-264-3002",
+   "phoneSource": "http://www.coraopolispa.com",
+   "was": "412-835-5243",
+   "email": "manager@coraopolispa.com",
+   "emailSource": "http://www.coraopolispa.com"
+  },
+  "muni-818": {
+   "phone": "412-921-0752",
+   "phoneSource": "http://www.crafton.org",
+   "was": "412-835-5243"
+  },
+  "muni-906": {
+   "phone": "724-457-8100",
+   "phoneSource": "http://www.crescenttownship.com",
+   "was": "724-457-8100 ex. 100"
+  },
+  "muni-820": {
+   "phone": "412-466-5200",
+   "phoneSource": "http://www.dravosburg.org",
+   "was": "412-469-0743"
+  },
+  "muni-907": {
+   "phone": "724-224-3434",
+   "phoneSource": "http://eastdeertownship.org",
+   "was": "724-274-5748"
+  },
+  "muni-822": {
+   "phone": "412-823-7124",
+   "phoneSource": "http://eastpittsburghboro.com/ ",
+   "was": "412-823-4046",
+   "email": "secretary2@eastpittsburghboro.com",
+   "emailSource": "http://eastpittsburghboro.com/ "
+  },
+  "muni-824": {
+   "phone": "412-741-9400",
+   "phoneSource": "http://www.edgeworthborough.org/",
+   "was": "412-835-5243",
+   "email": "office@edgeworthborough.org",
+   "emailSource": "http://www.edgeworthborough.org/"
+  },
+  "muni-910": {
+   "needsCheck": "Could not read http://www.findlay.pa.us to confirm the phone."
+  },
+  "muni-911": {
+   "phone": "412-664-5200",
+   "phoneSource": "http://forwardtownship.com ",
+   "was": "412-384-2321"
+  },
+  "muni-884": {
+   "phone": "412-364-4115",
+   "phoneSource": "http://www.franklinparkborough.us/",
+   "was": "412-364-4848"
+  },
+  "muni-913": {
+   "phone": "724-274-4202",
+   "phoneSource": "http://www.frazertownship.net/",
+   "was": "724-224-8971"
+  },
+  "muni-829": {
+   "phone": "412-672-7400",
+   "phoneSource": "https://glassportborough.net/",
+   "was": "412-664-7310",
+   "email": "office@glassportborough.net",
+   "emailSource": "https://glassportborough.net/"
+  },
+  "muni-846": {
+   "phone": "412-699-3850",
+   "phoneSource": "http://www.glenosborneborough.org/",
+   "was": "724-731-2319",
+   "email": "admin@glenosborneborough.org",
+   "emailSource": "http://www.glenosborneborough.org/"
+  },
+  "muni-830": {
+   "phone": "412-741-8566",
+   "phoneSource": "http://glenfieldborough.org/",
+   "was": "412-741-9473"
+  },
+  "muni-914": {
+   "phone": "412-486-0400",
+   "phoneSource": "http://www.hampton-pa.org",
+   "was": "724-731-2300"
+  },
+  "muni-832": {
+   "needsCheck": "Could not read https://www.haysvilleborough.org/ to confirm the phone."
+  },
+  "muni-833": {
+   "phone": "412-766-2565",
+   "phoneSource": "http://www.heidelbergborough.org",
+   "was": "412-276-5653",
+   "email": "manager@heidelbergborough.org",
+   "emailSource": "http://www.heidelbergborough.org"
+  },
+  "muni-835": {
+   "phone": "412-921-3625",
+   "phoneSource": "http://www.ingramborough.org",
+   "was": "412-922-5877"
+  },
+  "muni-878": {
+   "needsCheck": "Could not read http://www.jeffersonhillsboro.org/ to confirm the phone."
+  },
+  "muni-920": {
+   "phone": null,
+   "was": "412-835-5243",
+   "needsCheck": "Directory number is shared with other municipalities; site unreadable."
+  },
+  "muni-837": {
+   "needsCheck": "Could not read http://www.libertyborough.com/ to confirm the phone."
+  },
+  "muni-841": {
+   "phone": "724-926-0133",
+   "phoneSource": "http://www.mcdonaldboro.com",
+   "was": "724-926-8284"
+  },
+  "muni-879": {
+   "phone": "412-856-1000",
+   "phoneSource": "http://www.monroeville.pa.us",
+   "was": "412-856-3348"
+  },
+  "muni-926": {
+   "phone": "412-343-3400",
+   "phoneSource": "http://mtlebanon.org",
+   "was": "412-343-3405"
+  },
+  "muni-843": {
+   "phone": "412-351-4900",
+   "phoneSource": "http://www.northbraddockborough.com/",
+   "was": "412-351-5500",
+   "email": "admin@northbraddockborough.com",
+   "emailSource": "http://www.northbraddockborough.com/"
+  },
+  "muni-929": {
+   "phone": "724-693-9601",
+   "phoneSource": "http://www.north-fayette.com",
+   "was": "724-693-3118"
+  },
+  "muni-844": {
+   "needsCheck": "Could not read http://www.oakdaleborough.com to confirm the phone."
+  },
+  "muni-932": {
+   "phone": "412-364-6321",
+   "phoneSource": "http://www.ohiotwp.org",
+   "was": "412-528-4858"
+  },
+  "muni-934": {
+   "phone": "412-342-1086",
+   "phoneSource": "http://www.pennhills.org",
+   "was": "412-793-7063"
+  },
+  "muni-871": {
+   "phone": "412-276-5100",
+   "phoneSource": "http://www.pennsburyvillageboro.com",
+   "was": "412-276-6181"
+  },
+  "muni-935": {
+   "phone": "724-625-1591",
+   "phoneSource": "http://www.twp.pine.pa.us",
+   "was": "724-625-1591 x115"
+  },
+  "muni-873": {
+   "phone": "412-655-3300",
+   "phoneSource": "http://www.pleasanthillspa.com",
+   "was": "412-653-6321"
+  },
+  "muni-849": {
+   "phone": "412-271-1017",
+   "phoneSource": "http://www.rankinborough.com/",
+   "was": "412-271-6605",
+   "email": "manager@rankinborough.com",
+   "emailSource": "http://www.rankinborough.com/"
+  },
+  "muni-938": {
+   "phone": "724-443-5921",
+   "phoneSource": "http://richland.pa.us/",
+   "was": "724-731-2300",
+   "email": "info@richland.pa.us",
+   "emailSource": "http://richland.pa.us/"
+  },
+  "muni-940": {
+   "phone": "412-931-7048",
+   "phoneSource": "http://www.ross.pa.us/",
+   "was": "412-835-5243"
+  },
+  "muni-941": {
+   "phone": "412-276-5300",
+   "phoneSource": "http://scott-twp.com",
+   "was": "412-276-5302"
+  },
+  "muni-851": {
+   "phone": null,
+   "was": "724-731-2319",
+   "needsCheck": "Directory number is shared with other municipalities; site unreadable."
+  },
+  "muni-882": {
+   "phone": "412-741-4891",
+   "phoneSource": "http://www.sewickleyhills.com",
+   "was": "412-741-7734"
+  },
+  "muni-944": {
+   "phone": "412-486-9700",
+   "phoneSource": "http://www.shaler.org",
+   "was": "412-486-9700 x224"
+  },
+  "muni-945": {
+   "phone": "412-831-7000",
+   "phoneSource": "http://www.southparktwp.com",
+   "was": "412-833-8292"
+  },
+  "muni-853": {
+   "phone": "724-274-6800",
+   "phoneSource": "http://www.springdaleborough.com/",
+   "was": "724-274-6269"
+  },
+  "muni-949": {
+   "phone": "412-331-4050",
+   "phoneSource": "http://stowetwp.com/",
+   "was": "724-731-2311"
+  },
+  "muni-854": {
+   "phone": "412-271-7101",
+   "phoneSource": "http://www.swissvaleborough.com/",
+   "was": "412-351-3342",
+   "email": "administrative@swissvaleborough.com",
+   "emailSource": "http://www.swissvaleborough.com/"
+  },
+  "muni-855": {
+   "phone": "724-224-1876",
+   "phoneSource": "http://www.tarentumboro.com",
+   "was": "724-224-1179"
+  },
+  "muni-857": {
+   "phone": "412-372-7652",
+   "phoneSource": "http://www.traffordpa.com",
+   "was": "412-372-5361"
+  },
+  "muni-858": {
+   "needsCheck": "Could not read http://www.turtlecreekborough.com/ to confirm the phone."
+  },
+  "muni-952": {
+   "phone": "724-265-3680",
+   "phoneSource": "http://www.westdeertownship.com",
+   "was": "724-265-4250"
+  },
+  "muni-870": {
+   "phone": "412-466-8170",
+   "phoneSource": "http://www.westmifflinborough.com",
+   "was": "412-466-8177"
+  },
+  "muni-864": {
+   "phone": "412-931-2800",
+   "phoneSource": "http://www.westviewborough.org",
+   "was": "412-931-1633"
+  },
+  "muni-865": {
+   "phone": "412-766-4810",
+   "phoneSource": "http://www.alcosan.org",
+   "was": "412-464-1199"
+  },
+  "muni-874": {
+   "phone": "412-884-0505",
+   "phoneSource": "http://www.whitehallboro.org",
+   "was": "412-881-1644"
+  },
+  "muni-953": {
+   "phone": "412-824-6650",
+   "phoneSource": "http://www.wilkinstownship.com",
+   "was": "412-824-6860"
+  },
+  "muni-866": {
+   "phone": "412-244-2900",
+   "phoneSource": "http://www.wilkinsburgpa.gov",
+   "was": "610-599-3143",
+   "email": "info@wilkinsburgpa.gov",
+   "emailSource": "http://www.wilkinsburgpa.gov"
+  }
+ }
+}

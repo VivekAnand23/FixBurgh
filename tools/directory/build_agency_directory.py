@@ -131,6 +131,38 @@ def parse_profile(page: str, url: str) -> dict:
     return rec
 
 
+OVERRIDES = ROOT / "tools" / "directory" / "overrides.json"
+
+
+def apply_overrides(agencies: list[dict]) -> None:
+    """Applies reviewed fixes from overrides.json (see make_overrides.py)."""
+    if not OVERRIDES.exists():
+        return
+    fixes = json.loads(OVERRIDES.read_text())["overrides"]
+    for a in agencies:
+        o = fixes.get(a["id"])
+        if not o:
+            continue
+        if "phone" in o:
+            if o["phone"]:
+                a["phone"] = o["phone"]
+            else:
+                a.pop("phone", None)
+            a["phoneSource"] = o.get("phoneSource")
+        if o.get("email"):
+            a["email"] = o["email"]
+        if o.get("needsCheck"):
+            a["needsCheck"] = o["needsCheck"]
+
+
+def apply_only() -> None:
+    """Re-applies overrides.json to the existing directory without scraping."""
+    data = json.loads(OUT.read_text())
+    apply_overrides(data["agencies"])
+    OUT.write_text(json.dumps(data, indent=1) + "\n")
+    print(f"Applied overrides to {len(data['agencies'])} agencies")
+
+
 def main() -> None:
     boundaries = json.loads(BOUNDARIES.read_text())
     by_norm = {norm(f["properties"]["name"]): f["properties"] for f in boundaries["features"]}
@@ -144,7 +176,7 @@ def main() -> None:
     missing = []
     today = dt.date.today().isoformat()
     for i in range(1, 140):
-        url = f"{BASE}profile.asp?muni={i}"
+        url = f"{BASE}MuniProfile.asp?muni={i}"
         try:
             rec = parse_profile(fetch(url), url)
         except Exception as e:  # noqa: BLE001 - keep going, report at the end
@@ -169,6 +201,7 @@ def main() -> None:
 
     for a in STATIC_AGENCIES:
         a.setdefault("lastVerifiedAt", today)
+    apply_overrides(agencies)
     covered = {m for a in agencies for m in a.get("municipalityIds", [])}
     uncovered = [p["name"] for p in by_norm.values() if p["id"] not in covered]
     OUT.parent.mkdir(parents=True, exist_ok=True)
@@ -181,4 +214,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+
+    apply_only() if "--apply-overrides" in sys.argv else main()
