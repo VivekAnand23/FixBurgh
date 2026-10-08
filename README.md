@@ -36,7 +36,7 @@ BRD/  Images/     requirements document and all images
 
 ## Getting started
 
-Requirements: Flutter 3.41+, Xcode 26+ with CocoaPods, and Android Studio
+Requirements: Flutter 3.47+, Xcode 26+ with CocoaPods, and Android Studio
 (Android SDK) for Android builds.
 
 ```bash
