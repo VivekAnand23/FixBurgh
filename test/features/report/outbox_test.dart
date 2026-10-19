@@ -157,7 +157,7 @@ void main() {
     });
 
     test(
-      'a neighbor\'s report nearby waits for the person to decide',
+      "a neighbor's report nearby waits for the person to decide",
       () async {
         await add();
         when(() => repo.nearbyDuplicates(any(), any())).thenAnswer(
