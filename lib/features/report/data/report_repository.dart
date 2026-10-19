@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -17,11 +18,27 @@ import 'package:uuid/uuid.dart';
 const guestDailyLimit = 3;
 const userDailyLimit = 10;
 
+/// "Me too" votes per person per day (BRD FR-MOD-06).
+const dailyVoteLimit = 30;
+
+/// Most reports one map viewport loads (BRD FR-MAP-04).
+const viewportReportCap = 200;
+
 /// Thrown before upload when today's report limit is used up.
 class DailyLimitReached implements Exception {
   const DailyLimitReached({required this.isGuest});
 
   final bool isGuest;
+}
+
+/// Thrown before voting when today's "Me too" limit is used up.
+class VoteLimitReached implements Exception {
+  const VoteLimitReached();
+}
+
+/// Thrown when an email account votes before verifying its address.
+class EmailNotVerified implements Exception {
+  const EmailNotVerified();
 }
 
 /// UTC date as the rules compute it, e.g. "2026-10-5".
@@ -47,10 +64,28 @@ final myReportsProvider = StreamProvider<List<Report>>((ref) {
   return ref.watch(reportRepositoryProvider).watchMine(user.uid);
 });
 
-/// Recent visible reports for the community map (open and recently fixed).
-final mapReportsProvider = StreamProvider<List<Report>>(
-  (ref) => ref.watch(reportRepositoryProvider).watchVisible(),
-);
+/// The geohash cells a map viewport covers, joined with commas, and
+/// whether fixed reports are wanted.
+typedef ViewportKey = ({String cells, bool includeResolved});
+
+/// Visible reports in the map viewport, live (BRD FR-MAP-04).
+// ignore: specify_nonobvious_property_types, family type isn't exported.
+final viewportReportsProvider = StreamProvider.autoDispose
+    .family<List<Report>, ViewportKey>(
+      (ref, k) => ref
+          .watch(reportRepositoryProvider)
+          .watchViewport(
+            k.cells.split(',').where((c) => c.isNotEmpty).toList(),
+            includeResolved: k.includeResolved,
+          ),
+    );
+
+/// A report's status history, oldest first.
+// ignore: specify_nonobvious_property_types, family type isn't exported.
+final reportEventsProvider = StreamProvider.autoDispose
+    .family<List<ReportEvent>, String>(
+      (ref, id) => ref.watch(reportRepositoryProvider).watchEvents(id),
+    );
 
 /// One report, live.
 // ignore: specify_nonobvious_property_types, family type isn't exported.
@@ -107,23 +142,12 @@ class ReportRepository {
     }
 
     for (final path in draft.photoPaths) {
-      final photoId = const Uuid().v4();
-      final base = 'reports/$uid/$reportId/$photoId';
-      final full = await _compress(path, size: 1600, quality: 80);
-      final thumb = await _compress(path, size: 320, quality: 70);
-      final fullRef = _storage.ref('$base.jpg');
-      final thumbRef = _storage.ref('${base}_thumb.jpg');
-      final meta = SettableMetadata(contentType: 'image/jpeg');
-      await fullRef.putData(full, meta);
-      onProgress?.call(++done / steps);
-      await thumbRef.putData(thumb, meta);
-      onProgress?.call(++done / steps);
-      photos.add({
-        'path': fullRef.fullPath,
-        'thumbPath': thumbRef.fullPath,
-        'thumbUrl': await thumbRef.getDownloadURL(),
-        'blurred': false,
-      });
+      final photo = await _uploadPhoto(
+        path,
+        '$uid/$reportId',
+        onStep: () => onProgress?.call(++done / steps),
+      );
+      photos.add({...photo, 'blurred': false});
     }
 
     final description = cleanUserText(draft.description.trim());
@@ -170,15 +194,68 @@ class ReportRepository {
       .snapshots()
       .map((s) => s.docs.map(_fromDoc).toList());
 
-  /// Must filter on `moderation` so the query matches the read rule.
-  /// Viewport queries come with clustering at scale; 300 recent reports is
-  /// plenty for the pilot.
-  Stream<List<Report>> watchVisible() => _reports
-      .where('moderation', isEqualTo: 'visible')
-      .orderBy('createdAt', descending: true)
-      .limit(300)
+  /// Reports in the geohash [cells] of a map viewport, at most
+  /// [viewportReportCap] in all. Must filter on `moderation` so the query
+  /// matches the read rule; open-only unless [includeResolved].
+  Stream<List<Report>> watchViewport(
+    List<String> cells, {
+    required bool includeResolved,
+  }) {
+    if (cells.isEmpty) return Stream.value(const []);
+    final perCell = viewportReportCap ~/ cells.length;
+    final latest = List<List<Report>?>.filled(cells.length, null);
+    final subs = <StreamSubscription<void>>[];
+    late final StreamController<List<Report>> out;
+    out = StreamController<List<Report>>(
+      onListen: () {
+        for (var i = 0; i < cells.length; i++) {
+          var q = _reports.where(
+            'moderation',
+            isEqualTo: 'visible',
+          );
+          if (!includeResolved) {
+            q = q.where(
+              'status',
+              whereIn: [ReportStatus.reported.name, ReportStatus.sent.name],
+            );
+          }
+          subs.add(
+            q
+                .orderBy('geo.geohash')
+                .startAt([cells[i]])
+                .endAt(['${cells[i]}\uf8ff'])
+                .limit(perCell)
+                .snapshots()
+                .listen((s) {
+                  latest[i] = s.docs.map(_fromDoc).toList();
+                  out.add([for (final l in latest) ...?l]);
+                }, onError: out.addError),
+          );
+        }
+      },
+      onCancel: () => Future.wait(subs.map((s) => s.cancel())),
+    );
+    return out.stream;
+  }
+
+  Stream<List<ReportEvent>> watchEvents(String reportId) => _reports
+      .doc(reportId)
+      .collection('events')
+      .orderBy('at')
       .snapshots()
-      .map((s) => s.docs.map(_fromDoc).toList());
+      .map(
+        (s) => [
+          for (final d in s.docs)
+            ReportEvent(
+              type: ReportEventType.fromId(d['type'] as String? ?? ''),
+              // Pending server timestamps read as null until written.
+              at: (d.data()['at'] as Timestamp?)?.toDate() ?? DateTime.now(),
+              by: d.data()['by'] as String?,
+              channel: d.data()['channel'] as String?,
+              photoUrl: d.data()['photoUrl'] as String?,
+            ),
+        ],
+      );
 
   /// Open reports near [p] with the same category, nearest first. Queries
   /// the geohash cells around the point, then filters by exact distance.
@@ -226,18 +303,32 @@ class ReportRepository {
           .snapshots()
           .map((d) => d.exists);
 
-  /// Adds or removes a "Me too" in one batch so rules can pair them.
-  Future<void> setUpvote(String reportId, String uid, {required bool on}) {
+  /// Adds or removes a "Me too" in one batch so rules can pair them. Adding
+  /// also bumps today's vote counter.
+  Future<void> setUpvote(
+    String reportId,
+    String uid, {
+    required bool on,
+  }) async {
     final doc = _reports.doc(reportId);
     final vote = doc.collection('upvotes').doc(uid);
     final batch = _db.batch();
     if (on) {
-      batch.set(vote, {'createdAt': FieldValue.serverTimestamp()});
+      final limitRef = _db.collection('voteLimits').doc(uid);
+      final prev = (await limitRef.get()).data();
+      final day = _today();
+      final count = prev != null && prev['day'] == day
+          ? (prev['count'] as num).toInt() + 1
+          : 1;
+      if (count > dailyVoteLimit) throw const VoteLimitReached();
+      batch
+        ..set(vote, {'uid': uid, 'createdAt': FieldValue.serverTimestamp()})
+        ..set(limitRef, {'day': day, 'count': count});
     } else {
       batch.delete(vote);
     }
     batch.update(doc, {'upvoteCount': FieldValue.increment(on ? 1 : -1)});
-    return batch.commit();
+    await batch.commit();
   }
 
   /// Records a "Looks fixed" vote; the third distinct vote resolves it.
@@ -249,7 +340,7 @@ class ReportRepository {
         final snap = await tx.get(doc);
         final count = ((snap.data()?['fixedVoteCount'] as num?) ?? 0) + 1;
         tx
-          ..set(vote, {'createdAt': FieldValue.serverTimestamp()})
+          ..set(vote, {'uid': uid, 'createdAt': FieldValue.serverTimestamp()})
           ..update(doc, {
             'fixedVoteCount': count,
             if (count >= communityResolveVotes) ...{
@@ -260,8 +351,12 @@ class ReportRepository {
           });
       });
 
-  Future<void> reopen(String reportId) => _reports.doc(reportId).update({
-    'status': ReportStatus.reported.name,
+  /// Back to the open status it had before it was fixed (FR-MYR-03).
+  Future<void> reopen(Report r) => _reports.doc(r.id).update({
+    'status': r.reopenStatus.name,
+    'resolvedAt': FieldValue.delete(),
+    'resolvedBy': FieldValue.delete(),
+    'afterPhoto': FieldValue.delete(),
     'updatedAt': FieldValue.serverTimestamp(),
   });
 
@@ -303,11 +398,48 @@ class ReportRepository {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-  Future<void> markResolved(String reportId) => _reports.doc(reportId).update({
-    'status': ReportStatus.resolved.name,
-    'resolvedAt': FieldValue.serverTimestamp(),
-    'updatedAt': FieldValue.serverTimestamp(),
-  });
+  /// The reporter marks it fixed, optionally with an "after" photo
+  /// (BRD FR-MYR-02).
+  Future<void> markResolved(
+    String reportId, {
+    required String uid,
+    String? afterPhotoPath,
+  }) async {
+    Map<String, dynamic>? afterPhoto;
+    if (afterPhotoPath != null) {
+      afterPhoto = await _uploadPhoto(afterPhotoPath, '$uid/$reportId');
+    }
+    await _reports.doc(reportId).update({
+      'status': ReportStatus.resolved.name,
+      'resolvedBy': 'reporter',
+      'resolvedAt': FieldValue.serverTimestamp(),
+      'afterPhoto': ?afterPhoto,
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  /// Uploads a full-size photo and thumbnail under `reports/[folder]/`.
+  Future<Map<String, dynamic>> _uploadPhoto(
+    String path,
+    String folder, {
+    void Function()? onStep,
+  }) async {
+    final base = 'reports/$folder/${const Uuid().v4()}';
+    final full = await _compress(path, size: 1600, quality: 80);
+    final thumb = await _compress(path, size: 320, quality: 70);
+    final fullRef = _storage.ref('$base.jpg');
+    final thumbRef = _storage.ref('${base}_thumb.jpg');
+    final meta = SettableMetadata(contentType: 'image/jpeg');
+    await fullRef.putData(full, meta);
+    onStep?.call();
+    await thumbRef.putData(thumb, meta);
+    onStep?.call();
+    return {
+      'path': fullRef.fullPath,
+      'thumbPath': thumbRef.fullPath,
+      'thumbUrl': await thumbRef.getDownloadURL(),
+    };
+  }
 
   /// Resizes to [size] px on the long edge and re-encodes as JPEG, which
   /// drops EXIF metadata (GPS, device) from the uploaded file.
@@ -329,6 +461,7 @@ class ReportRepository {
     final m = d.data()!;
     final g = (m['geo'] as Map?)?.cast<String, dynamic>() ?? const {};
     final photos = (m['photos'] as List?)?.cast<Map<String, dynamic>>();
+    final after = (m['afterPhoto'] as Map?)?.cast<String, dynamic>();
     return Report(
       id: d.id,
       authorUid: m['authorUid'] as String? ?? '',
@@ -337,7 +470,12 @@ class ReportRepository {
           if (p['path'] is String) p['path'] as String,
           if (p['thumbPath'] is String) p['thumbPath'] as String,
         ],
+        if (after?['path'] is String) after!['path'] as String,
+        if (after?['thumbPath'] is String) after!['thumbPath'] as String,
       ],
+      afterThumbUrl: after?['thumbUrl'] as String?,
+      resolvedBy: m['resolvedBy'] as String?,
+      sentAt: (m['sentAt'] as Timestamp?)?.toDate(),
       upvoteCount: (m['upvoteCount'] as num?)?.toInt() ?? 0,
       fixedVoteCount: (m['fixedVoteCount'] as num?)?.toInt() ?? 0,
       agencyName: m['agencyName'] as String?,

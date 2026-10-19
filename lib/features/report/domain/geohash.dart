@@ -54,3 +54,37 @@ Set<String> neighborGeohashes(double lat, double lng, {int precision = 7}) {
         encodeGeohash(lat + y * dLat, lng + x * dLng, precision: precision),
   };
 }
+
+/// Geohash prefixes covering the box from ([south], [west]) to ([north],
+/// [east]), at the longest precision that needs at most [maxCells] cells,
+/// so a map viewport becomes a few range queries (BRD FR-MAP-04).
+List<String> geohashesCovering({
+  required double south,
+  required double west,
+  required double north,
+  required double east,
+  int maxCells = 9,
+}) {
+  for (var precision = 9; precision >= 1; precision--) {
+    final lngBits = (precision * 5 + 1) ~/ 2;
+    final latBits = precision * 5 ~/ 2;
+    final dLat = 180 / (1 << latBits);
+    final dLng = 360 / (1 << lngBits);
+    final y0 = ((south + 90) / dLat).floor();
+    final y1 = ((north + 90) / dLat).floor();
+    final x0 = ((west + 180) / dLng).floor();
+    final x1 = ((east + 180) / dLng).floor();
+    final count = (y1 - y0 + 1) * (x1 - x0 + 1);
+    if (count > maxCells && precision > 1) continue;
+    return [
+      for (var y = y0; y <= y1; y++)
+        for (var x = x0; x <= x1; x++)
+          encodeGeohash(
+            ((y + 0.5) * dLat - 90).clamp(-90, 90),
+            ((x + 0.5) * dLng - 180).clamp(-180, 180),
+            precision: precision,
+          ),
+    ];
+  }
+  return const [];
+}

@@ -5,7 +5,9 @@ import 'package:fixburgh/features/moderation/blocked_users.dart';
 import 'package:fixburgh/features/moderation/text_filter.dart';
 import 'package:fixburgh/features/report/data/report_repository.dart';
 import 'package:fixburgh/features/report/domain/report.dart';
+import 'package:fixburgh/features/report/presentation/mark_fixed.dart';
 import 'package:fixburgh/features/report/presentation/report_labels.dart';
+import 'package:fixburgh/features/report/presentation/status_timeline.dart';
 import 'package:fixburgh/features/report/presentation/steps/review_step.dart';
 import 'package:fixburgh/features/routing/data/routing_providers.dart';
 import 'package:fixburgh/features/routing/presentation/office_card.dart';
@@ -65,9 +67,33 @@ class _Body extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     try {
       await action();
+    } on VoteLimitReached {
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.voteLimitReached(dailyVoteLimit))),
+      );
+    } on EmailNotVerified {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.verifyToVote)));
     } on Exception {
       messenger.showSnackBar(SnackBar(content: Text(l10n.errorGeneric)));
     }
+  }
+
+  /// Email accounts verify their address before voting (BRD 9.1). The
+  /// cached flag may be stale, so check with the server before refusing.
+  Future<String> _voterUid(WidgetRef ref) async {
+    final uid = await _uid(ref);
+    final user = ref.read(authRepositoryProvider).currentUser!;
+    final emailOnly =
+        !user.isAnonymous &&
+        user.providerData.every((p) => p.providerId == 'password');
+    if (emailOnly && !user.emailVerified) {
+      await user.reload();
+      final fresh = ref.read(authRepositoryProvider).currentUser!;
+      if (!fresh.emailVerified) throw const EmailNotVerified();
+      // The rules read the verified flag from the ID token.
+      await fresh.getIdToken(true);
+    }
+    return uid;
   }
 
   Future<String> _uid(WidgetRef ref) async {
@@ -263,7 +289,8 @@ class _Body extends ConsumerWidget {
             FilledButton.icon(
               onPressed: () => _guard(
                 context,
-                () async => repo.setUpvote(r.id, await _uid(ref), on: !upvoted),
+                () async =>
+                    repo.setUpvote(r.id, await _voterUid(ref), on: !upvoted),
               ),
               icon: Icon(upvoted ? Icons.check : Icons.front_hand_outlined),
               label: Text(
@@ -295,17 +322,19 @@ class _Body extends ConsumerWidget {
             const SizedBox(height: 8),
             if (r.isOpen)
               FilledButton.icon(
-                onPressed: () => _guard(context, () => repo.markResolved(r.id)),
+                onPressed: () => markFixedFlow(context, ref, r),
                 icon: const Icon(Icons.task_alt),
                 label: Text(l10n.markFixed),
               )
-            else
+            else if (r.canReopen())
               OutlinedButton.icon(
-                onPressed: () => _guard(context, () => repo.reopen(r.id)),
+                onPressed: () => _guard(context, () => repo.reopen(r)),
                 icon: const Icon(Icons.replay),
                 label: Text(l10n.reopen),
               ),
           ],
+          const SizedBox(height: 16),
+          StatusTimeline(report: r),
           const SizedBox(height: 8),
           if (r.isOpen)
             TextButton.icon(

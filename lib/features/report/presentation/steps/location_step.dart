@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:fixburgh/features/map/data/place_search.dart';
 import 'package:fixburgh/features/report/presentation/report_draft_controller.dart';
 import 'package:fixburgh/features/routing/domain/municipality_locator.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -155,23 +155,15 @@ class _LocationStepState extends ConsumerState<LocationStep> {
       _locating = false;
     });
     try {
-      final hasRegion = RegExp(
-        r'\b(PA|Pennsylvania)\b',
-        caseSensitive: false,
-      ).hasMatch(q);
-      final results = await Geocoding().locationFromAddress(
-        hasRegion ? q : '$q, Allegheny County, PA',
-      );
-      if (results.isEmpty) throw const FormatException('no result');
-      final hit = results.first;
-      final p = LatLng(hit.latitude, hit.longitude);
+      final hit = await findPlace(q);
+      if (hit == null) {
+        messenger.showSnackBar(SnackBar(content: Text(l10n.addressNotFound)));
+        return;
+      }
+      final p = LatLng(hit.lat, hit.lng);
       _movePin(p);
       setState(() => _pinFromSearch = true);
       await _map?.animateCamera(CameraUpdate.newLatLngZoom(p, 19));
-    } on Exception {
-      messenger.showSnackBar(
-        SnackBar(content: Text(l10n.addressNotFound)),
-      );
     } finally {
       if (mounted) setState(() => _searching = false);
     }

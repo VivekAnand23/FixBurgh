@@ -159,7 +159,10 @@ class Report {
     this.upvoteCount = 0,
     this.fixedVoteCount = 0,
     this.agencyName,
+    this.sentAt,
     this.resolvedAt,
+    this.resolvedBy,
+    this.afterThumbUrl,
   });
 
   final String id;
@@ -179,9 +182,83 @@ class Report {
   final int fixedVoteCount;
   final String? agencyName;
   final DateTime createdAt;
+  final DateTime? sentAt;
   final DateTime? resolvedAt;
 
+  /// `reporter`, `community` or (Phase 3) `agency`.
+  final String? resolvedBy;
+
+  /// Thumbnail of the optional "after" photo added when marked fixed.
+  final String? afterThumbUrl;
+
   bool get isOpen => status != ReportStatus.resolved;
+
+  /// The reporter can reopen a fix that didn't hold, for 30 days
+  /// (BRD FR-MYR-03).
+  bool canReopen({DateTime? now}) =>
+      status == ReportStatus.resolved &&
+      (now ?? DateTime.now()).difference(resolvedAt ?? createdAt) <=
+          reopenWindow;
+
+  /// The open status a reopened report goes back to.
+  ReportStatus get reopenStatus =>
+      sentAt != null ? ReportStatus.sent : ReportStatus.reported;
+}
+
+const reopenWindow = Duration(days: 30);
+
+/// What happened to a report, for its status timeline (BRD FR-MAP-09).
+enum ReportEventType {
+  reported,
+  sent,
+  resolved,
+  reopened;
+
+  static ReportEventType fromId(String id) =>
+      values.firstWhere((t) => t.name == id, orElse: () => reported);
+}
+
+@immutable
+class ReportEvent {
+  const ReportEvent({
+    required this.type,
+    required this.at,
+    this.by,
+    this.channel,
+    this.photoUrl,
+  });
+
+  final ReportEventType type;
+  final DateTime at;
+
+  /// `reporter` or `community`.
+  final String? by;
+
+  /// For `sent`: `call`, `email` or `web`.
+  final String? channel;
+
+  /// For `resolved`: the "after" photo, if one was added.
+  final String? photoUrl;
+}
+
+/// The report's history, oldest first. Reports filed before history was
+/// recorded have no events, so their timeline is rebuilt from timestamps.
+List<ReportEvent> reportTimeline(Report r, List<ReportEvent> events) {
+  if (events.isNotEmpty) {
+    return [...events]..sort((a, b) => a.at.compareTo(b.at));
+  }
+  return [
+    ReportEvent(type: ReportEventType.reported, at: r.createdAt),
+    if (r.sentAt != null)
+      ReportEvent(type: ReportEventType.sent, at: r.sentAt!),
+    if (r.status == ReportStatus.resolved)
+      ReportEvent(
+        type: ReportEventType.resolved,
+        at: r.resolvedAt ?? r.createdAt,
+        by: r.resolvedBy,
+        photoUrl: r.afterThumbUrl,
+      ),
+  ];
 }
 
 /// Great-circle distance in metres (haversine).

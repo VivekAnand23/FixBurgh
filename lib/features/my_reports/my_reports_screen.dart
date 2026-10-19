@@ -1,6 +1,7 @@
 import 'package:fixburgh/app/widgets/placeholder_view.dart';
 import 'package:fixburgh/features/report/data/report_repository.dart';
 import 'package:fixburgh/features/report/domain/report.dart';
+import 'package:fixburgh/features/report/presentation/mark_fixed.dart';
 import 'package:fixburgh/features/report/presentation/report_detail_sheet.dart';
 import 'package:fixburgh/features/report/presentation/report_labels.dart';
 import 'package:fixburgh/features/report/presentation/steps/review_step.dart';
@@ -34,15 +35,59 @@ class MyReportsScreen extends ConsumerWidget {
               title: l10n.myReportsTitle,
               message: l10n.myReportsEmpty,
             )
-          : Scaffold(
-              appBar: AppBar(title: Text(l10n.myReportsTitle)),
-              body: ListView.separated(
-                padding: const EdgeInsets.all(16),
-                itemCount: list.length,
-                separatorBuilder: (_, _) => const SizedBox(height: 12),
-                itemBuilder: (context, i) => _ReportCard(report: list[i]),
+          : DefaultTabController(
+              length: 3,
+              child: Scaffold(
+                appBar: AppBar(
+                  title: Text(l10n.myReportsTitle),
+                  bottom: TabBar(
+                    tabs: [
+                      Tab(text: l10n.tabAll(list.length)),
+                      Tab(text: l10n.tabOpen(list.where(_open).length)),
+                      Tab(text: l10n.tabFixed(list.where(_fixed).length)),
+                    ],
+                  ),
+                ),
+                body: TabBarView(
+                  children: [
+                    _ReportList(reports: list),
+                    _ReportList(reports: list.where(_open).toList()),
+                    _ReportList(reports: list.where(_fixed).toList()),
+                  ],
+                ),
               ),
             ),
+    );
+  }
+
+  static bool _open(Report r) => r.isOpen;
+  static bool _fixed(Report r) => !r.isOpen;
+}
+
+/// Newest first, as [myReportsProvider] returns them (BRD FR-MYR-01).
+class _ReportList extends StatelessWidget {
+  const _ReportList({required this.reports});
+
+  final List<Report> reports;
+
+  @override
+  Widget build(BuildContext context) {
+    if (reports.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Text(
+            AppLocalizations.of(context).noReportsInTab,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+    return ListView.separated(
+      padding: const EdgeInsets.all(16),
+      itemCount: reports.length,
+      separatorBuilder: (_, _) => const SizedBox(height: 12),
+      itemBuilder: (context, i) => _ReportCard(report: reports[i]),
     );
   }
 }
@@ -158,9 +203,7 @@ class _ReportCard extends ConsumerWidget {
                         const Spacer(),
                         if (r.status != ReportStatus.resolved)
                           TextButton(
-                            onPressed: () => ref
-                                .read(reportRepositoryProvider)
-                                .markResolved(r.id),
+                            onPressed: () => markFixedFlow(context, ref, r),
                             child: Text(l10n.markFixed),
                           ),
                       ],
