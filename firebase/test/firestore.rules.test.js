@@ -125,6 +125,11 @@ describe('creating reports', () => {
     await assertFails(createReport('alice', 'r1', 1, outside));
   });
 
+  it('accepts a report sent later from the offline outbox', async () => {
+    await assertSucceeds(createReport('alice', 'r1', 1, report('alice', { source: 'offline_queue' })));
+    await assertFails(createReport('alice', 'r2', 2, report('alice', { source: 'bot' })));
+  });
+
   it('rejects a report that starts with upvotes', async () => {
     await assertFails(createReport('alice', 'r1', 1, report('alice', { upvoteCount: 5 })));
   });

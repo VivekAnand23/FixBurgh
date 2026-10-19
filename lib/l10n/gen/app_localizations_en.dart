@@ -1010,4 +1010,52 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recheckNo => 'No, continue';
+
+  @override
+  String get savedForLater =>
+      'You\'re offline. Your report is saved and will send when you\'re back online.';
+
+  @override
+  String get outboxWaiting =>
+      'Waiting to send. It goes out when you\'re back online.';
+
+  @override
+  String get outboxLimit =>
+      'Today\'s report limit is used up. It sends tomorrow.';
+
+  @override
+  String get outboxFailed =>
+      'Couldn\'t send this report. Try again, or cancel it.';
+
+  @override
+  String get outboxDuplicate =>
+      'Someone reported this nearby while you were offline. Add your voice instead?';
+
+  @override
+  String get sendAnyway => 'It\'s different, send it';
+
+  @override
+  String get retryNow => 'Try again now';
+
+  @override
+  String get stillOffline => 'Still can\'t reach FixBurgh. We\'ll keep trying.';
+
+  @override
+  String get cancelReport => 'Cancel report';
+
+  @override
+  String get unsentReportsTitle => 'Some reports haven\'t been sent';
+
+  @override
+  String unsentReportsBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count reports are still waiting to send. Signing out deletes them from this phone.',
+      one:
+          '1 report is still waiting to send. Signing out deletes it from this phone.',
+    );
+    return '$_temp0';
+  }
 }

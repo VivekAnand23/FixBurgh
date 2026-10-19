@@ -1,5 +1,5 @@
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:fixburgh/app/providers.dart';
+import 'package:fixburgh/app/remote_config.dart';
 import 'package:fixburgh/features/report/domain/report.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -65,20 +65,8 @@ List<String> parseKeywords(String raw) {
 /// Safety keywords from Remote Config (free), with the built-in list as
 /// default and fallback.
 final safetyKeywordsProvider = FutureProvider<List<String>>((ref) async {
-  try {
-    final rc = FirebaseRemoteConfig.instance;
-    await rc.setDefaults({'safety_keywords': defaultSafetyKeywords.join(',')});
-    await rc.setConfigSettings(
-      RemoteConfigSettings(
-        fetchTimeout: const Duration(seconds: 10),
-        minimumFetchInterval: const Duration(hours: 12),
-      ),
-    );
-    await rc.fetchAndActivate();
-    return parseKeywords(rc.getString('safety_keywords'));
-  } on Object {
-    return defaultSafetyKeywords;
-  }
+  final rc = await ref.watch(remoteConfigProvider.future);
+  return parseKeywords(rc?.getString('safety_keywords') ?? '');
 });
 
 /// Reports this person has filed on this device, for [fullSafetyCheckReports].

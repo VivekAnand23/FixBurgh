@@ -1773,6 +1773,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No, continue'**
   String get recheckNo;
+
+  /// No description provided for @savedForLater.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re offline. Your report is saved and will send when you\'re back online.'**
+  String get savedForLater;
+
+  /// No description provided for @outboxWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting to send. It goes out when you\'re back online.'**
+  String get outboxWaiting;
+
+  /// No description provided for @outboxLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s report limit is used up. It sends tomorrow.'**
+  String get outboxLimit;
+
+  /// No description provided for @outboxFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t send this report. Try again, or cancel it.'**
+  String get outboxFailed;
+
+  /// No description provided for @outboxDuplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone reported this nearby while you were offline. Add your voice instead?'**
+  String get outboxDuplicate;
+
+  /// No description provided for @sendAnyway.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s different, send it'**
+  String get sendAnyway;
+
+  /// No description provided for @retryNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again now'**
+  String get retryNow;
+
+  /// No description provided for @stillOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Still can\'t reach FixBurgh. We\'ll keep trying.'**
+  String get stillOffline;
+
+  /// No description provided for @cancelReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel report'**
+  String get cancelReport;
+
+  /// No description provided for @unsentReportsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Some reports haven\'t been sent'**
+  String get unsentReportsTitle;
+
+  /// No description provided for @unsentReportsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 report is still waiting to send. Signing out deletes it from this phone.} other{{count} reports are still waiting to send. Signing out deletes them from this phone.}}'**
+  String unsentReportsBody(int count);
 }
 
 class _AppLocalizationsDelegate

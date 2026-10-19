@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:fixburgh/app/remote_config.dart';
 import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/moderation/text_filter.dart';
 import 'package:fixburgh/features/report/data/report_repository.dart';
 import 'package:fixburgh/features/report/domain/report.dart';
+import 'package:fixburgh/features/report/presentation/outbox_controller.dart';
 import 'package:fixburgh/features/report/presentation/report_draft_controller.dart';
 import 'package:fixburgh/features/report/presentation/report_labels.dart';
 import 'package:fixburgh/features/report/presentation/safety.dart';
@@ -14,6 +16,7 @@ import 'package:fixburgh/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:uuid/uuid.dart';
 
 /// Step indexes used by the Edit links.
 const _photoStep = 1;
@@ -42,11 +45,43 @@ class _ReviewStepState extends ConsumerState<ReviewStep> {
     final messenger = ScaffoldMessenger.of(context);
     final router = GoRouter.of(context);
     final auth = ref.read(authRepositoryProvider);
+    final offlineOk = ref.read(featureFlagsProvider).offlineOutbox;
+    final draft = ref.read(reportDraftProvider);
+    // Fixed up front so a send that fails here can resume from the outbox
+    // without creating a second report.
+    final reportId = const Uuid().v4();
+    final photoIds = [for (final _ in draft.photoPaths) const Uuid().v4()];
     setState(() => _progress = 0);
+
+    Future<void> finish(String message, String route) async {
+      await ref.read(reportsFiledProvider.notifier).increment();
+      await ref.read(reportDraftProvider.notifier).discard();
+      widget.onSubmitted();
+      messenger.showSnackBar(SnackBar(content: Text(message)));
+      router.go(route);
+    }
+
+    // Offline: keep it in the outbox and send it later (BRD FR-OFF-01).
+    Future<void> queue() async {
+      final routing = await ref.read(draftRoutingProvider.future);
+      await ref
+          .read(outboxProvider.notifier)
+          .enqueue(
+            id: reportId,
+            draft: draft,
+            photoIds: photoIds,
+            routing: routing == null ? null : routingFields(routing),
+          );
+      await finish(l10n.savedForLater, '/my-reports');
+    }
+
     try {
+      if (offlineOk && !await isOnline()) {
+        await queue();
+        return;
+      }
       await auth.ensureGuest();
       final user = auth.currentUser!;
-      final draft = ref.read(reportDraftProvider);
       final repo = ref.read(reportRepositoryProvider);
 
       // Offer "Me too" instead of a duplicate (BRD FR-MAP-08).
@@ -69,15 +104,26 @@ class _ReviewStepState extends ConsumerState<ReviewStep> {
       }
 
       final routing = await ref.read(draftRoutingProvider.future);
-      final reportId = await repo.submit(
-        draft: draft,
-        uid: user.uid,
-        isGuest: user.isAnonymous,
-        routing: routing,
-        onProgress: (p) {
-          if (mounted) setState(() => _progress = p);
-        },
-      );
+      try {
+        await repo.submit(
+          draft: draft,
+          uid: user.uid,
+          isGuest: user.isAnonymous,
+          routing: routing == null ? null : routingFields(routing),
+          reportId: reportId,
+          photoIds: photoIds,
+          onProgress: (p) {
+            if (mounted) setState(() => _progress = p);
+          },
+        );
+      } on DailyLimitReached {
+        rethrow;
+      } on Exception {
+        // Lost the connection partway: finish from the outbox.
+        if (!offlineOk) rethrow;
+        await queue();
+        return;
+      }
       if (routing != null && mounted) {
         await showContactSheet(
           context,
@@ -87,11 +133,7 @@ class _ReviewStepState extends ConsumerState<ReviewStep> {
           onContacted: (c) => repo.markSent(reportId, c.name),
         );
       }
-      await ref.read(reportsFiledProvider.notifier).increment();
-      await ref.read(reportDraftProvider.notifier).discard();
-      widget.onSubmitted();
-      messenger.showSnackBar(SnackBar(content: Text(l10n.reportSubmitted)));
-      router.go('/my-reports');
+      await finish(l10n.reportSubmitted, '/my-reports');
     } on DailyLimitReached catch (e) {
       messenger.showSnackBar(
         SnackBar(

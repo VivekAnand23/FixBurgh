@@ -568,5 +568,23 @@
   "recheckTitle": "Is anyone in danger?",
   "recheckBody": "You described an urgent problem that might be dangerous, like live wires, gas or someone trapped. If anyone could get hurt, call for help now instead of filing a report.",
   "recheckYes": "Yes, get help",
-  "recheckNo": "No, continue"
+  "recheckNo": "No, continue",
+  "savedForLater": "You're offline. Your report is saved and will send when you're back online.",
+  "outboxWaiting": "Waiting to send. It goes out when you're back online.",
+  "outboxLimit": "Today's report limit is used up. It sends tomorrow.",
+  "outboxFailed": "Couldn't send this report. Try again, or cancel it.",
+  "outboxDuplicate": "Someone reported this nearby while you were offline. Add your voice instead?",
+  "sendAnyway": "It's different, send it",
+  "retryNow": "Try again now",
+  "stillOffline": "Still can't reach FixBurgh. We'll keep trying.",
+  "cancelReport": "Cancel report",
+  "unsentReportsTitle": "Some reports haven't been sent",
+  "unsentReportsBody": "{count, plural, =1{1 report is still waiting to send. Signing out deletes it from this phone.} other{{count} reports are still waiting to send. Signing out deletes them from this phone.}}",
+  "@unsentReportsBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:fixburgh/app/widgets/placeholder_view.dart';
+import 'package:fixburgh/features/report/data/outbox.dart';
 import 'package:fixburgh/features/report/data/report_repository.dart';
 import 'package:fixburgh/features/report/domain/report.dart';
 import 'package:fixburgh/features/report/presentation/mark_fixed.dart';
+import 'package:fixburgh/features/report/presentation/outbox_controller.dart';
 import 'package:fixburgh/features/report/presentation/report_detail_sheet.dart';
 import 'package:fixburgh/features/report/presentation/report_labels.dart';
 import 'package:fixburgh/features/report/presentation/steps/review_step.dart';
@@ -19,6 +23,7 @@ class MyReportsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final reports = ref.watch(myReportsProvider);
+    final waiting = ref.watch(outboxProvider);
     return reports.when(
       loading: () => Scaffold(
         appBar: AppBar(title: Text(l10n.myReportsTitle)),
@@ -29,7 +34,7 @@ class MyReportsScreen extends ConsumerWidget {
         title: l10n.myReportsTitle,
         message: l10n.errorGeneric,
       ),
-      data: (list) => list.isEmpty
+      data: (list) => list.isEmpty && waiting.isEmpty
           ? PlaceholderView(
               icon: Icons.list_alt,
               title: l10n.myReportsTitle,
@@ -42,16 +47,23 @@ class MyReportsScreen extends ConsumerWidget {
                   title: Text(l10n.myReportsTitle),
                   bottom: TabBar(
                     tabs: [
-                      Tab(text: l10n.tabAll(list.length)),
-                      Tab(text: l10n.tabOpen(list.where(_open).length)),
+                      Tab(text: l10n.tabAll(list.length + waiting.length)),
+                      Tab(
+                        text: l10n.tabOpen(
+                          list.where(_open).length + waiting.length,
+                        ),
+                      ),
                       Tab(text: l10n.tabFixed(list.where(_fixed).length)),
                     ],
                   ),
                 ),
                 body: TabBarView(
                   children: [
-                    _ReportList(reports: list),
-                    _ReportList(reports: list.where(_open).toList()),
+                    _ReportList(reports: list, waiting: waiting),
+                    _ReportList(
+                      reports: list.where(_open).toList(),
+                      waiting: waiting,
+                    ),
                     _ReportList(reports: list.where(_fixed).toList()),
                   ],
                 ),
@@ -64,15 +76,17 @@ class MyReportsScreen extends ConsumerWidget {
   static bool _fixed(Report r) => !r.isOpen;
 }
 
-/// Newest first, as [myReportsProvider] returns them (BRD FR-MYR-01).
+/// Newest first, as [myReportsProvider] returns them (BRD FR-MYR-01), after
+/// any reports still waiting to send.
 class _ReportList extends StatelessWidget {
-  const _ReportList({required this.reports});
+  const _ReportList({required this.reports, this.waiting = const []});
 
   final List<Report> reports;
+  final List<OutboxItem> waiting;
 
   @override
   Widget build(BuildContext context) {
-    if (reports.isEmpty) {
+    if (reports.isEmpty && waiting.isEmpty) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(32),
@@ -85,9 +99,142 @@ class _ReportList extends StatelessWidget {
     }
     return ListView.separated(
       padding: const EdgeInsets.all(16),
-      itemCount: reports.length,
+      itemCount: waiting.length + reports.length,
       separatorBuilder: (_, _) => const SizedBox(height: 12),
-      itemBuilder: (context, i) => _ReportCard(report: reports[i]),
+      itemBuilder: (context, i) => i < waiting.length
+          ? OutboxCard(item: waiting[i])
+          : _ReportCard(report: reports[i - waiting.length]),
+    );
+  }
+}
+
+/// A report saved on the device that hasn't reached the server yet
+/// (BRD FR-OFF-03, FR-OFF-05).
+class OutboxCard extends ConsumerWidget {
+  const OutboxCard({required this.item, super.key});
+
+  final OutboxItem item;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final ctl = ref.read(outboxProvider.notifier);
+    final d = item.draft;
+    final messenger = ScaffoldMessenger.of(context);
+    Future<void> guard(Future<void> Function() action) async {
+      try {
+        await action();
+      } on Exception {
+        messenger.showSnackBar(SnackBar(content: Text(l10n.errorGeneric)));
+      }
+    }
+
+    final status = switch (item.status) {
+      OutboxStatus.waiting => l10n.outboxWaiting,
+      OutboxStatus.limitReached => l10n.outboxLimit,
+      OutboxStatus.failed => l10n.outboxFailed,
+      OutboxStatus.duplicate => l10n.outboxDuplicate,
+    };
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: SizedBox.square(
+                    dimension: 72,
+                    child: d.photoPaths.isEmpty
+                        ? Icon(d.category?.icon ?? Icons.photo)
+                        : Image.file(
+                            File(d.photoPaths.first),
+                            fit: BoxFit.cover,
+                            excludeFromSemantics: true,
+                            errorBuilder: (_, _, _) =>
+                                Icon(d.category?.icon ?? Icons.photo),
+                          ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        d.category?.label(l10n) ?? '',
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      Text(
+                        d.address ?? d.municipality?.name ?? '',
+                        style: theme.textTheme.bodySmall,
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(
+                            item.status == OutboxStatus.waiting
+                                ? Icons.cloud_upload_outlined
+                                : Icons.info_outline,
+                            size: 18,
+                            color: theme.colorScheme.primary,
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              status,
+                              style: theme.textTheme.bodyMedium,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              children: [
+                if (item.status == OutboxStatus.duplicate) ...[
+                  FilledButton.tonal(
+                    onPressed: () => guard(() => ctl.meTooInstead(item.id)),
+                    child: Text(l10n.meTooShort),
+                  ),
+                  TextButton(
+                    onPressed: () => guard(() => ctl.sendAnyway(item.id)),
+                    child: Text(l10n.sendAnyway),
+                  ),
+                ] else
+                  TextButton(
+                    onPressed: () => guard(() async {
+                      final run = await ctl.sendNow(force: true);
+                      if ((run?.sent ?? 0) == 0) {
+                        messenger.showSnackBar(
+                          SnackBar(content: Text(l10n.stillOffline)),
+                        );
+                      }
+                    }),
+                    child: Text(l10n.retryNow),
+                  ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    foregroundColor: theme.colorScheme.error,
+                  ),
+                  onPressed: () => ctl.cancel(item.id),
+                  child: Text(l10n.cancelReport),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

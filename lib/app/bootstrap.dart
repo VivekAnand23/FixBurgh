@@ -4,12 +4,14 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:fixburgh/app/app.dart';
+import 'package:fixburgh/app/background.dart';
 import 'package:fixburgh/app/flavor.dart';
 import 'package:fixburgh/app/providers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workmanager/workmanager.dart';
 
 /// Shared startup for every flavor's `main`.
 Future<void> bootstrap(Flavor flavor) async {
@@ -37,6 +39,13 @@ Future<void> bootstrap(Flavor flavor) async {
   };
 
   final prefs = await SharedPreferences.getInstance();
+  // Background sends need to know which Firebase project to use.
+  await prefs.setString(flavorPrefsKey, flavor.name);
+  try {
+    await Workmanager().initialize(backgroundDispatcher);
+  } on Object {
+    // Background work unavailable; the outbox still sends while open.
+  }
 
   runApp(
     ProviderScope(

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fixburgh/features/auth/auth_repository.dart';
+import 'package:fixburgh/features/report/presentation/outbox_controller.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,7 +33,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     final l10n = AppLocalizations.of(context);
     final shell = widget.navigationShell;
     return Scaffold(
-      body: shell,
+      body: OutboxRunner(child: shell),
       bottomNavigationBar: NavigationBar(
         selectedIndex: shell.currentIndex,
         onDestinationSelected: (i) =>

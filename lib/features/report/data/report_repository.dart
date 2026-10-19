@@ -31,6 +31,15 @@ class DailyLimitReached implements Exception {
   final bool isGuest;
 }
 
+/// The routing fields stored on a report.
+Map<String, Object?> routingFields(RoutingResult r) => {
+  'agencyId': r.agency.id,
+  'agencyName': r.agency.name,
+  'roadOwner': r.road.owner.name,
+  'roadName': r.road.name,
+  'stateRoute': r.road.route,
+};
+
 /// Thrown before voting when today's "Me too" limit is used up.
 class VoteLimitReached implements Exception {
   const VoteLimitReached();
@@ -115,15 +124,22 @@ class ReportRepository {
 
   /// Compresses and uploads the photos, then creates the report document.
   /// Photos go first so a report never points at missing images.
+  ///
+  /// [reportId] and [photoIds] let a retry from the outbox reuse the same
+  /// IDs: photos already uploaded are skipped, so a send that stopped
+  /// halfway picks up where it left off.
   Future<String> submit({
     required ReportDraft draft,
     required String uid,
     required bool isGuest,
-    RoutingResult? routing,
+    Map<String, Object?>? routing,
+    String? reportId,
+    List<String>? photoIds,
+    String source = 'online',
     void Function(double progress)? onProgress,
   }) async {
     final location = draft.location!;
-    final reportId = const Uuid().v4();
+    final id = reportId ?? const Uuid().v4();
     final photos = <Map<String, dynamic>>[];
     final steps = draft.photoPaths.length * 2;
     var done = 0;
@@ -141,10 +157,11 @@ class ReportRepository {
       throw DailyLimitReached(isGuest: isGuest);
     }
 
-    for (final path in draft.photoPaths) {
+    for (final (i, path) in draft.photoPaths.indexed) {
       final photo = await _uploadPhoto(
         path,
-        '$uid/$reportId',
+        '$uid/$id',
+        photoId: photoIds != null && i < photoIds.length ? photoIds[i] : null,
         onStep: () => onProgress?.call(++done / steps),
       );
       photos.add({...photo, 'blurred': false});
@@ -153,7 +170,7 @@ class ReportRepository {
     final description = cleanUserText(draft.description.trim());
     final batch = _db.batch()
       ..set(limitRef, {'day': day, 'count': count})
-      ..set(_reports.doc(reportId), {
+      ..set(_reports.doc(id), {
         'authorUid': uid,
         'authorIsGuest': isGuest,
         'category': draft.category!.id,
@@ -169,13 +186,8 @@ class ReportRepository {
         'municipalityId': draft.municipality!.id,
         'municipalityName': draft.municipality!.name,
         'photos': photos,
-        if (routing != null) ...{
-          'agencyId': routing.agency.id,
-          'agencyName': routing.agency.name,
-          'roadOwner': routing.road.owner.name,
-          'roadName': routing.road.name,
-          'stateRoute': routing.road.route,
-        },
+        ...?routing,
+        if (source != 'online') 'source': source,
         'status': ReportStatus.reported.name,
         'upvoteCount': 0,
         'flagCount': 0,
@@ -184,8 +196,14 @@ class ReportRepository {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     await batch.commit();
-    return reportId;
+    return id;
   }
+
+  /// Whether report [id] is on the server (an earlier send got through).
+  /// Asks the server, not the cache; throws when offline.
+  Future<bool> existsOnServer(String id) async =>
+      (await _reports.doc(id).get(const GetOptions(source: Source.server)))
+          .exists;
 
   Stream<List<Report>> watchMine(String uid) => _reports
       .where('authorUid', isEqualTo: uid)
@@ -419,20 +437,42 @@ class ReportRepository {
   }
 
   /// Uploads a full-size photo and thumbnail under `reports/[folder]/`.
+  /// With a [photoId] from an earlier attempt, files already uploaded are
+  /// kept (Storage rules allow each file to be written once).
   Future<Map<String, dynamic>> _uploadPhoto(
     String path,
     String folder, {
+    String? photoId,
     void Function()? onStep,
   }) async {
-    final base = 'reports/$folder/${const Uuid().v4()}';
-    final full = await _compress(path, size: 1600, quality: 80);
-    final thumb = await _compress(path, size: 320, quality: 70);
+    final base = 'reports/$folder/${photoId ?? const Uuid().v4()}';
     final fullRef = _storage.ref('$base.jpg');
     final thumbRef = _storage.ref('${base}_thumb.jpg');
     final meta = SettableMetadata(contentType: 'image/jpeg');
-    await fullRef.putData(full, meta);
+    Future<bool> uploaded(Reference ref) async {
+      if (photoId == null) return false;
+      try {
+        await ref.getMetadata();
+        return true;
+      } on FirebaseException catch (e) {
+        if (e.code == 'object-not-found') return false;
+        rethrow;
+      }
+    }
+
+    if (!await uploaded(fullRef)) {
+      await fullRef.putData(
+        await _compress(path, size: 1600, quality: 80),
+        meta,
+      );
+    }
     onStep?.call();
-    await thumbRef.putData(thumb, meta);
+    if (!await uploaded(thumbRef)) {
+      await thumbRef.putData(
+        await _compress(path, size: 320, quality: 70),
+        meta,
+      );
+    }
     onStep?.call();
     return {
       'path': fullRef.fullPath,

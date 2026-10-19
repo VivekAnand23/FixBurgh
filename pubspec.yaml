@@ -30,12 +30,14 @@ environment:
 dependencies:
   cloud_firestore: ^6.10.0
   cloud_functions: ^6.5.0
+  connectivity_plus: ^7.3.1
   cupertino_icons: ^1.0.8
   firebase_analytics: ^12.6.0
   firebase_app_check: ^0.4.8
   firebase_auth: ^6.7.0
   firebase_core: ^4.15.0
   firebase_crashlytics: ^5.4.0
+  firebase_messaging: ^16.7.0
   firebase_remote_config: ^6.7.0
   firebase_storage: ^13.6.0
   flutter:
@@ -55,6 +57,7 @@ dependencies:
   shared_preferences: ^2.5.5
   url_launcher: ^6.3.3
   uuid: ^4.6.0
+  workmanager: ^0.10.10
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.4

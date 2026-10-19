@@ -6,6 +6,27 @@
       },
       "description": "Comma-separated words that re-ask the safety check on urgent fallen tree, flooding or streetlight reports (BRD FR-SAF-03). Matched at the start of words.",
       "valueType": "STRING"
+    },
+    "feature_offline_outbox": {
+      "defaultValue": {
+        "value": "true"
+      },
+      "description": "Phase 2 offline mode: reports made without a connection wait in an outbox and send later (FR-OFF).",
+      "valueType": "BOOLEAN"
+    },
+    "feature_push": {
+      "defaultValue": {
+        "value": "true"
+      },
+      "description": "Phase 2 push notifications (FR-NTF-01, 02, 05, 06).",
+      "valueType": "BOOLEAN"
+    },
+    "feature_saved_places": {
+      "defaultValue": {
+        "value": "true"
+      },
+      "description": "Phase 2 saved places and nearby urgent alerts (FR-NTF-03, 04).",
+      "valueType": "BOOLEAN"
     }
   }
 }

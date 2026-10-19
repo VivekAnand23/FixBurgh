@@ -32,7 +32,8 @@ service cloud.firestore {
           'geo', 'address', 'municipalityId', 'municipalityName', 'photos',
           'status', 'upvoteCount', 'flagCount', 'moderation',
           'agencyId', 'agencyName', 'roadOwner', 'roadName', 'stateRoute',
-          'createdAt', 'updatedAt'])
+          'source', 'createdAt', 'updatedAt'])
+        && d.get('source', 'online') in ['online', 'offline_queue']
         && d.authorUid == request.auth.uid
         && d.authorIsGuest == (request.auth.token.firebase.sign_in_provider == 'anonymous')
         && d.category in ['pothole', 'landslide', 'flooding', 'streetlight',

@@ -8,6 +8,7 @@ import 'package:fixburgh/features/moderation/blocked_users.dart';
 import 'package:fixburgh/features/profile/settings_controller.dart';
 import 'package:fixburgh/features/report/data/draft_store.dart';
 import 'package:fixburgh/features/report/data/report_repository.dart';
+import 'package:fixburgh/features/report/presentation/outbox_controller.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,9 +24,33 @@ class ProfileScreen extends ConsumerWidget {
   static Future<void> _clearLocalData(WidgetRef ref) async {
     await ref.read(draftStoreProvider).clear();
     await ref.read(blockedUsersProvider.notifier).unblockAll();
+    await ref.read(outboxStoreProvider).clear();
+    await ref.read(outboxProvider.notifier).refresh();
   }
 
-  Future<void> _signOut(WidgetRef ref) async {
+  Future<void> _signOut(BuildContext context, WidgetRef ref) async {
+    final unsent = ref.read(outboxProvider).length;
+    if (unsent > 0) {
+      final l10n = AppLocalizations.of(context);
+      final ok = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(l10n.unsentReportsTitle),
+          content: Text(l10n.unsentReportsBody(unsent)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l10n.cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(l10n.signOut),
+            ),
+          ],
+        ),
+      );
+      if (ok != true) return;
+    }
     await ref.read(authRepositoryProvider).signOut();
     await _clearLocalData(ref);
   }
@@ -190,7 +215,7 @@ class ProfileScreen extends ConsumerWidget {
                     )
                   else
                     OutlinedButton(
-                      onPressed: () => _signOut(ref),
+                      onPressed: () => _signOut(context, ref),
                       child: Text(l10n.signOut),
                     ),
                 ],
