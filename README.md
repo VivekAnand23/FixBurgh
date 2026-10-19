@@ -24,7 +24,7 @@ Allegheny County and PennDOT.
 lib/
   app/            app shell: bootstrap, flavors, router, theme, Firebase options
   features/
-    auth/         guest, Google and email sign-in (guest upgrade keeps reports)
+    auth/         guest, Google, Apple and email sign-in (guest upgrade keeps reports)
     onboarding/   welcome and neutral 13+ age screen
     routing/      smart routing engine (pure Dart), municipality lookup
     map/ report/ my_reports/ profile/
@@ -64,6 +64,38 @@ The Firebase config files in this repo (`firebase_options_*.dart`,
 `GoogleService-Info.plist`, `google-services.json`) identify the projects and
 are meant to be public. Access is protected by Security Rules, App Check and
 API key restrictions. Never commit service-account keys or other secrets.
+
+## Backend
+
+Firestore and Storage rules, indexes, Cloud Functions and the Remote Config
+template are deployed with the Firebase CLI. Use the dev project unless you
+are releasing:
+
+```bash
+firebase deploy --project fixburgh-dev --only firestore,storage,functions,remoteconfig
+```
+
+Rules and functions tests run against the emulators:
+
+```bash
+firebase emulators:exec --only auth,firestore,functions,storage --project demo-fixburgh \
+  "npm --prefix firebase/test test && npm --prefix firebase/test run test:functions"
+```
+
+### Office directory
+
+The app bundles `assets/directory/agencies.json` and lays Firestore's
+`agencies` collection over it, so contacts can be corrected without a
+release. To publish the bundled directory to Firestore (needs Google
+credentials for the project, e.g. a service-account key in
+`GOOGLE_APPLICATION_CREDENTIALS`):
+
+```bash
+npm --prefix functions run seed:agencies -- --project fixburgh-dev
+```
+
+Edits to any `agencies` document (including in the console) bump
+`config/directory.version`, and apps refetch on their next launch.
 
 ## Updating GIS data
 

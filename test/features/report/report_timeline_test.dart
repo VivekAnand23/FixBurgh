@@ -52,6 +52,21 @@ void main() {
     ]);
   });
 
+  test('fills in early steps recorded before history existed', () {
+    final r = _report(
+      sentAt: DateTime(2026, 9, 2),
+      resolvedAt: DateTime(2026, 9, 10),
+    );
+    final t = reportTimeline(r, [
+      ReportEvent(type: ReportEventType.resolved, at: DateTime(2026, 9, 10)),
+    ]);
+    expect(t.map((e) => e.type), [
+      ReportEventType.reported,
+      ReportEventType.sent,
+      ReportEventType.resolved,
+    ]);
+  });
+
   test('can reopen within 30 days, back to the earlier open status', () {
     final fixed = _report(
       sentAt: DateTime(2026, 9, 2),

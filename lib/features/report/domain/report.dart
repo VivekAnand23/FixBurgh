@@ -242,10 +242,23 @@ class ReportEvent {
 }
 
 /// The report's history, oldest first. Reports filed before history was
-/// recorded have no events, so their timeline is rebuilt from timestamps.
+/// recorded have no events (or only the later ones), so the missing early
+/// steps are rebuilt from the report's timestamps.
 List<ReportEvent> reportTimeline(Report r, List<ReportEvent> events) {
   if (events.isNotEmpty) {
-    return [...events]..sort((a, b) => a.at.compareTo(b.at));
+    final types = events.map((e) => e.type).toSet();
+    final first = events
+        .map((e) => e.at)
+        .reduce((a, b) => a.isBefore(b) ? a : b);
+    return [
+      if (!types.contains(ReportEventType.reported))
+        ReportEvent(type: ReportEventType.reported, at: r.createdAt),
+      if (!types.contains(ReportEventType.sent) &&
+          r.sentAt != null &&
+          r.sentAt!.isBefore(first))
+        ReportEvent(type: ReportEventType.sent, at: r.sentAt!),
+      ...events,
+    ]..sort((a, b) => a.at.compareTo(b.at));
   }
   return [
     ReportEvent(type: ReportEventType.reported, at: r.createdAt),
