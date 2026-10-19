@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:fixburgh/app/links.dart';
 import 'package:fixburgh/app/providers.dart';
+import 'package:fixburgh/app/remote_config.dart';
 import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/auth/sign_in_screen.dart';
 import 'package:fixburgh/features/moderation/blocked_users.dart';
+import 'package:fixburgh/features/notifications/push_service.dart';
 import 'package:fixburgh/features/profile/settings_controller.dart';
 import 'package:fixburgh/features/report/data/draft_store.dart';
 import 'package:fixburgh/features/report/data/report_repository.dart';
@@ -51,7 +53,13 @@ class ProfileScreen extends ConsumerWidget {
       );
       if (ok != true) return;
     }
-    await ref.read(authRepositoryProvider).signOut();
+    final auth = ref.read(authRepositoryProvider);
+    final uid = auth.currentUser?.uid;
+    // This phone stops getting the old account's notifications.
+    if (uid != null) {
+      await ref.read(pushServiceProvider).unregister(uid).catchError((_) {});
+    }
+    await auth.signOut();
     await _clearLocalData(ref);
   }
 
@@ -291,6 +299,14 @@ class ProfileScreen extends ConsumerWidget {
               ),
             ),
           ),
+          if (ref.watch(featureFlagsProvider).push)
+            ListTile(
+              leading: const Icon(Icons.notifications_outlined),
+              title: Text(l10n.notificationsTitle),
+              subtitle: Text(l10n.notificationsSubtitle),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.push('/notifications'),
+            ),
           if (blocked.isNotEmpty)
             ListTile(
               leading: const Icon(Icons.block),

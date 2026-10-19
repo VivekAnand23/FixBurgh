@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:fixburgh/app/remote_config.dart';
 import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/moderation/text_filter.dart';
+import 'package:fixburgh/features/notifications/push_prompt.dart';
 import 'package:fixburgh/features/report/data/report_repository.dart';
 import 'package:fixburgh/features/report/domain/report.dart';
 import 'package:fixburgh/features/report/presentation/outbox_controller.dart';
@@ -55,6 +56,10 @@ class _ReviewStepState extends ConsumerState<ReviewStep> {
 
     Future<void> finish(String message, String route) async {
       await ref.read(reportsFiledProvider.notifier).increment();
+      // After the first report, offer notifications (BRD FR-NTF-01).
+      if (ref.read(reportsFiledProvider) == 1 && mounted) {
+        await maybeAskForNotifications(context, ref);
+      }
       await ref.read(reportDraftProvider.notifier).discard();
       widget.onSubmitted();
       messenger.showSnackBar(SnackBar(content: Text(message)));

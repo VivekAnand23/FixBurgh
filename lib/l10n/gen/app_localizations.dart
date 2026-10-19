@@ -1839,6 +1839,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 report is still waiting to send. Signing out deletes it from this phone.} other{{count} reports are still waiting to send. Signing out deletes them from this phone.}}'**
   String unsentReportsBody(int count);
+
+  /// No description provided for @pushRationaleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hear when it gets fixed'**
+  String get pushRationaleTitle;
+
+  /// No description provided for @pushRationaleBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll let you know when a report you made or said \"Me too\" to is sent to the office, fixed or reopened, and about urgent problems near places you save. At most 5 a day, and you choose which ones in Profile.'**
+  String get pushRationaleBody;
+
+  /// No description provided for @pushRationaleAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on notifications'**
+  String get pushRationaleAllow;
+
+  /// No description provided for @notNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get notNow;
+
+  /// No description provided for @notificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsTitle;
+
+  /// No description provided for @notificationsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Updates, saved places and quiet hours'**
+  String get notificationsSubtitle;
+
+  /// No description provided for @pushOffBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are off on this phone.'**
+  String get pushOffBody;
+
+  /// No description provided for @pushBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are blocked. Turn them on for FixBurgh in your phone\'s settings.'**
+  String get pushBlocked;
+
+  /// No description provided for @notifyStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Updates on my reports'**
+  String get notifyStatus;
+
+  /// No description provided for @notifyStatusBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports you made or said \"Me too\" to: sent to the office, fixed or reopened.'**
+  String get notifyStatusBody;
+
+  /// No description provided for @notifyNearby.
+  ///
+  /// In en, this message translates to:
+  /// **'Urgent problems near my places'**
+  String get notifyNearby;
+
+  /// No description provided for @notifyNearbyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'New urgent reports within the alert radius of your saved places.'**
+  String get notifyNearbyBody;
+
+  /// No description provided for @savedPlacesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved places'**
+  String get savedPlacesTitle;
+
+  /// No description provided for @savedPlacesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Home, school, work or anywhere you care about'**
+  String get savedPlacesBody;
+
+  /// No description provided for @quietHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiet hours'**
+  String get quietHours;
+
+  /// No description provided for @quietHoursBody.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications during these hours.'**
+  String get quietHoursBody;
+
+  /// No description provided for @quietFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get quietFrom;
+
+  /// No description provided for @quietUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Until'**
+  String get quietUntil;
+
+  /// No description provided for @notifyLimitNote.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll get at most 5 notifications a day.'**
+  String get notifyLimitNote;
+
+  /// No description provided for @sendTestNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a test notification'**
+  String get sendTestNotification;
+
+  /// No description provided for @testSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Test sent. It should arrive in a few seconds.'**
+  String get testSent;
+
+  /// No description provided for @savedPlacesIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Save up to 3 places. We\'ll tell you about new urgent problems nearby. We store only the point on the map, not an address.'**
+  String get savedPlacesIntro;
+
+  /// No description provided for @noSavedPlaces.
+  ///
+  /// In en, this message translates to:
+  /// **'No saved places yet.'**
+  String get noSavedPlaces;
+
+  /// No description provided for @addPlace.
+  ///
+  /// In en, this message translates to:
+  /// **'Add place'**
+  String get addPlace;
+
+  /// No description provided for @editPlace.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit place'**
+  String get editPlace;
+
+  /// No description provided for @alertRadius.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert radius: {miles} mi'**
+  String alertRadius(String miles);
+
+  /// No description provided for @placesFull.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve saved {count} places, the most you can.'**
+  String placesFull(int count);
+
+  /// No description provided for @placeHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get placeHome;
+
+  /// No description provided for @placeSchool.
+  ///
+  /// In en, this message translates to:
+  /// **'School'**
+  String get placeSchool;
+
+  /// No description provided for @placeWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get placeWork;
+
+  /// No description provided for @placeOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get placeOther;
+
+  /// No description provided for @placeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (optional)'**
+  String get placeLabel;
+
+  /// No description provided for @placeMapSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Map of the saved place. Tap to move it.'**
+  String get placeMapSemantics;
+
+  /// No description provided for @placeTapMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Search, use your location, or tap the map to choose the spot.'**
+  String get placeTapMap;
+
+  /// No description provided for @placeChosen.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the map to move the spot.'**
+  String get placeChosen;
+
+  /// No description provided for @savePlace.
+  ///
+  /// In en, this message translates to:
+  /// **'Save place'**
+  String get savePlace;
+
+  /// No description provided for @view.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get view;
 }
 
 class _AppLocalizationsDelegate

@@ -17,6 +17,8 @@ import {
 } from 'firebase-functions/v2/firestore';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 
+import { categoryLabel, notifyUsers, placeOwnersNear } from './notify';
+
 initializeApp();
 
 // Same region as the Firestore database.
@@ -177,10 +179,12 @@ export const deleteAccount = onCall({ timeoutSeconds: 60 }, async (request) => {
   const flags = await db.collection('flags').where('reporterUid', '==', uid).get();
   const writer = db.bulkWriter();
   for (const flag of flags.docs) writer.update(flag.ref, { reporterUid: '' });
-  for (const coll of ['users', 'rateLimits', 'voteLimits']) {
+  for (const coll of ['rateLimits', 'voteLimits', 'notifyLimits']) {
     writer.delete(db.collection(coll).doc(uid));
   }
   await writer.close();
+  // The profile with its devices, saved places and notifications.
+  await db.recursiveDelete(db.collection('users').doc(uid));
 
   await getAuth().deleteUser(uid);
   return { reports: reports.size, mode };
@@ -229,6 +233,64 @@ export const onReportWritten = onDocumentWritten('reports/{reportId}', async (ev
   if (next === 'resolved' && typeof afterThumb === 'string') entry.photoUrl = afterThumb;
   // The event ID makes a retried trigger write the same entry once.
   await after.ref.collection('events').doc(event.id).set(entry);
+  await notifyStatusChange(event.id, after, entry.type as string);
+});
+
+type Snapshot = FirebaseFirestore.DocumentSnapshot;
+
+/**
+ * Tells the reporter and everyone who said "Me too" (FR-NTF-02), and on a
+ * new urgent report, people with a saved place nearby (FR-NTF-04).
+ */
+async function notifyStatusChange(key: string, report: Snapshot, type: string) {
+  const author = report.get('authorUid') as string | undefined;
+  const what = categoryLabel(report.get('category'));
+  const where = (report.get('address') as string | undefined) || (report.get('municipalityName') as string) || '';
+  const at = where ? ` at ${where}` : '';
+  const reportId = report.id;
+
+  if (type === 'reported') {
+    if (report.get('severity') !== 'urgent') return;
+    const lat = Number(report.get('geo.lat')), lng = Number(report.get('geo.lng'));
+    const owners = (await placeOwnersNear(lat, lng)).filter((u) => u !== author);
+    await notifyUsers(owners, {
+      kind: 'nearby',
+      title: `Urgent ${what} near your saved place`,
+      body: `Reported${at}. Take care if you're passing by.`,
+      reportId,
+    }, key);
+    return;
+  }
+
+  const byCommunity = type === 'resolved' && report.get('resolvedBy') === 'community';
+  const upvoters = (await report.ref.collection('upvotes').get()).docs.map((d) => d.id);
+  // The reporter made every other change, so they don't need telling.
+  const recipients = byCommunity ? [...upvoters, author ?? ''] : upvoters.filter((u) => u !== author);
+  const agency = report.get('agencyName') as string | undefined;
+  const notice = {
+    sent: { title: `Your neighbor contacted ${agency ?? 'the office'}`, body: `The ${what}${at} has been reported to the people who fix it.` },
+    resolved: byCommunity
+      ? { title: `Fixed: ${what}${at}`, body: 'Neighbors confirmed it looks fixed.' }
+      : { title: `Fixed: ${what}${at}`, body: 'The reporter marked it fixed.' },
+    reopened: { title: `Not fixed after all: ${what}`, body: `The ${what}${at} was reopened.` },
+  }[type];
+  if (!notice) return;
+  await notifyUsers(recipients, { kind: 'status', ...notice, reportId }, key);
+}
+
+/**
+ * sendTestNotification: sends a test notification to the caller's own
+ * devices, from Profile > Notifications. Counts toward the daily limit.
+ */
+export const sendTestNotification = onCall(async (request) => {
+  const uid = request.auth?.uid;
+  if (!uid) throw new HttpsError('unauthenticated', 'Sign in first.');
+  const sent = await notifyUsers([uid], {
+    kind: 'test',
+    title: 'FixBurgh notifications work',
+    body: "You'll hear from us when reports you follow change.",
+  }, `test_${Date.now()}`);
+  return { sent: sent.length };
 });
 
 /**

@@ -1058,4 +1058,125 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get pushRationaleTitle => 'Hear when it gets fixed';
+
+  @override
+  String get pushRationaleBody =>
+      'We\'ll let you know when a report you made or said \"Me too\" to is sent to the office, fixed or reopened, and about urgent problems near places you save. At most 5 a day, and you choose which ones in Profile.';
+
+  @override
+  String get pushRationaleAllow => 'Turn on notifications';
+
+  @override
+  String get notNow => 'Not now';
+
+  @override
+  String get notificationsTitle => 'Notifications';
+
+  @override
+  String get notificationsSubtitle => 'Updates, saved places and quiet hours';
+
+  @override
+  String get pushOffBody => 'Notifications are off on this phone.';
+
+  @override
+  String get pushBlocked =>
+      'Notifications are blocked. Turn them on for FixBurgh in your phone\'s settings.';
+
+  @override
+  String get notifyStatus => 'Updates on my reports';
+
+  @override
+  String get notifyStatusBody =>
+      'Reports you made or said \"Me too\" to: sent to the office, fixed or reopened.';
+
+  @override
+  String get notifyNearby => 'Urgent problems near my places';
+
+  @override
+  String get notifyNearbyBody =>
+      'New urgent reports within the alert radius of your saved places.';
+
+  @override
+  String get savedPlacesTitle => 'Saved places';
+
+  @override
+  String get savedPlacesBody => 'Home, school, work or anywhere you care about';
+
+  @override
+  String get quietHours => 'Quiet hours';
+
+  @override
+  String get quietHoursBody => 'No notifications during these hours.';
+
+  @override
+  String get quietFrom => 'From';
+
+  @override
+  String get quietUntil => 'Until';
+
+  @override
+  String get notifyLimitNote => 'You\'ll get at most 5 notifications a day.';
+
+  @override
+  String get sendTestNotification => 'Send a test notification';
+
+  @override
+  String get testSent => 'Test sent. It should arrive in a few seconds.';
+
+  @override
+  String get savedPlacesIntro =>
+      'Save up to 3 places. We\'ll tell you about new urgent problems nearby. We store only the point on the map, not an address.';
+
+  @override
+  String get noSavedPlaces => 'No saved places yet.';
+
+  @override
+  String get addPlace => 'Add place';
+
+  @override
+  String get editPlace => 'Edit place';
+
+  @override
+  String alertRadius(String miles) {
+    return 'Alert radius: $miles mi';
+  }
+
+  @override
+  String placesFull(int count) {
+    return 'You\'ve saved $count places, the most you can.';
+  }
+
+  @override
+  String get placeHome => 'Home';
+
+  @override
+  String get placeSchool => 'School';
+
+  @override
+  String get placeWork => 'Work';
+
+  @override
+  String get placeOther => 'Other';
+
+  @override
+  String get placeLabel => 'Name (optional)';
+
+  @override
+  String get placeMapSemantics => 'Map of the saved place. Tap to move it.';
+
+  @override
+  String get placeTapMap =>
+      'Search, use your location, or tap the map to choose the spot.';
+
+  @override
+  String get placeChosen => 'Tap the map to move the spot.';
+
+  @override
+  String get savePlace => 'Save place';
+
+  @override
+  String get view => 'View';
 }

@@ -94,7 +94,7 @@ const toValue = (v) =>
   typeof v === 'string'
     ? { stringValue: v }
     : typeof v === 'number'
-      ? { integerValue: String(v) }
+      ? Number.isInteger(v) ? { integerValue: String(v) } : { doubleValue: v }
       : typeof v === 'boolean'
         ? { booleanValue: v }
         : Array.isArray(v)
@@ -224,5 +224,86 @@ describe('report triggers', () => {
       assert.equal(res.status, 200);
       assert.ok((await res.json()).fields.version.timestampValue);
     });
+  });
+});
+
+describe('notifications', () => {
+  const notifications = (uid) => listDocs(`users/${uid}/notifications`);
+  const uid = (tag) => `${tag}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+
+  it('tells neighbors who said "Me too" when the reporter contacts the office', async () => {
+    const id = uid('n');
+    const reporter = uid('reporter');
+    const fan = uid('fan');
+    await putDoc(`reports/${id}`, { authorUid: reporter, status: 'reported', category: 'pothole', address: '414 Grant St' });
+    await putDoc(`reports/${id}/upvotes/${fan}`, { uid: fan });
+    await putDoc(`reports/${id}`, {
+      authorUid: reporter, status: 'sent', category: 'pothole', address: '414 Grant St', agencyName: 'City of Pittsburgh 311',
+    });
+    await eventually(async () => {
+      const got = await notifications(fan);
+      assert.equal(got.length, 1);
+      assert.match(got[0].fields.body.stringValue, /pothole at 414 Grant St/);
+      assert.equal(got[0].fields.reportId.stringValue, id);
+    });
+    assert.equal((await notifications(reporter)).length, 0);
+  });
+
+  it('tells the reporter when neighbors confirm the fix, unless they opted out', async () => {
+    const id = uid('c');
+    const reporter = uid('reporter');
+    const quiet = uid('quiet');
+    const q = `${id}-q`;
+    await putDoc(`users/${quiet}`, { notify: { status: false } });
+    for (const [rid, author] of [[id, reporter], [q, quiet]]) {
+      await putDoc(`reports/${rid}`, { authorUid: author, status: 'reported', category: 'streetlight' });
+      await putDoc(`reports/${rid}`, { authorUid: author, status: 'resolved', resolvedBy: 'community', category: 'streetlight' });
+    }
+    await eventually(async () => {
+      const got = await notifications(reporter);
+      assert.equal(got.length, 1);
+      assert.match(got[0].fields.body.stringValue, /Neighbors confirmed/);
+    });
+    assert.equal((await notifications(quiet)).length, 0);
+  });
+
+  it('sends at most 5 a day per person', async () => {
+    const fan = uid('busy');
+    for (let i = 0; i < 7; i++) {
+      const id = `${fan}-r${i}`;
+      await putDoc(`reports/${id}`, { authorUid: 'someone', status: 'reported', category: 'other' });
+      await putDoc(`reports/${id}/upvotes/${fan}`, { uid: fan });
+      await putDoc(`reports/${id}`, { authorUid: 'someone', status: 'resolved', resolvedBy: 'community', category: 'other' });
+    }
+    await eventually(async () => assert.equal((await notifications(fan)).length, 5));
+    await new Promise((r) => setTimeout(r, 1500));
+    assert.equal((await notifications(fan)).length, 5);
+  });
+
+  it('alerts people with a saved place near a new urgent report', async () => {
+    const near = uid('near');
+    const far = uid('far');
+    const author = uid('author');
+    await putDoc(`users/${near}/places/p1`, { kind: 'home', lat: 40.4410, lng: -79.9960, geohash: 'dppn59kd3', radiusMiles: 0.5 });
+    await putDoc(`users/${far}/places/p1`, { kind: 'work', lat: 40.5200, lng: -79.9000, geohash: 'dppqh0000', radiusMiles: 0.25 });
+    await putDoc(`users/${author}/places/p1`, { kind: 'home', lat: 40.4406, lng: -79.9959, geohash: 'dppn59kd3', radiusMiles: 2 });
+    await putDoc(`reports/${uid('u')}`, {
+      authorUid: author, status: 'reported', severity: 'urgent', category: 'landslide',
+      geo: { lat: 40.4406, lng: -79.9959 },
+    });
+    await eventually(async () => {
+      const got = await notifications(near);
+      assert.equal(got.length, 1);
+      assert.match(got[0].fields.title.stringValue, /Urgent landslide/);
+    });
+    assert.equal((await notifications(far)).length, 0);
+    assert.equal((await notifications(author)).length, 0);
+  });
+
+  it('sends a test notification to the caller', async () => {
+    const guest = await signUpGuest();
+    const res = await call('sendTestNotification', guest.idToken, {});
+    assert.equal(res.status, 200, await res.clone().text());
+    assert.equal((await notifications(guest.localId)).length, 1);
   });
 });

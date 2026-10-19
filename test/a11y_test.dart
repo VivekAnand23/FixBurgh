@@ -1,6 +1,7 @@
 import 'package:fixburgh/app/providers.dart';
 import 'package:fixburgh/app/theme/app_theme.dart';
 import 'package:fixburgh/features/auth/sign_in_screen.dart';
+import 'package:fixburgh/features/notifications/push_prompt.dart';
 import 'package:fixburgh/features/onboarding/age_gate_screen.dart';
 import 'package:fixburgh/features/onboarding/welcome_screen.dart';
 import 'package:fixburgh/features/profile/data_sources_screen.dart';
@@ -27,6 +28,7 @@ void main() {
     'emergency card': Scaffold(body: EmergencyCard(onBack: () {})),
     'data sources': const DataSourcesScreen(),
     'delete account dialog': const Scaffold(body: DeleteAccountDialog()),
+    'notification explanation': const Scaffold(body: NotificationRationale()),
   };
 
   for (final dark in [false, true]) {

@@ -342,3 +342,58 @@ describe('flags', () => {
     );
   });
 });
+
+describe('notification settings', () => {
+  const place = (extra = {}) => ({
+    kind: 'home',
+    label: 'Home',
+    lat: 40.44,
+    lng: -80,
+    geohash: 'dppn59kd3',
+    radiusMiles: 1,
+    updatedAt: serverTimestamp(),
+    ...extra,
+  });
+
+  it('lets people save up to 3 places of their own', async () => {
+    for (const id of ['p1', 'p2', 'p3']) {
+      await assertSucceeds(setDoc(doc(db('alice'), `users/alice/places/${id}`), place()));
+    }
+    await assertFails(setDoc(doc(db('alice'), 'users/alice/places/p4'), place()));
+    await assertFails(setDoc(doc(db('bob'), 'users/alice/places/p1'), place()));
+    await assertFails(getDoc(doc(db('bob'), 'users/alice/places/p1')));
+  });
+
+  it('keeps the alert radius between 0.25 and 2 miles', async () => {
+    await assertFails(setDoc(doc(db('alice'), 'users/alice/places/p1'), place({ radiusMiles: 5 })));
+    await assertFails(setDoc(doc(db('alice'), 'users/alice/places/p1'), place({ radiusMiles: 0.1 })));
+    await assertFails(setDoc(doc(db('alice'), 'users/alice/places/p1'), place({ address: '414 Grant St' })));
+  });
+
+  it('stores push tokens per device for their owner only', async () => {
+    const device = { token: 't', platform: 'android', updatedAt: serverTimestamp() };
+    await assertSucceeds(setDoc(doc(db('alice'), 'users/alice/devices/d1'), device));
+    await assertFails(setDoc(doc(db('bob'), 'users/alice/devices/d1'), device));
+    await assertFails(setDoc(doc(db('alice'), 'users/alice/devices/d2'), { ...device, platform: 'web' }));
+  });
+
+  it('accepts valid choices and quiet hours', async () => {
+    await assertSucceeds(
+      setDoc(doc(db('alice'), 'users/alice'), {
+        notify: { status: true, nearby: false },
+        quietHours: { enabled: true, start: 1320, end: 420 },
+        utcOffsetMinutes: -240,
+      }),
+    );
+    await assertFails(
+      setDoc(doc(db('alice'), 'users/alice'), { quietHours: { enabled: true, start: 2000, end: 0 } }),
+    );
+    await assertFails(setDoc(doc(db('alice'), 'users/alice'), { notify: { marketing: true } }));
+  });
+
+  it('lets people read their notifications but not write them', async () => {
+    await assertSucceeds(getDoc(doc(db('alice'), 'users/alice/notifications/n1')));
+    await assertFails(getDoc(doc(db('bob'), 'users/alice/notifications/n1')));
+    await assertFails(setDoc(doc(db('alice'), 'users/alice/notifications/n1'), { title: 'x' }));
+  });
+});

@@ -221,7 +221,60 @@ service cloud.firestore {
     match /users/{uid} {
       allow read, delete: if signedIn() && request.auth.uid == uid;
       allow create, update: if signedIn() && request.auth.uid == uid
-        && !request.resource.data.keys().hasAny(['role']);
+        && !request.resource.data.keys().hasAny(['role'])
+        && validNotifySettings(request.resource.data);
+
+      // Push tokens, one per device (BRD FR-NTF-02).
+      match /devices/{deviceId} {
+        allow read, delete: if signedIn() && request.auth.uid == uid;
+        allow create, update: if signedIn() && request.auth.uid == uid
+          && request.resource.data.keys().hasOnly(['token', 'platform', 'updatedAt'])
+          && request.resource.data.token is string
+          && request.resource.data.token.size() < 4096
+          && request.resource.data.platform in ['android', 'ios']
+          && request.resource.data.updatedAt == request.time;
+      }
+
+      // Up to 3 saved places, stored as coordinates and geohash only
+      // (BRD FR-NTF-03).
+      match /places/{placeId} {
+        allow read, delete: if signedIn() && request.auth.uid == uid;
+        allow create, update: if signedIn() && request.auth.uid == uid
+          && placeId in ['p1', 'p2', 'p3']
+          && validPlace(request.resource.data);
+      }
+
+      // Notifications sent, written only by Cloud Functions.
+      match /notifications/{id} {
+        allow read: if signedIn() && request.auth.uid == uid;
+        allow write: if false;
+      }
+    }
+
+    // Notification choices and quiet hours (BRD FR-NTF-05).
+    function validNotifySettings(d) {
+      return (!('notify' in d) || (d.notify is map
+          && d.notify.keys().hasOnly(['status', 'nearby'])
+          && d.notify.get('status', true) is bool
+          && d.notify.get('nearby', true) is bool))
+        && (!('quietHours' in d) || (d.quietHours is map
+          && d.quietHours.keys().hasOnly(['enabled', 'start', 'end'])
+          && d.quietHours.enabled is bool
+          && d.quietHours.start is int && d.quietHours.start >= 0 && d.quietHours.start < 1440
+          && d.quietHours.end is int && d.quietHours.end >= 0 && d.quietHours.end < 1440))
+        && (!('utcOffsetMinutes' in d) || (d.utcOffsetMinutes is int
+          && d.utcOffsetMinutes >= -840 && d.utcOffsetMinutes <= 840));
+    }
+
+    function validPlace(p) {
+      return p.keys().hasOnly(['kind', 'label', 'lat', 'lng', 'geohash', 'radiusMiles', 'updatedAt'])
+        && p.kind in ['home', 'school', 'work', 'other']
+        && p.get('label', '') is string && p.get('label', '').size() <= 40
+        && p.lat is number && p.lat >= -90 && p.lat <= 90
+        && p.lng is number && p.lng >= -180 && p.lng <= 180
+        && p.geohash is string && p.geohash.size() == 9
+        && p.radiusMiles is number && p.radiusMiles >= 0.25 && p.radiusMiles <= 2
+        && p.updatedAt == request.time;
     }
   }
 }

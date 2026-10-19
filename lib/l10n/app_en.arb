@@ -586,5 +586,56 @@
         "type": "int"
       }
     }
-  }
+  },
+  "pushRationaleTitle": "Hear when it gets fixed",
+  "pushRationaleBody": "We'll let you know when a report you made or said \"Me too\" to is sent to the office, fixed or reopened, and about urgent problems near places you save. At most 5 a day, and you choose which ones in Profile.",
+  "pushRationaleAllow": "Turn on notifications",
+  "notNow": "Not now",
+  "notificationsTitle": "Notifications",
+  "notificationsSubtitle": "Updates, saved places and quiet hours",
+  "pushOffBody": "Notifications are off on this phone.",
+  "pushBlocked": "Notifications are blocked. Turn them on for FixBurgh in your phone's settings.",
+  "notifyStatus": "Updates on my reports",
+  "notifyStatusBody": "Reports you made or said \"Me too\" to: sent to the office, fixed or reopened.",
+  "notifyNearby": "Urgent problems near my places",
+  "notifyNearbyBody": "New urgent reports within the alert radius of your saved places.",
+  "savedPlacesTitle": "Saved places",
+  "savedPlacesBody": "Home, school, work or anywhere you care about",
+  "quietHours": "Quiet hours",
+  "quietHoursBody": "No notifications during these hours.",
+  "quietFrom": "From",
+  "quietUntil": "Until",
+  "notifyLimitNote": "You'll get at most 5 notifications a day.",
+  "sendTestNotification": "Send a test notification",
+  "testSent": "Test sent. It should arrive in a few seconds.",
+  "savedPlacesIntro": "Save up to 3 places. We'll tell you about new urgent problems nearby. We store only the point on the map, not an address.",
+  "noSavedPlaces": "No saved places yet.",
+  "addPlace": "Add place",
+  "editPlace": "Edit place",
+  "alertRadius": "Alert radius: {miles} mi",
+  "@alertRadius": {
+    "placeholders": {
+      "miles": {
+        "type": "String"
+      }
+    }
+  },
+  "placesFull": "You've saved {count} places, the most you can.",
+  "@placesFull": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "placeHome": "Home",
+  "placeSchool": "School",
+  "placeWork": "Work",
+  "placeOther": "Other",
+  "placeLabel": "Name (optional)",
+  "placeMapSemantics": "Map of the saved place. Tap to move it.",
+  "placeTapMap": "Search, use your location, or tap the map to choose the spot.",
+  "placeChosen": "Tap the map to move the spot.",
+  "savePlace": "Save place",
+  "view": "View"
 }

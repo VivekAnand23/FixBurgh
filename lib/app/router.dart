@@ -2,6 +2,8 @@ import 'package:fixburgh/app/home_shell.dart';
 import 'package:fixburgh/features/auth/sign_in_screen.dart';
 import 'package:fixburgh/features/map/map_screen.dart';
 import 'package:fixburgh/features/my_reports/my_reports_screen.dart';
+import 'package:fixburgh/features/notifications/notifications_screen.dart';
+import 'package:fixburgh/features/notifications/saved_places_screen.dart';
 import 'package:fixburgh/features/onboarding/age_gate_screen.dart';
 import 'package:fixburgh/features/onboarding/onboarding_controller.dart';
 import 'package:fixburgh/features/onboarding/welcome_screen.dart';
@@ -22,6 +24,8 @@ abstract final class Routes {
   static const profile = '/profile';
   static const signIn = '/sign-in';
   static const dataSources = '/data-sources';
+  static const notifications = '/notifications';
+  static const savedPlaces = '/saved-places';
 }
 
 /// Picks the onboarding screen the user must see, or null when done.
@@ -64,6 +68,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.dataSources,
         builder: (_, _) => const DataSourcesScreen(),
+      ),
+      GoRoute(
+        path: Routes.notifications,
+        builder: (_, _) => const NotificationsScreen(),
+      ),
+      GoRoute(
+        path: Routes.savedPlaces,
+        builder: (_, _) => const SavedPlacesScreen(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (_, _, shell) => HomeShell(navigationShell: shell),
