@@ -946,9 +946,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contactSupport => 'Contact support';
 
   @override
-  String get supportWebsite => 'FixBurgh website';
-
-  @override
   String get deleteAccountReportsQuestion =>
       'What should happen to your reports?';
 

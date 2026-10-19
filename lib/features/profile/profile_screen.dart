@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fixburgh/app/links.dart';
+import 'package:fixburgh/app/providers.dart';
 import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/auth/sign_in_screen.dart';
 import 'package:fixburgh/features/moderation/blocked_users.dart';
@@ -141,7 +142,7 @@ class ProfileScreen extends ConsumerWidget {
     final settings = ref.watch(settingsProvider);
     final settingsCtl = ref.read(settingsProvider.notifier);
     final blocked = ref.watch(blockedUsersProvider);
-    const support = AppLinks.supportEmail;
+    final links = AppLinks(ref.watch(flavorProvider));
     return Scaffold(
       appBar: AppBar(title: Text(l10n.profileTitle)),
       body: ListView(
@@ -288,13 +289,13 @@ class ProfileScreen extends ConsumerWidget {
             leading: const Icon(Icons.privacy_tip_outlined),
             title: Text(l10n.privacyPolicy),
             trailing: const Icon(Icons.open_in_new, size: 18),
-            onTap: () => _open(AppLinks.privacy),
+            onTap: () => _open(links.privacy),
           ),
           ListTile(
             leading: const Icon(Icons.gavel_outlined),
             title: Text(l10n.termsOfUse),
             trailing: const Icon(Icons.open_in_new, size: 18),
-            onTap: () => _open(AppLinks.terms),
+            onTap: () => _open(links.terms),
           ),
           ListTile(
             leading: const Icon(Icons.map_outlined),
@@ -314,17 +315,14 @@ class ProfileScreen extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.support_agent),
             title: Text(l10n.contactSupport),
-            subtitle: Text(support ?? l10n.supportWebsite),
-            onTap: () => support == null
-                ? _open(AppLinks.site)
-                : launchUrl(
-                    Uri(
-                      scheme: 'mailto',
-                      // ignore: avoid_redundant_argument_values, set later.
-                      path: support,
-                      query: 'subject=${Uri.encodeComponent(l10n.appTitle)}',
-                    ),
-                  ),
+            subtitle: const Text(AppLinks.supportEmail),
+            onTap: () => launchUrl(
+              Uri(
+                scheme: 'mailto',
+                path: AppLinks.supportEmail,
+                query: 'subject=${Uri.encodeComponent(l10n.appTitle)}',
+              ),
+            ),
           ),
           const SizedBox(height: 16),
           ListTile(

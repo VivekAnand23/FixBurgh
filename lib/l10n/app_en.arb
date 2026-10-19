@@ -541,7 +541,6 @@
   "dataSourcesShort": "Maps, road ownership and office contacts",
   "openSourceLicenses": "Open-source licenses",
   "contactSupport": "Contact support",
-  "supportWebsite": "FixBurgh website",
   "deleteAccountReportsQuestion": "What should happen to your reports?",
   "deleteKeepReports": "Keep them on the map, anonymously",
   "deleteKeepReportsBody": "The problems still exist. Nobody will be able to link them to you.",

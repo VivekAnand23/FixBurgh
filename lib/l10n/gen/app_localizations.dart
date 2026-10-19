@@ -1666,12 +1666,6 @@ abstract class AppLocalizations {
   /// **'Contact support'**
   String get contactSupport;
 
-  /// No description provided for @supportWebsite.
-  ///
-  /// In en, this message translates to:
-  /// **'FixBurgh website'**
-  String get supportWebsite;
-
   /// No description provided for @deleteAccountReportsQuestion.
   ///
   /// In en, this message translates to:
