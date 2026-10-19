@@ -7,9 +7,14 @@
  */
 import { initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
-import { FieldValue, getFirestore } from 'firebase-admin/firestore';
-import { setGlobalOptions } from 'firebase-functions/v2';
-import { onDocumentCreated } from 'firebase-functions/v2/firestore';
+import { DocumentData, FieldValue, getFirestore } from 'firebase-admin/firestore';
+import { getStorage } from 'firebase-admin/storage';
+import { logger, setGlobalOptions } from 'firebase-functions/v2';
+import {
+  onDocumentCreated,
+  onDocumentDeleted,
+  onDocumentWritten,
+} from 'firebase-functions/v2/firestore';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 
 initializeApp();
@@ -76,4 +81,164 @@ export const claimGuestReports = onCall(async (request) => {
   // The guest account has nothing left; remove it.
   await getAuth().deleteUser(guest.uid).catch(() => undefined);
   return { moved: reports.size };
+});
+
+/** Account deletion needs a sign-in this recent (BRD FR-AUTH-05). */
+const RECENT_LOGIN_SECONDS = 5 * 60;
+
+/** Storage paths of a report's photos, including the "after" photo. */
+function photoPaths(data: DocumentData | undefined): string[] {
+  const photos: unknown[] = Array.isArray(data?.photos) ? data.photos : [];
+  const after = data?.afterPhoto ? [data.afterPhoto] : [];
+  return [...photos, ...after].flatMap((p) => {
+    const photo = p as { path?: unknown; thumbPath?: unknown };
+    return [photo.path, photo.thumbPath].filter(
+      (x): x is string => typeof x === 'string' && x.startsWith('reports/'),
+    );
+  });
+}
+
+async function deleteFiles(paths: string[]): Promise<void> {
+  const bucket = getStorage().bucket();
+  await Promise.all(
+    paths.map((path) =>
+      bucket
+        .file(path)
+        .delete({ ignoreNotFound: true })
+        .catch((e) => logger.warn('photo delete failed', { path, e })),
+    ),
+  );
+}
+
+/**
+ * deleteAccount: deletes the caller's account (BRD FR-PRF-04, journey 6.5).
+ *
+ * `reports: 'delete'` removes their reports, photos and the reports' votes
+ * and history; `'anonymize'` keeps the reports on the map with no link to
+ * the account. Either way their own votes, limits, profile and sign-in are
+ * removed. Signed-in (non-guest) accounts must have signed in within the
+ * last five minutes; otherwise this fails with `failed-precondition` and the
+ * app asks them to sign in again.
+ */
+export const deleteAccount = onCall({ timeoutSeconds: 60 }, async (request) => {
+  const uid = request.auth?.uid;
+  if (!uid) throw new HttpsError('unauthenticated', 'Sign in first.');
+  const mode = request.data?.reports;
+  if (mode !== 'delete' && mode !== 'anonymize') {
+    throw new HttpsError('invalid-argument', "reports must be 'delete' or 'anonymize'.");
+  }
+  const token = request.auth!.token;
+  const isGuest = token.firebase?.sign_in_provider === 'anonymous';
+  const signedInAgo = Date.now() / 1000 - (token.auth_time ?? 0);
+  if (!isGuest && signedInAgo > RECENT_LOGIN_SECONDS) {
+    throw new HttpsError('failed-precondition', 'requires-recent-login');
+  }
+
+  const db = getFirestore();
+  const reports = await db.collection('reports').where('authorUid', '==', uid).get();
+  if (mode === 'delete') {
+    await deleteFiles(reports.docs.flatMap((d) => photoPaths(d.data())));
+    // Takes the votes and history subcollections with each report.
+    for (const doc of reports.docs) await db.recursiveDelete(doc.ref);
+  } else {
+    const writer = db.bulkWriter();
+    for (const doc of reports.docs) {
+      writer.update(doc.ref, {
+        authorUid: '',
+        authorIsGuest: false,
+        anonymized: true,
+        claimedFromGuest: FieldValue.delete(),
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+    }
+    await writer.close();
+  }
+
+  // Their "Me too" and "Looks fixed" votes on other people's reports.
+  for (const [coll, field] of [
+    ['upvotes', 'upvoteCount'],
+    ['fixedVotes', 'fixedVoteCount'],
+  ] as const) {
+    const votes = await db.collectionGroup(coll).where('uid', '==', uid).get();
+    for (const vote of votes.docs) {
+      const report = vote.ref.parent.parent!;
+      await db.runTransaction(async (tx) => {
+        const snap = await tx.get(report);
+        tx.delete(vote.ref);
+        // A resolved report stays resolved; only open counts go down.
+        if (snap.exists && (coll === 'upvotes' || snap.get('status') !== 'resolved')) {
+          tx.update(report, { [field]: FieldValue.increment(-1) });
+        }
+      });
+    }
+  }
+
+  // Flags stay for moderators, without the person who sent them.
+  const flags = await db.collection('flags').where('reporterUid', '==', uid).get();
+  const writer = db.bulkWriter();
+  for (const flag of flags.docs) writer.update(flag.ref, { reporterUid: '' });
+  for (const coll of ['users', 'rateLimits', 'voteLimits']) {
+    writer.delete(db.collection(coll).doc(uid));
+  }
+  await writer.close();
+
+  await getAuth().deleteUser(uid);
+  return { reports: reports.size, mode };
+});
+
+/**
+ * onReportDeleted: when a report is deleted (by its author in My Reports),
+ * removes its photos, votes and history (BRD FR-MYR-04).
+ */
+export const onReportDeleted = onDocumentDeleted('reports/{reportId}', async (event) => {
+  if (!event.data) return;
+  await deleteFiles(photoPaths(event.data.data()));
+  // The document is gone; this removes what is left beneath it.
+  await getFirestore().recursiveDelete(event.data.ref);
+});
+
+/**
+ * onReportWritten: records each status change in `reports/{id}/events`
+ * for the timeline on the report detail (BRD FR-MAP-09). Runs on the server
+ * so the history can't be edited by clients.
+ */
+export const onReportWritten = onDocumentWritten('reports/{reportId}', async (event) => {
+  const before = event.data?.before;
+  const after = event.data?.after;
+  if (!after?.exists) return;
+  const prev = before?.exists ? before.get('status') : undefined;
+  const next = after.get('status');
+  if (prev === next) return;
+
+  const entry: Record<string, unknown> = {
+    type:
+      prev === undefined
+        ? 'reported'
+        : next === 'resolved'
+          ? 'resolved'
+          : prev === 'resolved'
+            ? 'reopened'
+            : next,
+    by: next === 'resolved' ? (after.get('resolvedBy') ?? 'reporter') : 'reporter',
+    at: FieldValue.serverTimestamp(),
+  };
+  if (next === 'sent' && typeof after.get('contactChannel') === 'string') {
+    entry.channel = after.get('contactChannel');
+  }
+  const afterThumb = after.get('afterPhoto.thumbUrl');
+  if (next === 'resolved' && typeof afterThumb === 'string') entry.photoUrl = afterThumb;
+  // The event ID makes a retried trigger write the same entry once.
+  await after.ref.collection('events').doc(event.id).set(entry);
+});
+
+/**
+ * onAgencyWritten: bumps `config/directory.version` whenever an agency
+ * record changes (including console edits), so apps fetch the directory
+ * again on their next launch (BRD FR-RTE-10).
+ */
+export const onAgencyWritten = onDocumentWritten('agencies/{agencyId}', async () => {
+  await getFirestore()
+    .collection('config')
+    .doc('directory')
+    .set({ version: FieldValue.serverTimestamp() }, { merge: true });
 });

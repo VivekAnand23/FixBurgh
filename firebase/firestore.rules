@@ -8,6 +8,13 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    // Email accounts must verify their address before voting (BRD 9.1).
+    function canVote() {
+      return signedIn()
+        && (request.auth.token.firebase.sign_in_provider != 'password'
+            || request.auth.token.email_verified == true);
+    }
+
     function isModerator() {
       return signedIn() && request.auth.token.get('role', '') in ['moderator', 'admin'];
     }
@@ -50,21 +57,26 @@ service cloud.firestore {
       allow create: if signedIn() && validNewReport(request.resource.data)
         && withinDailyLimit();
 
-      // Authors can change status and description.
+      // Authors can change status and description, and add an "after"
+      // photo when they mark it fixed.
       allow update: if signedIn()
         && resource.data.authorUid == request.auth.uid
         && request.resource.data.diff(resource.data).affectedKeys()
              .hasOnly(['status', 'description', 'resolvedAt', 'resolvedBy',
-                       'sentAt', 'contactChannel', 'updatedAt'])
+                       'sentAt', 'contactChannel', 'afterPhoto', 'updatedAt'])
+        && validAfterPhoto(request.resource.data.get('afterPhoto', null))
         && request.resource.data.status in ['reported', 'sent', 'resolved']
         && request.resource.data.description.size() <= 280
         && request.resource.data.updatedAt == request.time;
 
-      // Anyone signed in can "Me too" once, paired with their upvote doc.
-      allow update: if signedIn()
+      // Anyone signed in can "Me too" once, paired with their upvote doc,
+      // up to 30 a day (BRD FR-MOD-06).
+      allow update: if canVote()
         && request.resource.data.diff(resource.data).affectedKeys()
              .hasOnly(['upvoteCount'])
-        && voteChanged('upvotes', 'upvoteCount', reportId);
+        && voteChanged('upvotes', 'upvoteCount', reportId)
+        && (request.resource.data.upvoteCount < resource.data.upvoteCount
+            || withinVoteLimit());
 
       // "Looks fixed" votes; the vote that reaches 3 resolves the report.
       allow update: if signedIn()
@@ -84,12 +96,35 @@ service cloud.firestore {
 
       match /upvotes/{uid} {
         allow read: if true;
-        allow create, delete: if signedIn() && request.auth.uid == uid;
+        allow create: if signedIn() && request.auth.uid == uid && validVote();
+        allow delete: if signedIn() && request.auth.uid == uid;
       }
       match /fixedVotes/{uid} {
         allow read: if true;
-        allow create, delete: if signedIn() && request.auth.uid == uid;
+        allow create: if signedIn() && request.auth.uid == uid && validVote();
+        allow delete: if signedIn() && request.auth.uid == uid;
       }
+
+      // Status history, written only by the onReportWritten function.
+      match /events/{eventId} {
+        allow read: if true;
+        allow write: if false;
+      }
+    }
+
+    // `uid` lets account deletion find a person's votes.
+    function validVote() {
+      return request.resource.data.keys().hasOnly(['createdAt', 'uid'])
+        && request.resource.data.get('uid', request.auth.uid) == request.auth.uid;
+    }
+
+    // An "after" photo the author uploaded under their own folder.
+    function validAfterPhoto(p) {
+      return p == null || (p is map
+        && p.keys().hasOnly(['path', 'thumbPath', 'thumbUrl'])
+        && p.path is string && p.thumbPath is string && p.thumbUrl is string
+        && p.path.matches('reports/' + request.auth.uid + '/.*')
+        && p.thumbPath.matches('reports/' + request.auth.uid + '/.*'));
     }
 
     // A count moves by exactly one, together with the caller's vote doc.
@@ -123,6 +158,11 @@ service cloud.firestore {
       allow read: if true;
       allow write: if false;
     }
+    // `config/directory.version` changes when an agency record does.
+    match /config/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
 
     // Daily report limits (BRD FR-MOD-06): each new report must bump the
     // caller's counter for today by exactly one in the same batch.
@@ -136,21 +176,45 @@ service cloud.firestore {
     }
 
     function withinDailyLimit() {
-      let path = /databases/$(database)/documents/rateLimits/$(request.auth.uid);
+      return withinLimit('rateLimits', dailyLimit());
+    }
+
+    function withinVoteLimit() {
+      return withinLimit('voteLimits', 30);
+    }
+
+    // The caller's counter in `coll` moved up by one for today in this
+    // same write, and is still within [max].
+    function withinLimit(coll, max) {
+      let path = /databases/$(database)/documents/$(coll)/$(request.auth.uid);
       let after = getAfter(path).data;
       let before = exists(path) ? get(path).data : {'day': '', 'count': 0};
       return after.day == today()
         && after.count == (before.day == today() ? before.count + 1 : 1)
-        && after.count <= dailyLimit();
+        && after.count <= max;
+    }
+
+    // Counters only ever go up by one per write, and reset each day, so
+    // they can't be wound back to dodge the limit.
+    function validCounter(max) {
+      let prev = resource == null ? {'day': '', 'count': 0} : resource.data;
+      return request.resource.data.keys().hasOnly(['day', 'count'])
+        && request.resource.data.day == today()
+        && request.resource.data.count
+             == (prev.day == today() ? prev.count + 1 : 1)
+        && request.resource.data.count <= max;
     }
 
     match /rateLimits/{uid} {
       allow read: if signedIn() && request.auth.uid == uid;
       allow create, update: if signedIn() && request.auth.uid == uid
-        && request.resource.data.keys().hasOnly(['day', 'count'])
-        && request.resource.data.day == today()
-        && request.resource.data.count is int
-        && request.resource.data.count <= dailyLimit();
+        && validCounter(dailyLimit());
+    }
+
+    match /voteLimits/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow create, update: if signedIn() && request.auth.uid == uid
+        && validCounter(30);
     }
 
     match /users/{uid} {

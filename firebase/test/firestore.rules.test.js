@@ -133,11 +133,50 @@ describe('creating reports', () => {
 describe('Me too', () => {
   beforeEach(() => seed('r1', { ...report('alice'), createdAt: new Date(), updatedAt: new Date() }));
 
+  /** Adds a "Me too" with today's vote counter, as the app does. */
+  const upvote = (uid, count = 1, { by = 1, id = 'r1', d = db(uid) } = {}) => {
+    const b = writeBatch(d);
+    b.set(doc(d, `reports/${id}/upvotes/${uid}`), { uid, createdAt: serverTimestamp() });
+    b.set(doc(d, 'voteLimits', uid), { day: today(), count });
+    b.update(doc(d, `reports/${id}`), { upvoteCount: increment(by) });
+    return b.commit();
+  };
+
   it('lets a neighbor add one upvote with their vote doc', async () => {
+    await assertSucceeds(upvote('bob'));
+  });
+
+  it('requires the daily vote counter to move with the upvote', async () => {
     const b = writeBatch(db('bob'));
     b.set(doc(db('bob'), 'reports/r1/upvotes/bob'), { createdAt: serverTimestamp() });
     b.update(doc(db('bob'), 'reports/r1'), { upvoteCount: increment(1) });
-    await assertSucceeds(b.commit());
+    await assertFails(b.commit());
+  });
+
+  it('stops after 30 upvotes a day', async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'voteLimits/bob'), { day: today(), count: 29 });
+      await setDoc(doc(ctx.firestore(), 'reports/r2'), { ...report('alice'), createdAt: new Date() });
+    });
+    await assertSucceeds(upvote('bob', 30));
+    await assertFails(upvote('bob', 31, { id: 'r2' }));
+  });
+
+  it('blocks winding the vote counter back', async () => {
+    await assertSucceeds(upvote('bob'));
+    await assertFails(setDoc(doc(db('bob'), 'voteLimits/bob'), { day: today(), count: 1 }));
+    await assertFails(setDoc(doc(db('bob'), 'voteLimits/bob'), { day: today(), count: 0 }));
+  });
+
+  it('requires a verified email for email accounts', async () => {
+    const unverified = env
+      .authenticatedContext('erin', { firebase: { sign_in_provider: 'password' }, email_verified: false })
+      .firestore();
+    await assertFails(upvote('erin', 1, { d: unverified }));
+    const verified = env
+      .authenticatedContext('erin', { firebase: { sign_in_provider: 'password' }, email_verified: true })
+      .firestore();
+    await assertSucceeds(upvote('erin', 1, { d: verified }));
   });
 
   it('blocks bumping the count without a vote doc', async () => {
@@ -145,28 +184,24 @@ describe('Me too', () => {
   });
 
   it('blocks adding more than one', async () => {
+    await assertFails(upvote('bob', 1, { by: 2 }));
+  });
+
+  it("blocks a vote doc with someone else's uid", async () => {
     const b = writeBatch(db('bob'));
-    b.set(doc(db('bob'), 'reports/r1/upvotes/bob'), { createdAt: serverTimestamp() });
-    b.update(doc(db('bob'), 'reports/r1'), { upvoteCount: increment(2) });
+    b.set(doc(db('bob'), 'reports/r1/upvotes/bob'), { uid: 'carol', createdAt: serverTimestamp() });
+    b.set(doc(db('bob'), 'voteLimits', 'bob'), { day: today(), count: 1 });
+    b.update(doc(db('bob'), 'reports/r1'), { upvoteCount: increment(1) });
     await assertFails(b.commit());
   });
 
   it('blocks voting a second time', async () => {
-    const first = writeBatch(db('bob'));
-    first.set(doc(db('bob'), 'reports/r1/upvotes/bob'), { createdAt: serverTimestamp() });
-    first.update(doc(db('bob'), 'reports/r1'), { upvoteCount: increment(1) });
-    await first.commit();
-    const again = writeBatch(db('bob'));
-    again.set(doc(db('bob'), 'reports/r1/upvotes/bob'), { createdAt: serverTimestamp() });
-    again.update(doc(db('bob'), 'reports/r1'), { upvoteCount: increment(1) });
-    await assertFails(again.commit());
+    await upvote('bob');
+    await assertFails(upvote('bob', 2));
   });
 
   it('lets a neighbor take back their upvote', async () => {
-    const add = writeBatch(db('bob'));
-    add.set(doc(db('bob'), 'reports/r1/upvotes/bob'), { createdAt: serverTimestamp() });
-    add.update(doc(db('bob'), 'reports/r1'), { upvoteCount: increment(1) });
-    await add.commit();
+    await upvote('bob');
     const remove = writeBatch(db('bob'));
     remove.delete(doc(db('bob'), 'reports/r1/upvotes/bob'));
     remove.update(doc(db('bob'), 'reports/r1'), { upvoteCount: increment(-1) });
@@ -226,6 +261,47 @@ describe('author changes', () => {
 
   it('blocks others from deleting', async () => {
     await assertFails(deleteDoc(doc(db('bob'), 'reports/r1')));
+  });
+
+  const fixedWith = (afterPhoto) =>
+    updateDoc(doc(db('alice'), 'reports/r1'), {
+      status: 'resolved',
+      resolvedBy: 'reporter',
+      resolvedAt: serverTimestamp(),
+      afterPhoto,
+      updatedAt: serverTimestamp(),
+    });
+
+  it('accepts an "after" photo from the author\'s own folder', async () => {
+    await assertSucceeds(
+      fixedWith({ path: 'reports/alice/r1/a.jpg', thumbPath: 'reports/alice/r1/a_thumb.jpg', thumbUrl: 'u' }),
+    );
+  });
+
+  it('rejects an "after" photo from someone else\'s folder', async () => {
+    await assertFails(
+      fixedWith({ path: 'reports/bob/r9/a.jpg', thumbPath: 'reports/bob/r9/a_thumb.jpg', thumbUrl: 'u' }),
+    );
+  });
+});
+
+describe('status history', () => {
+  beforeEach(() => seed('r1', { ...report('alice'), createdAt: new Date(), updatedAt: new Date() }));
+
+  it('is public to read and closed to writes', async () => {
+    await assertSucceeds(getDoc(doc(db('bob'), 'reports/r1/events/e1')));
+    await assertFails(
+      setDoc(doc(db('alice'), 'reports/r1/events/e1'), { type: 'resolved', at: serverTimestamp() }),
+    );
+  });
+});
+
+describe('directory', () => {
+  it('is public to read and closed to writes', async () => {
+    await assertSucceeds(getDoc(doc(db('bob'), 'agencies/penndot-d11')));
+    await assertSucceeds(getDoc(doc(db('bob'), 'config/directory')));
+    await assertFails(setDoc(doc(db('bob'), 'agencies/penndot-d11'), { name: 'x' }));
+    await assertFails(setDoc(doc(db('bob'), 'config/directory'), { version: 1 }));
   });
 });
 

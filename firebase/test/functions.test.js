@@ -1,5 +1,5 @@
 // Cloud Functions tests against the emulators. Run from the repo root:
-//   firebase emulators:exec --only auth,firestore,functions --project demo-fixburgh \
+//   firebase emulators:exec --only auth,firestore,functions,storage --project demo-fixburgh \
 //     "npm --prefix firebase/test run test:functions"
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
@@ -86,5 +86,143 @@ describe('claimGuestReports', () => {
       body: JSON.stringify({ data: { guestIdToken: guest.idToken } }),
     });
     assert.equal(res.status, 401);
+  });
+});
+
+/** Encodes plain JSON as Firestore REST fields. */
+const toValue = (v) =>
+  typeof v === 'string'
+    ? { stringValue: v }
+    : typeof v === 'number'
+      ? { integerValue: String(v) }
+      : typeof v === 'boolean'
+        ? { booleanValue: v }
+        : Array.isArray(v)
+          ? { arrayValue: { values: v.map(toValue) } }
+          : { mapValue: { fields: toFields(v) } };
+const toFields = (o) => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, toValue(v)]));
+
+const putDoc = (path, data) =>
+  fetch(`${FIRESTORE}/${path}`, {
+    method: 'PATCH',
+    headers: { ...OWNER, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fields: toFields(data) }),
+  }).then(json);
+
+const getDoc = (path) => fetch(`${FIRESTORE}/${path}`, { headers: OWNER });
+
+const listDocs = (path) =>
+  fetch(`${FIRESTORE}/${path}`, { headers: OWNER })
+    .then(json)
+    .then((b) => b.documents ?? []);
+
+/** Retries [check] until it stops throwing; triggers run asynchronously. */
+async function eventually(check, ms = 8000) {
+  const end = Date.now() + ms;
+  for (;;) {
+    try {
+      return await check();
+    } catch (e) {
+      if (Date.now() > end) throw e;
+      await new Promise((r) => setTimeout(r, 250));
+    }
+  }
+}
+
+const accountExists = (idToken) =>
+  fetch(`${AUTH}/accounts:lookup?key=fake`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ idToken }),
+  }).then((r) => r.ok);
+
+describe('deleteAccount', () => {
+  const setup = async (tag) => {
+    const user = await signUpEmail(`${tag}${Date.now()}@example.com`);
+    const uid = user.localId;
+    const mine = `${tag}-mine-${Date.now()}`;
+    const theirs = `${tag}-theirs-${Date.now()}`;
+    await putDoc(`reports/${mine}`, { authorUid: uid, status: 'reported', photos: [] });
+    await putDoc(`reports/${theirs}`, { authorUid: 'someone-else', status: 'reported', upvoteCount: 1 });
+    await putDoc(`reports/${theirs}/upvotes/${uid}`, { uid });
+    await putDoc(`rateLimits/${uid}`, { day: 'x', count: 1 });
+    return { user, uid, mine, theirs };
+  };
+
+  it('deletes the account, its reports and its votes', async () => {
+    const { user, uid, mine, theirs } = await setup('d');
+    const res = await call('deleteAccount', user.idToken, { reports: 'delete' });
+    assert.equal(res.status, 200, await res.clone().text());
+
+    assert.equal((await getDoc(`reports/${mine}`)).status, 404);
+    assert.equal((await getDoc(`reports/${theirs}/upvotes/${uid}`)).status, 404);
+    assert.equal((await getReport(theirs)).fields.upvoteCount.integerValue, '0');
+    assert.equal((await getDoc(`rateLimits/${uid}`)).status, 404);
+    assert.equal(await accountExists(user.idToken), false);
+  });
+
+  it('can keep the reports on the map without the account', async () => {
+    const { user, mine } = await setup('a');
+    const res = await call('deleteAccount', user.idToken, { reports: 'anonymize' });
+    assert.equal(res.status, 200, await res.clone().text());
+    const r = await getReport(mine);
+    assert.equal(r.fields.authorUid.stringValue, '');
+    assert.equal(r.fields.anonymized.booleanValue, true);
+    assert.equal(await accountExists(user.idToken), false);
+  });
+
+  it('works for guests', async () => {
+    const guest = await signUpGuest();
+    const res = await call('deleteAccount', guest.idToken, { reports: 'delete' });
+    assert.equal(res.status, 200, await res.clone().text());
+  });
+
+  it('rejects an unknown choice', async () => {
+    const guest = await signUpGuest();
+    const res = await call('deleteAccount', guest.idToken, { reports: 'keep' });
+    assert.equal(res.status, 400);
+    assert.equal(await accountExists(guest.idToken), true);
+  });
+});
+
+describe('report triggers', () => {
+  it('records status changes in the history', async () => {
+    const id = `h${Date.now()}`;
+    await putDoc(`reports/${id}`, { authorUid: 'u', status: 'reported' });
+    await eventually(async () => {
+      const events = await listDocs(`reports/${id}/events`);
+      assert.deepEqual(events.map((e) => e.fields.type.stringValue), ['reported']);
+    });
+    await putDoc(`reports/${id}`, { authorUid: 'u', status: 'sent', contactChannel: 'call' });
+    await eventually(async () => {
+      const events = await listDocs(`reports/${id}/events`);
+      const sent = events.find((e) => e.fields.type.stringValue === 'sent');
+      assert.equal(sent?.fields.channel.stringValue, 'call');
+    });
+    await putDoc(`reports/${id}`, { authorUid: 'u', status: 'resolved', resolvedBy: 'community' });
+    await eventually(async () => {
+      const events = await listDocs(`reports/${id}/events`);
+      const fixed = events.find((e) => e.fields.type.stringValue === 'resolved');
+      assert.equal(fixed?.fields.by.stringValue, 'community');
+    });
+  });
+
+  it("cleans up a deleted report's votes", async () => {
+    const id = `x${Date.now()}`;
+    await putDoc(`reports/${id}`, { authorUid: 'u', status: 'reported' });
+    await putDoc(`reports/${id}/upvotes/v`, { uid: 'v' });
+    await fetch(`${FIRESTORE}/reports/${id}`, { method: 'DELETE', headers: OWNER }).then(json);
+    await eventually(async () => {
+      assert.equal((await getDoc(`reports/${id}/upvotes/v`)).status, 404);
+    });
+  });
+
+  it('bumps the directory version when an agency changes', async () => {
+    await putDoc('agencies/test-agency', { name: 'Test', type: 'municipal' });
+    await eventually(async () => {
+      const res = await getDoc('config/directory');
+      assert.equal(res.status, 200);
+      assert.ok((await res.json()).fields.version.timestampValue);
+    });
   });
 });
