@@ -1,6 +1,8 @@
 import 'package:fixburgh/features/report/domain/report.dart';
 import 'package:fixburgh/features/report/presentation/report_draft_controller.dart';
 import 'package:fixburgh/features/report/presentation/report_labels.dart';
+import 'package:fixburgh/features/report/presentation/safety.dart';
+import 'package:fixburgh/features/report/presentation/steps/safety_step.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,11 +27,59 @@ class _DetailsStepState extends ConsumerState<DetailsStep> {
     super.dispose();
   }
 
+  /// Asks about danger again for urgent reports that sound like an
+  /// emergency (BRD FR-SAF-03) before moving on.
+  Future<void> _next() async {
+    final draft = ref.read(reportDraftProvider);
+    final keywords =
+        ref.read(safetyKeywordsProvider).value ?? defaultSafetyKeywords;
+    if (!needsSafetyRecheck(
+      category: draft.category,
+      severity: draft.severity,
+      description: draft.description,
+      keywords: keywords,
+    )) {
+      widget.onNext();
+      return;
+    }
+    final l10n = AppLocalizations.of(context);
+    final danger = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        icon: Icon(Icons.emergency, color: Theme.of(context).colorScheme.error),
+        title: Text(l10n.recheckTitle),
+        content: Text(l10n.recheckBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.recheckNo),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.onError,
+            ),
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l10n.recheckYes),
+          ),
+        ],
+      ),
+    );
+    if (!mounted || danger == null) return;
+    if (danger) {
+      await showEmergencyScreen(context);
+    } else {
+      widget.onNext();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final draft = ref.watch(reportDraftProvider);
+    // Starts the Remote Config fetch early so the list is ready on Next.
+    ref.watch(safetyKeywordsProvider);
     final notifier = ref.read(reportDraftProvider.notifier);
     return ListView(
       padding: const EdgeInsets.all(24),
@@ -78,7 +128,7 @@ class _DetailsStepState extends ConsumerState<DetailsStep> {
         ),
         const SizedBox(height: 16),
         FilledButton(
-          onPressed: draft.category != null ? widget.onNext : null,
+          onPressed: draft.category != null ? _next : null,
           child: Text(l10n.next),
         ),
       ],

@@ -8,9 +8,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 class PhotoStep extends ConsumerWidget {
-  const PhotoStep({required this.onNext, super.key});
+  const PhotoStep({required this.onNext, this.header, super.key});
 
   final VoidCallback onNext;
+
+  /// Shown above the title (the compact safety row).
+  final Widget? header;
 
   Future<void> _pick(WidgetRef ref, ImageSource source) async {
     final file = await ImagePicker().pickImage(
@@ -32,6 +35,7 @@ class PhotoStep extends ConsumerWidget {
     return ListView(
       padding: const EdgeInsets.all(24),
       children: [
+        if (header != null) ...[header!, const SizedBox(height: 16)],
         Text(l10n.photoTitle, style: theme.textTheme.headlineSmall),
         const SizedBox(height: 8),
         Text(l10n.photoBody(maxPhotos)),

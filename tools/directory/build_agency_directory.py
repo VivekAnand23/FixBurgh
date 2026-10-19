@@ -72,6 +72,57 @@ STATIC_AGENCIES = [
         "municipalityIds": ["100"],
         "source": "https://www.pittsburghpa.gov/311",
     },
+    # Emergency lines shown on the safety screen for downed wires and gas
+    # (BRD FR-SAF-02). Numbers from the PA PUC list and the utilities' sites.
+    {
+        "id": "duquesne-light",
+        "name": "Duquesne Light",
+        "type": "utility",
+        "emergencyFor": [
+            "wires"
+        ],
+        "phone": "1-888-393-7000",
+        "hours": "24/7 for outages and downed wires",
+        "website": "https://www.duquesnelight.com",
+        "source": "https://www.puc.pa.gov/electricity/electric-companies-suppliers/"
+    },
+    {
+        "id": "west-penn-power",
+        "name": "West Penn Power (FirstEnergy)",
+        "type": "utility",
+        "emergencyFor": [
+            "wires"
+        ],
+        "phone": "1-888-544-4877",
+        "phoneLabel": "1-888-LIGHTSS",
+        "hours": "24/7 for outages and downed wires",
+        "website": "https://www.firstenergycorp.com/outages",
+        "source": "https://www.puc.pa.gov/electricity/electric-companies-suppliers/"
+    },
+    {
+        "id": "peoples-gas",
+        "name": "Peoples Gas",
+        "type": "utility",
+        "emergencyFor": [
+            "gas"
+        ],
+        "phone": "1-800-400-4271",
+        "hours": "24/7 gas emergencies",
+        "website": "https://www.peoples-gas.com/contact",
+        "source": "https://www.peoples-gas.com/contact"
+    },
+    {
+        "id": "columbia-gas-pa",
+        "name": "Columbia Gas of Pennsylvania",
+        "type": "utility",
+        "emergencyFor": [
+            "gas"
+        ],
+        "phone": "1-888-460-4332",
+        "hours": "24/7 gas emergencies",
+        "website": "https://www.columbiagaspa.com",
+        "source": "https://www.columbiagaspa.com/bills-and-payments/understanding-your-bill"
+    },
 ]
 
 

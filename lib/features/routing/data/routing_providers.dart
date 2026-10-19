@@ -1,5 +1,10 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
+import 'package:fixburgh/app/providers.dart';
 import 'package:fixburgh/features/report/domain/report.dart';
 import 'package:fixburgh/features/report/presentation/report_draft_controller.dart';
+import 'package:fixburgh/features/routing/data/agency_directory.dart';
 import 'package:fixburgh/features/routing/domain/municipality_locator.dart';
 import 'package:fixburgh/features/routing/domain/road_owner_locator.dart';
 import 'package:fixburgh/features/routing/domain/routing_engine.dart';
@@ -28,13 +33,31 @@ final roadOwnerLocatorProvider = FutureProvider<RoadOwnerLocator>((ref) async {
   );
 });
 
-/// Office directory bundled with the app (tools/directory).
+final agencyDirectoryProvider = Provider<AgencyDirectory>(
+  (ref) => AgencyDirectory(
+    ref.watch(sharedPreferencesProvider),
+    loadBundled: () => rootBundle.loadString('assets/directory/agencies.json'),
+    firestore: () => FirebaseFirestore.instance,
+  ),
+);
+
+/// Office directory: bundled (tools/directory), plus corrections from
+/// Firestore cached on the device. Checks for changes once per app run.
 final routingEngineProvider = FutureProvider<RoutingEngine>((ref) async {
-  final source = await rootBundle.loadString(
-    'assets/directory/agencies.json',
-  );
-  return RoutingEngine.fromJson(source);
+  final directory = ref.watch(agencyDirectoryProvider);
+  final engine = RoutingEngine.fromRecords(await directory.load());
+  if (!_directoryChecked) {
+    _directoryChecked = true;
+    unawaited(
+      directory.refresh().then((changed) {
+        if (changed && ref.mounted) ref.invalidateSelf();
+      }),
+    );
+  }
+  return engine;
 });
+
+bool _directoryChecked = false;
 
 /// Routes a point and category to the responsible office, fully offline.
 Future<RoutingResult?> routeIssue(

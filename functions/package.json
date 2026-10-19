@@ -2,10 +2,13 @@
   "name": "fixburgh-functions",
   "private": true,
   "main": "lib/index.js",
-  "engines": { "node": "22" },
+  "engines": {
+    "node": "22"
+  },
   "scripts": {
     "build": "tsc",
-    "deploy": "firebase deploy --only functions"
+    "deploy": "firebase deploy --only functions",
+    "seed:agencies": "node scripts/seed-agencies.js"
   },
   "dependencies": {
     "firebase-admin": "^13.0.0",

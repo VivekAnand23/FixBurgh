@@ -3,6 +3,8 @@ import 'package:fixburgh/app/theme/app_theme.dart';
 import 'package:fixburgh/features/auth/sign_in_screen.dart';
 import 'package:fixburgh/features/onboarding/age_gate_screen.dart';
 import 'package:fixburgh/features/onboarding/welcome_screen.dart';
+import 'package:fixburgh/features/profile/data_sources_screen.dart';
+import 'package:fixburgh/features/profile/profile_screen.dart';
 import 'package:fixburgh/features/report/presentation/steps/details_step.dart';
 import 'package:fixburgh/features/report/presentation/steps/photo_step.dart';
 import 'package:fixburgh/features/report/presentation/steps/safety_step.dart';
@@ -22,6 +24,9 @@ void main() {
     'safety step': Scaffold(body: SafetyStep(onContinue: () {})),
     'photo step': Scaffold(body: PhotoStep(onNext: () {})),
     'details step': Scaffold(body: DetailsStep(onNext: () {})),
+    'emergency card': Scaffold(body: EmergencyCard(onBack: () {})),
+    'data sources': const DataSourcesScreen(),
+    'delete account dialog': const Scaffold(body: DeleteAccountDialog()),
   };
 
   for (final dark in [false, true]) {

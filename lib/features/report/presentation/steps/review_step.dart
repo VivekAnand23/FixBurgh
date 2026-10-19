@@ -6,6 +6,7 @@ import 'package:fixburgh/features/report/data/report_repository.dart';
 import 'package:fixburgh/features/report/domain/report.dart';
 import 'package:fixburgh/features/report/presentation/report_draft_controller.dart';
 import 'package:fixburgh/features/report/presentation/report_labels.dart';
+import 'package:fixburgh/features/report/presentation/safety.dart';
 import 'package:fixburgh/features/routing/data/routing_providers.dart';
 import 'package:fixburgh/features/routing/domain/routing_engine.dart';
 import 'package:fixburgh/features/routing/presentation/office_card.dart';
@@ -86,6 +87,7 @@ class _ReviewStepState extends ConsumerState<ReviewStep> {
           onContacted: (c) => repo.markSent(reportId, c.name),
         );
       }
+      await ref.read(reportsFiledProvider.notifier).increment();
       await ref.read(reportDraftProvider.notifier).discard();
       widget.onSubmitted();
       messenger.showSnackBar(SnackBar(content: Text(l10n.reportSubmitted)));

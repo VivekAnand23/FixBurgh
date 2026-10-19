@@ -1,0 +1,11 @@
+{
+  "parameters": {
+    "safety_keywords": {
+      "defaultValue": {
+        "value": "wire,power line,spark,electric,gas,smoke,fire,trapped,stuck,injur,hurt,bleeding"
+      },
+      "description": "Comma-separated words that re-ask the safety check on urgent fallen tree, flooding or streetlight reports (BRD FR-SAF-03). Matched at the start of words.",
+      "valueType": "STRING"
+    }
+  }
+}

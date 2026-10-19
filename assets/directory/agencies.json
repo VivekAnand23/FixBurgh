@@ -49,6 +49,59 @@
    "lastVerifiedAt": "2026-10-04"
   },
   {
+   "id": "duquesne-light",
+   "name": "Duquesne Light",
+   "type": "utility",
+   "emergencyFor": [
+    "wires"
+   ],
+   "phone": "1-888-393-7000",
+   "hours": "24/7 for outages and downed wires",
+   "website": "https://www.duquesnelight.com",
+   "source": "https://www.puc.pa.gov/electricity/electric-companies-suppliers/",
+   "lastVerifiedAt": "2026-10-18"
+  },
+  {
+   "id": "west-penn-power",
+   "name": "West Penn Power (FirstEnergy)",
+   "type": "utility",
+   "emergencyFor": [
+    "wires"
+   ],
+   "phone": "1-888-544-4877",
+   "phoneLabel": "1-888-LIGHTSS",
+   "hours": "24/7 for outages and downed wires",
+   "website": "https://www.firstenergycorp.com/outages",
+   "source": "https://www.puc.pa.gov/electricity/electric-companies-suppliers/",
+   "lastVerifiedAt": "2026-10-18"
+  },
+  {
+   "id": "peoples-gas",
+   "name": "Peoples Gas",
+   "type": "utility",
+   "emergencyFor": [
+    "gas"
+   ],
+   "phone": "1-800-400-4271",
+   "hours": "24/7 gas emergencies",
+   "website": "https://www.peoples-gas.com/contact",
+   "source": "https://www.peoples-gas.com/contact",
+   "lastVerifiedAt": "2026-10-18"
+  },
+  {
+   "id": "columbia-gas-pa",
+   "name": "Columbia Gas of Pennsylvania",
+   "type": "utility",
+   "emergencyFor": [
+    "gas"
+   ],
+   "phone": "1-888-460-4332",
+   "hours": "24/7 gas emergencies",
+   "website": "https://www.columbiagaspa.com",
+   "source": "https://www.columbiagaspa.com/bills-and-payments/understanding-your-bill",
+   "lastVerifiedAt": "2026-10-18"
+  },
+  {
    "id": "muni-901",
    "name": "Aleppo Township",
    "type": "municipal",

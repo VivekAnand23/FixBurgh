@@ -18,6 +18,7 @@ class Agency {
     this.address,
     this.hours,
     this.municipalityIds = const [],
+    this.emergencyFor = const [],
   });
 
   factory Agency.fromJson(Map<String, dynamic> j) => Agency(
@@ -33,12 +34,13 @@ class Agency {
     hours: j['hours'] as String?,
     municipalityIds:
         (j['municipalityIds'] as List?)?.cast<String>() ?? const [],
+    emergencyFor: (j['emergencyFor'] as List?)?.cast<String>() ?? const [],
   );
 
   final String id;
   final String name;
 
-  /// `state`, `county`, `municipal` or `311`.
+  /// `state`, `county`, `municipal`, `311` or `utility`.
   final String type;
   final String? phone;
 
@@ -50,6 +52,9 @@ class Agency {
   final String? address;
   final String? hours;
   final List<String> municipalityIds;
+
+  /// Hazards this utility takes emergency calls for: `wires` or `gas`.
+  final List<String> emergencyFor;
 }
 
 /// Why this office was chosen; the UI turns it into a sentence.
@@ -94,11 +99,19 @@ class RoutingEngine {
 
   factory RoutingEngine.fromJson(String source) {
     final json = jsonDecode(source) as Map<String, dynamic>;
-    return RoutingEngine([
-      for (final a in (json['agencies'] as List).cast<Map<String, dynamic>>())
-        Agency.fromJson(a),
-    ]);
+    return RoutingEngine.fromRecords(
+      (json['agencies'] as List).cast<Map<String, dynamic>>(),
+    );
   }
+
+  /// Skips records that are missing required fields, so one bad edit in
+  /// Firestore can't break routing.
+  factory RoutingEngine.fromRecords(Iterable<Map<String, dynamic>> records) =>
+      RoutingEngine([
+        for (final r in records)
+          if (r['id'] is String && r['name'] is String && r['type'] is String)
+            Agency.fromJson(r),
+      ]);
 
   static const penndotId = 'penndot-d11';
   static const turnpikeId = 'pa-turnpike';
@@ -118,6 +131,18 @@ class RoutingEngine {
   final Map<String, Agency> _municipal311;
 
   int get agencyCount => _byId.length;
+
+  Agency? byId(String id) => _byId[id];
+
+  /// Utilities' emergency lines for a hazard (`wires` or `gas`), for the
+  /// safety screen (BRD FR-SAF-02).
+  List<Agency> emergencyLines(String hazard) => [
+    for (final a in _byId.values)
+      if (a.type == 'utility' &&
+          a.emergencyFor.contains(hazard) &&
+          a.phone != null)
+        a,
+  ];
 
   /// The municipality's own office, preferring its 311 line when it has one.
   Agency municipalOffice(Municipality m) =>
