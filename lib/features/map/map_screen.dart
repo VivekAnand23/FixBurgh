@@ -11,6 +11,7 @@ import 'package:fixburgh/features/report/presentation/category_style.dart';
 import 'package:fixburgh/features/report/presentation/report_detail_sheet.dart';
 import 'package:fixburgh/features/report/presentation/report_labels.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
@@ -115,13 +116,24 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         return;
       }
       if (mounted) setState(() => _locationOn = true);
+      // On Android, read the platform location manager directly so Google's
+      // "Location Accuracy" consent dialog doesn't pop up over the map.
+      final android = defaultTargetPlatform == TargetPlatform.android;
       final pos =
-          await Geolocator.getLastKnownPosition() ??
+          await Geolocator.getLastKnownPosition(
+            forceAndroidLocationManager: android,
+          ) ??
           await Geolocator.getCurrentPosition(
-            locationSettings: const LocationSettings(
-              accuracy: LocationAccuracy.medium,
-              timeLimit: Duration(seconds: 10),
-            ),
+            locationSettings: android
+                ? AndroidSettings(
+                    accuracy: LocationAccuracy.medium,
+                    forceLocationManager: true,
+                    timeLimit: const Duration(seconds: 10),
+                  )
+                : const LocationSettings(
+                    accuracy: LocationAccuracy.medium,
+                    timeLimit: Duration(seconds: 10),
+                  ),
           );
       if (!_inCounty(pos.latitude, pos.longitude)) return;
       await _map?.animateCamera(
