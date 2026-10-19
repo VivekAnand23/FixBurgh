@@ -12,6 +12,7 @@ String authFailureMessage(AppLocalizations l10n, AuthFailure f) => switch (f) {
   AuthFailure.emailInUse => l10n.errorEmailInUse,
   AuthFailure.credentialInUse => l10n.errorCredentialInUse,
   AuthFailure.requiresRecentLogin => l10n.errorRequiresRecentLogin,
+  AuthFailure.providerDisabled => l10n.errorProviderDisabled,
   AuthFailure.network => l10n.errorNetwork,
   AuthFailure.unknown => l10n.errorGeneric,
 };
@@ -113,8 +114,27 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                 icon: const Icon(Icons.account_circle_outlined),
                 label: Text(l10n.continueWithGoogle),
               ),
-              // Sign in with Apple is added once the Apple Developer account
-              // is set up (required by App Store guideline 4.8 before release).
+              if (appleSignInAvailable) ...[
+                const SizedBox(height: 12),
+                // Apple's style: black (white in dark mode) with the logo.
+                FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: theme.brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                    foregroundColor: theme.brightness == Brightness.dark
+                        ? Colors.black
+                        : Colors.white,
+                  ),
+                  onPressed: _busy
+                      ? null
+                      : () => _run(
+                          ref.read(authRepositoryProvider).signInWithApple,
+                        ),
+                  icon: const Icon(Icons.apple),
+                  label: Text(l10n.continueWithApple),
+                ),
+              ],
               const SizedBox(height: 24),
               Row(
                 children: [

@@ -283,7 +283,7 @@ abstract class AppLocalizations {
   /// No description provided for @deleteAccountBody.
   ///
   /// In en, this message translates to:
-  /// **'This permanently deletes your account. This can\'t be undone.'**
+  /// **'This permanently deletes your account, your votes and your sign-in. This can\'t be undone.'**
   String get deleteAccountBody;
 
   /// No description provided for @delete.
@@ -1305,6 +1305,480 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start over'**
   String get startOver;
+
+  /// No description provided for @continueWithApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Apple'**
+  String get continueWithApple;
+
+  /// No description provided for @errorProviderDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'This sign-in method isn\'t available yet. Try another one.'**
+  String get errorProviderDisabled;
+
+  /// No description provided for @markFixedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as fixed'**
+  String get markFixedTitle;
+
+  /// No description provided for @markFixedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an \"after\" photo so neighbors can see the fix. It\'s optional.'**
+  String get markFixedBody;
+
+  /// No description provided for @afterPhotoCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Take an \"after\" photo'**
+  String get afterPhotoCamera;
+
+  /// No description provided for @afterPhotoGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an \"after\" photo'**
+  String get afterPhotoGallery;
+
+  /// No description provided for @markFixedNoPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark fixed without a photo'**
+  String get markFixedNoPhoto;
+
+  /// No description provided for @uploadingPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading photo…'**
+  String get uploadingPhoto;
+
+  /// No description provided for @markedFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Marked as fixed. Thanks for following up!'**
+  String get markedFixed;
+
+  /// No description provided for @afterPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo after the fix'**
+  String get afterPhoto;
+
+  /// No description provided for @historyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get historyTitle;
+
+  /// No description provided for @eventReported.
+  ///
+  /// In en, this message translates to:
+  /// **'Reported'**
+  String get eventReported;
+
+  /// No description provided for @eventSentCall.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to agency by phone'**
+  String get eventSentCall;
+
+  /// No description provided for @eventSentEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to agency by email'**
+  String get eventSentEmail;
+
+  /// No description provided for @eventSentWeb.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to agency by web form'**
+  String get eventSentWeb;
+
+  /// No description provided for @eventResolvedReporter.
+  ///
+  /// In en, this message translates to:
+  /// **'Marked fixed by the reporter'**
+  String get eventResolvedReporter;
+
+  /// No description provided for @eventResolvedCommunity.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed fixed by neighbors'**
+  String get eventResolvedCommunity;
+
+  /// No description provided for @eventReopened.
+  ///
+  /// In en, this message translates to:
+  /// **'Reopened: not fixed after all'**
+  String get eventReopened;
+
+  /// No description provided for @voteLimitReached.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve used today\'s {count} \"Me too\" votes. Try again tomorrow.'**
+  String voteLimitReached(int count);
+
+  /// No description provided for @verifyToVote.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your email first. Check your inbox for the link, then try again.'**
+  String get verifyToVote;
+
+  /// No description provided for @tabAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All ({count})'**
+  String tabAll(int count);
+
+  /// No description provided for @tabOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open ({count})'**
+  String tabOpen(int count);
+
+  /// No description provided for @tabFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed ({count})'**
+  String tabFixed(int count);
+
+  /// No description provided for @noReportsInTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here yet.'**
+  String get noReportsInTab;
+
+  /// No description provided for @legendTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Map legend'**
+  String get legendTitle;
+
+  /// No description provided for @legendUrgent.
+  ///
+  /// In en, this message translates to:
+  /// **'Urgent (red badge)'**
+  String get legendUrgent;
+
+  /// No description provided for @legendFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed (faded)'**
+  String get legendFixed;
+
+  /// No description provided for @legendCluster.
+  ///
+  /// In en, this message translates to:
+  /// **'A number means several reports close together. Zoom in to see them.'**
+  String get legendCluster;
+
+  /// No description provided for @searchMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Search an address or place'**
+  String get searchMap;
+
+  /// No description provided for @timeRangeTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how far back to show reports'**
+  String get timeRangeTooltip;
+
+  /// No description provided for @rangeWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 7 days'**
+  String get rangeWeek;
+
+  /// No description provided for @rangeMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 30 days'**
+  String get rangeMonth;
+
+  /// No description provided for @rangeQuarter.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 90 days'**
+  String get rangeQuarter;
+
+  /// No description provided for @rangeYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 12 months'**
+  String get rangeYear;
+
+  /// No description provided for @rangeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All time'**
+  String get rangeAll;
+
+  /// No description provided for @deletingAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting your account…'**
+  String get deletingAccount;
+
+  /// No description provided for @confirmPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password to confirm'**
+  String get confirmPasswordTitle;
+
+  /// No description provided for @continueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueLabel;
+
+  /// No description provided for @methodGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Google'**
+  String get methodGoogle;
+
+  /// No description provided for @methodApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple'**
+  String get methodApple;
+
+  /// No description provided for @methodEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'email and password'**
+  String get methodEmail;
+
+  /// No description provided for @signedInWith.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in with {method}'**
+  String signedInWith(String method);
+
+  /// No description provided for @reportCounts.
+  ///
+  /// In en, this message translates to:
+  /// **'{total, plural, =0{No reports yet} =1{1 report} other{{total} reports}} · {open} open · {fixed} fixed'**
+  String reportCounts(int total, int open, int fixed);
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @themeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get themeTitle;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeSystem;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// No description provided for @textSizeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Text size'**
+  String get textSizeTitle;
+
+  /// No description provided for @textSizeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Adds to the text size set on your phone.'**
+  String get textSizeBody;
+
+  /// No description provided for @textSizeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get textSizeSystem;
+
+  /// No description provided for @textSizeLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'Large'**
+  String get textSizeLarge;
+
+  /// No description provided for @textSizeLarger.
+  ///
+  /// In en, this message translates to:
+  /// **'Larger'**
+  String get textSizeLarger;
+
+  /// No description provided for @textSizePreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview: a pothole on Grant Street was reported 2 days ago.'**
+  String get textSizePreview;
+
+  /// No description provided for @aboutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get aboutTitle;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get privacyPolicy;
+
+  /// No description provided for @termsOfUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of use'**
+  String get termsOfUse;
+
+  /// No description provided for @dataSourcesShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Maps, road ownership and office contacts'**
+  String get dataSourcesShort;
+
+  /// No description provided for @openSourceLicenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Open-source licenses'**
+  String get openSourceLicenses;
+
+  /// No description provided for @contactSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact support'**
+  String get contactSupport;
+
+  /// No description provided for @supportWebsite.
+  ///
+  /// In en, this message translates to:
+  /// **'FixBurgh website'**
+  String get supportWebsite;
+
+  /// No description provided for @deleteAccountReportsQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What should happen to your reports?'**
+  String get deleteAccountReportsQuestion;
+
+  /// No description provided for @deleteKeepReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep them on the map, anonymously'**
+  String get deleteKeepReports;
+
+  /// No description provided for @deleteKeepReportsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The problems still exist. Nobody will be able to link them to you.'**
+  String get deleteKeepReportsBody;
+
+  /// No description provided for @deleteRemoveReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete them and their photos'**
+  String get deleteRemoveReports;
+
+  /// No description provided for @deleteRemoveReportsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'They disappear from the map for everyone.'**
+  String get deleteRemoveReportsBody;
+
+  /// No description provided for @dataSourcesIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'FixBurgh works out who fixes what from public open data, bundled in the app so it works offline.'**
+  String get dataSourcesIntro;
+
+  /// No description provided for @dataSourcesDirectory.
+  ///
+  /// In en, this message translates to:
+  /// **'Office contacts were collected from each office\'s official website and are re-checked regularly. Tell us about a wrong office from any report.'**
+  String get dataSourcesDirectory;
+
+  /// No description provided for @dataSourcesMaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Maps © Google. Addresses come from your phone\'s built-in geocoder.'**
+  String get dataSourcesMaps;
+
+  /// No description provided for @dataSourcesDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Road ownership data can be out of date. FixBurgh is not affiliated with Allegheny County, PennDOT or any municipality.'**
+  String get dataSourcesDisclaimer;
+
+  /// No description provided for @safetyCompact.
+  ///
+  /// In en, this message translates to:
+  /// **'Is anyone in danger right now?'**
+  String get safetyCompact;
+
+  /// No description provided for @safetyCompactYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get safetyCompactYes;
+
+  /// No description provided for @utilityWires.
+  ///
+  /// In en, this message translates to:
+  /// **'Downed or sparking wires? After 911, tell your electric company:'**
+  String get utilityWires;
+
+  /// No description provided for @utilityGas.
+  ///
+  /// In en, this message translates to:
+  /// **'Smell gas? Leave the area first, then call 911 and your gas company:'**
+  String get utilityGas;
+
+  /// No description provided for @callUtility.
+  ///
+  /// In en, this message translates to:
+  /// **'Call {name}: {phone}'**
+  String callUtility(String name, String phone);
+
+  /// No description provided for @recheckTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Is anyone in danger?'**
+  String get recheckTitle;
+
+  /// No description provided for @recheckBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You described an urgent problem that might be dangerous, like live wires, gas or someone trapped. If anyone could get hurt, call for help now instead of filing a report.'**
+  String get recheckBody;
+
+  /// No description provided for @recheckYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, get help'**
+  String get recheckYes;
+
+  /// No description provided for @recheckNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No, continue'**
+  String get recheckNo;
 }
 
 class _AppLocalizationsDelegate

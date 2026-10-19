@@ -110,7 +110,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteAccountBody =>
-      'This permanently deletes your account. This can\'t be undone.';
+      'This permanently deletes your account, your votes and your sign-in. This can\'t be undone.';
 
   @override
   String get delete => 'Delete';
@@ -740,4 +740,277 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get startOver => 'Start over';
+
+  @override
+  String get continueWithApple => 'Continue with Apple';
+
+  @override
+  String get errorProviderDisabled =>
+      'This sign-in method isn\'t available yet. Try another one.';
+
+  @override
+  String get markFixedTitle => 'Mark as fixed';
+
+  @override
+  String get markFixedBody =>
+      'Add an \"after\" photo so neighbors can see the fix. It\'s optional.';
+
+  @override
+  String get afterPhotoCamera => 'Take an \"after\" photo';
+
+  @override
+  String get afterPhotoGallery => 'Choose an \"after\" photo';
+
+  @override
+  String get markFixedNoPhoto => 'Mark fixed without a photo';
+
+  @override
+  String get uploadingPhoto => 'Uploading photo…';
+
+  @override
+  String get markedFixed => 'Marked as fixed. Thanks for following up!';
+
+  @override
+  String get afterPhoto => 'Photo after the fix';
+
+  @override
+  String get historyTitle => 'History';
+
+  @override
+  String get eventReported => 'Reported';
+
+  @override
+  String get eventSentCall => 'Sent to agency by phone';
+
+  @override
+  String get eventSentEmail => 'Sent to agency by email';
+
+  @override
+  String get eventSentWeb => 'Sent to agency by web form';
+
+  @override
+  String get eventResolvedReporter => 'Marked fixed by the reporter';
+
+  @override
+  String get eventResolvedCommunity => 'Confirmed fixed by neighbors';
+
+  @override
+  String get eventReopened => 'Reopened: not fixed after all';
+
+  @override
+  String voteLimitReached(int count) {
+    return 'You\'ve used today\'s $count \"Me too\" votes. Try again tomorrow.';
+  }
+
+  @override
+  String get verifyToVote =>
+      'Verify your email first. Check your inbox for the link, then try again.';
+
+  @override
+  String tabAll(int count) {
+    return 'All ($count)';
+  }
+
+  @override
+  String tabOpen(int count) {
+    return 'Open ($count)';
+  }
+
+  @override
+  String tabFixed(int count) {
+    return 'Fixed ($count)';
+  }
+
+  @override
+  String get noReportsInTab => 'Nothing here yet.';
+
+  @override
+  String get legendTitle => 'Map legend';
+
+  @override
+  String get legendUrgent => 'Urgent (red badge)';
+
+  @override
+  String get legendFixed => 'Fixed (faded)';
+
+  @override
+  String get legendCluster =>
+      'A number means several reports close together. Zoom in to see them.';
+
+  @override
+  String get searchMap => 'Search an address or place';
+
+  @override
+  String get timeRangeTooltip => 'Choose how far back to show reports';
+
+  @override
+  String get rangeWeek => 'Last 7 days';
+
+  @override
+  String get rangeMonth => 'Last 30 days';
+
+  @override
+  String get rangeQuarter => 'Last 90 days';
+
+  @override
+  String get rangeYear => 'Last 12 months';
+
+  @override
+  String get rangeAll => 'All time';
+
+  @override
+  String get deletingAccount => 'Deleting your account…';
+
+  @override
+  String get confirmPasswordTitle => 'Enter your password to confirm';
+
+  @override
+  String get continueLabel => 'Continue';
+
+  @override
+  String get methodGoogle => 'Google';
+
+  @override
+  String get methodApple => 'Apple';
+
+  @override
+  String get methodEmail => 'email and password';
+
+  @override
+  String signedInWith(String method) {
+    return 'Signed in with $method';
+  }
+
+  @override
+  String reportCounts(int total, int open, int fixed) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total reports',
+      one: '1 report',
+      zero: 'No reports yet',
+    );
+    return '$_temp0 · $open open · $fixed fixed';
+  }
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get themeTitle => 'Theme';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get textSizeTitle => 'Text size';
+
+  @override
+  String get textSizeBody => 'Adds to the text size set on your phone.';
+
+  @override
+  String get textSizeSystem => 'Default';
+
+  @override
+  String get textSizeLarge => 'Large';
+
+  @override
+  String get textSizeLarger => 'Larger';
+
+  @override
+  String get textSizePreview =>
+      'Preview: a pothole on Grant Street was reported 2 days ago.';
+
+  @override
+  String get aboutTitle => 'About';
+
+  @override
+  String get privacyPolicy => 'Privacy policy';
+
+  @override
+  String get termsOfUse => 'Terms of use';
+
+  @override
+  String get dataSourcesShort => 'Maps, road ownership and office contacts';
+
+  @override
+  String get openSourceLicenses => 'Open-source licenses';
+
+  @override
+  String get contactSupport => 'Contact support';
+
+  @override
+  String get supportWebsite => 'FixBurgh website';
+
+  @override
+  String get deleteAccountReportsQuestion =>
+      'What should happen to your reports?';
+
+  @override
+  String get deleteKeepReports => 'Keep them on the map, anonymously';
+
+  @override
+  String get deleteKeepReportsBody =>
+      'The problems still exist. Nobody will be able to link them to you.';
+
+  @override
+  String get deleteRemoveReports => 'Delete them and their photos';
+
+  @override
+  String get deleteRemoveReportsBody =>
+      'They disappear from the map for everyone.';
+
+  @override
+  String get dataSourcesIntro =>
+      'FixBurgh works out who fixes what from public open data, bundled in the app so it works offline.';
+
+  @override
+  String get dataSourcesDirectory =>
+      'Office contacts were collected from each office\'s official website and are re-checked regularly. Tell us about a wrong office from any report.';
+
+  @override
+  String get dataSourcesMaps =>
+      'Maps © Google. Addresses come from your phone\'s built-in geocoder.';
+
+  @override
+  String get dataSourcesDisclaimer =>
+      'Road ownership data can be out of date. FixBurgh is not affiliated with Allegheny County, PennDOT or any municipality.';
+
+  @override
+  String get safetyCompact => 'Is anyone in danger right now?';
+
+  @override
+  String get safetyCompactYes => 'Yes';
+
+  @override
+  String get utilityWires =>
+      'Downed or sparking wires? After 911, tell your electric company:';
+
+  @override
+  String get utilityGas =>
+      'Smell gas? Leave the area first, then call 911 and your gas company:';
+
+  @override
+  String callUtility(String name, String phone) {
+    return 'Call $name: $phone';
+  }
+
+  @override
+  String get recheckTitle => 'Is anyone in danger?';
+
+  @override
+  String get recheckBody =>
+      'You described an urgent problem that might be dangerous, like live wires, gas or someone trapped. If anyone could get hurt, call for help now instead of filing a report.';
+
+  @override
+  String get recheckYes => 'Yes, get help';
+
+  @override
+  String get recheckNo => 'No, continue';
 }

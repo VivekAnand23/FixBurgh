@@ -38,7 +38,7 @@
   "signOut": "Sign out",
   "deleteAccount": "Delete my account",
   "deleteAccountTitle": "Delete your account?",
-  "deleteAccountBody": "This permanently deletes your account. This can't be undone.",
+  "deleteAccountBody": "This permanently deletes your account, your votes and your sign-in. This can't be undone.",
   "delete": "Delete",
   "cancel": "Cancel",
   "accountDeleted": "Your account was deleted.",
@@ -432,5 +432,142 @@
   "resumeDraftTitle": "Finish your report?",
   "resumeDraftBody": "You started a report earlier but didn't send it.",
   "continueDraft": "Continue",
-  "startOver": "Start over"
+  "startOver": "Start over",
+  "continueWithApple": "Continue with Apple",
+  "errorProviderDisabled": "This sign-in method isn't available yet. Try another one.",
+  "markFixedTitle": "Mark as fixed",
+  "markFixedBody": "Add an \"after\" photo so neighbors can see the fix. It's optional.",
+  "afterPhotoCamera": "Take an \"after\" photo",
+  "afterPhotoGallery": "Choose an \"after\" photo",
+  "markFixedNoPhoto": "Mark fixed without a photo",
+  "uploadingPhoto": "Uploading photo…",
+  "markedFixed": "Marked as fixed. Thanks for following up!",
+  "afterPhoto": "Photo after the fix",
+  "historyTitle": "History",
+  "eventReported": "Reported",
+  "eventSentCall": "Sent to agency by phone",
+  "eventSentEmail": "Sent to agency by email",
+  "eventSentWeb": "Sent to agency by web form",
+  "eventResolvedReporter": "Marked fixed by the reporter",
+  "eventResolvedCommunity": "Confirmed fixed by neighbors",
+  "eventReopened": "Reopened: not fixed after all",
+  "voteLimitReached": "You've used today's {count} \"Me too\" votes. Try again tomorrow.",
+  "@voteLimitReached": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "verifyToVote": "Verify your email first. Check your inbox for the link, then try again.",
+  "tabAll": "All ({count})",
+  "@tabAll": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tabOpen": "Open ({count})",
+  "@tabOpen": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tabFixed": "Fixed ({count})",
+  "@tabFixed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noReportsInTab": "Nothing here yet.",
+  "legendTitle": "Map legend",
+  "legendUrgent": "Urgent (red badge)",
+  "legendFixed": "Fixed (faded)",
+  "legendCluster": "A number means several reports close together. Zoom in to see them.",
+  "searchMap": "Search an address or place",
+  "timeRangeTooltip": "Choose how far back to show reports",
+  "rangeWeek": "Last 7 days",
+  "rangeMonth": "Last 30 days",
+  "rangeQuarter": "Last 90 days",
+  "rangeYear": "Last 12 months",
+  "rangeAll": "All time",
+  "deletingAccount": "Deleting your account…",
+  "confirmPasswordTitle": "Enter your password to confirm",
+  "continueLabel": "Continue",
+  "methodGoogle": "Google",
+  "methodApple": "Apple",
+  "methodEmail": "email and password",
+  "signedInWith": "Signed in with {method}",
+  "@signedInWith": {
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "reportCounts": "{total, plural, =0{No reports yet} =1{1 report} other{{total} reports}} · {open} open · {fixed} fixed",
+  "@reportCounts": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      },
+      "open": {
+        "type": "int"
+      },
+      "fixed": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsTitle": "Settings",
+  "themeTitle": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "textSizeTitle": "Text size",
+  "textSizeBody": "Adds to the text size set on your phone.",
+  "textSizeSystem": "Default",
+  "textSizeLarge": "Large",
+  "textSizeLarger": "Larger",
+  "textSizePreview": "Preview: a pothole on Grant Street was reported 2 days ago.",
+  "aboutTitle": "About",
+  "privacyPolicy": "Privacy policy",
+  "termsOfUse": "Terms of use",
+  "dataSourcesShort": "Maps, road ownership and office contacts",
+  "openSourceLicenses": "Open-source licenses",
+  "contactSupport": "Contact support",
+  "supportWebsite": "FixBurgh website",
+  "deleteAccountReportsQuestion": "What should happen to your reports?",
+  "deleteKeepReports": "Keep them on the map, anonymously",
+  "deleteKeepReportsBody": "The problems still exist. Nobody will be able to link them to you.",
+  "deleteRemoveReports": "Delete them and their photos",
+  "deleteRemoveReportsBody": "They disappear from the map for everyone.",
+  "dataSourcesIntro": "FixBurgh works out who fixes what from public open data, bundled in the app so it works offline.",
+  "dataSourcesDirectory": "Office contacts were collected from each office's official website and are re-checked regularly. Tell us about a wrong office from any report.",
+  "dataSourcesMaps": "Maps © Google. Addresses come from your phone's built-in geocoder.",
+  "dataSourcesDisclaimer": "Road ownership data can be out of date. FixBurgh is not affiliated with Allegheny County, PennDOT or any municipality.",
+  "safetyCompact": "Is anyone in danger right now?",
+  "safetyCompactYes": "Yes",
+  "utilityWires": "Downed or sparking wires? After 911, tell your electric company:",
+  "utilityGas": "Smell gas? Leave the area first, then call 911 and your gas company:",
+  "callUtility": "Call {name}: {phone}",
+  "@callUtility": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "recheckTitle": "Is anyone in danger?",
+  "recheckBody": "You described an urgent problem that might be dangerous, like live wires, gas or someone trapped. If anyone could get hurt, call for help now instead of filing a report.",
+  "recheckYes": "Yes, get help",
+  "recheckNo": "No, continue"
 }

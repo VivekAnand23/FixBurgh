@@ -5,6 +5,7 @@ import 'package:fixburgh/features/my_reports/my_reports_screen.dart';
 import 'package:fixburgh/features/onboarding/age_gate_screen.dart';
 import 'package:fixburgh/features/onboarding/onboarding_controller.dart';
 import 'package:fixburgh/features/onboarding/welcome_screen.dart';
+import 'package:fixburgh/features/profile/data_sources_screen.dart';
 import 'package:fixburgh/features/profile/profile_screen.dart';
 import 'package:fixburgh/features/report/report_screen.dart';
 import 'package:flutter/foundation.dart';
@@ -20,6 +21,7 @@ abstract final class Routes {
   static const myReports = '/my-reports';
   static const profile = '/profile';
   static const signIn = '/sign-in';
+  static const dataSources = '/data-sources';
 }
 
 /// Picks the onboarding screen the user must see, or null when done.
@@ -59,6 +61,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, _) => const AgeBlockedScreen(),
       ),
       GoRoute(path: Routes.signIn, builder: (_, _) => const SignInScreen()),
+      GoRoute(
+        path: Routes.dataSources,
+        builder: (_, _) => const DataSourcesScreen(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (_, _, shell) => HomeShell(navigationShell: shell),
         branches: [
