@@ -152,8 +152,10 @@ void main() {
         (await outbox.load()).single.copyWith(attempts: maxSendAttempts - 1),
       );
       when(() => repo.existsOnServer(any())).thenThrow(Exception('rules'));
-      await sender().sendDue(force: true);
+      final run = await sender().sendDue(force: true);
       expect((await outbox.load()).single.status, OutboxStatus.failed);
+      // Waiting on the person now, so the background task can stop.
+      expect(run.waiting, 0);
     });
 
     test(

@@ -201,9 +201,19 @@ class ReportRepository {
 
   /// Whether report [id] is on the server (an earlier send got through).
   /// Asks the server, not the cache; throws when offline.
-  Future<bool> existsOnServer(String id) async =>
-      (await _reports.doc(id).get(const GetOptions(source: Source.server)))
-          .exists;
+  Future<bool> existsOnServer(String id) async {
+    try {
+      final doc = await _reports
+          .doc(id)
+          .get(const GetOptions(source: Source.server));
+      return doc.exists;
+    } on FirebaseException catch (e) {
+      // The read rule checks the report's fields, so reading one that
+      // doesn't exist yet is denied. The author can always read their own.
+      if (e.code == 'permission-denied') return false;
+      rethrow;
+    }
+  }
 
   Stream<List<Report>> watchMine(String uid) => _reports
       .where('authorUid', isEqualTo: uid)

@@ -61,8 +61,9 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         ..add(FirebaseMessaging.onMessageOpenedApp.listen(_open));
       final initial = await FirebaseMessaging.instance.getInitialMessage();
       if (initial != null) _open(initial);
-    } on Object {
+    } on Object catch (e) {
       // No Firebase Messaging (tests) or no Google Play services.
+      debugPrint('Push: unavailable ($e)');
     }
   }
 

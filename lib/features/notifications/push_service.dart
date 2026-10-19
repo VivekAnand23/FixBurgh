@@ -61,7 +61,10 @@ class PushService {
   /// On iOS this needs an APNs key in Firebase; without one there is no
   /// token and this quietly does nothing.
   Future<void> register(String uid) async {
-    if (!await isAllowed) return;
+    if (!await isAllowed) {
+      debugPrint('Push: notifications not allowed');
+      return;
+    }
     String? token;
     try {
       if (defaultTargetPlatform == TargetPlatform.iOS &&
@@ -69,11 +72,13 @@ class PushService {
         return;
       }
       token = await messaging.getToken();
-    } on Object {
+    } on Object catch (e) {
+      debugPrint('Push: no token ($e)');
       return;
     }
     if (token == null) return;
     await _save(uid, token);
+    debugPrint('Push: registered this device');
     await _refresh?.cancel();
     _refresh = messaging.onTokenRefresh.listen((t) => _save(uid, t));
   }

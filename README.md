@@ -82,6 +82,17 @@ firebase emulators:exec --only auth,firestore,functions,storage --project demo-f
   "npm --prefix firebase/test test && npm --prefix firebase/test run test:functions"
 ```
 
+### Phase 2 switches
+
+Remote Config parameters `feature_offline_outbox`, `feature_push` and
+`feature_saved_places` turn offline mode, push notifications and saved places
+on or off without a release (`firebase/remoteconfig.template.json`, on in
+dev). The app treats a missing value as on.
+
+Push on iOS needs an APNs authentication key uploaded in the Firebase console
+(Project settings > Cloud Messaging > Apple app configuration). Until then iOS
+devices don't get a token; Android works as is.
+
 ### Office directory
 
 The app bundles `assets/directory/agencies.json` and lays Firestore's

@@ -260,7 +260,8 @@ class OutboxSender {
             nextAttemptAt: DateTime.utc(t.year, t.month, t.day + 1),
           ),
         );
-      } on Object {
+      } on Object catch (e) {
+        debugPrint('Outbox: send failed ($e)');
         final attempts = item.attempts + 1;
         await outbox.update(
           item.copyWith(
@@ -274,8 +275,14 @@ class OutboxSender {
         break; // Likely offline; the rest would fail the same way.
       }
     }
+    // Items waiting on the person (a duplicate, or gave up) don't keep the
+    // background task retrying.
     final waiting = (await outbox.load())
-        .where((i) => i.status != OutboxStatus.duplicate)
+        .where(
+          (i) =>
+              i.status == OutboxStatus.waiting ||
+              i.status == OutboxStatus.limitReached,
+        )
         .length;
     return (sent: sent, waiting: waiting);
   }
