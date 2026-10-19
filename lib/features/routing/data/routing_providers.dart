@@ -65,11 +65,16 @@ Future<RoutingResult?> routeIssue(
   required GeoPoint location,
   required ReportCategory category,
 }) async {
-  final munis = await ref.watch(municipalityLocatorProvider.future);
-  final muni = munis.locate(location);
+  // Watch everything before the first await: an auto-disposing caller may
+  // be disposed while the bundled data loads, and a disposed ref can't
+  // watch.
+  final munisF = ref.watch(municipalityLocatorProvider.future);
+  final roadsF = ref.watch(roadOwnerLocatorProvider.future);
+  final engineF = ref.watch(routingEngineProvider.future);
+  final muni = (await munisF).locate(location);
   if (muni == null) return null;
-  final roads = await ref.watch(roadOwnerLocatorProvider.future);
-  final engine = await ref.watch(routingEngineProvider.future);
+  final roads = await roadsF;
+  final engine = await engineF;
   return engine.route(
     municipality: muni,
     road: roads.nearest(location),
@@ -101,3 +106,15 @@ final reportRoutingProvider = FutureProvider.autoDispose
         category: k.category,
       ),
     );
+
+/// Routing for a submitted report, for "Contact office" buttons. Keeps
+/// the lookup alive until it finishes; a plain `ref.read` of the
+/// auto-disposing provider would drop it partway.
+Future<RoutingResult?> routeReport(WidgetRef ref, RouteKey key) async {
+  final keepAlive = ref.listenManual(reportRoutingProvider(key), (_, _) {});
+  try {
+    return await ref.read(reportRoutingProvider(key).future);
+  } finally {
+    keepAlive.close();
+  }
+}

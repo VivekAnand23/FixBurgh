@@ -247,14 +247,17 @@ class _ReportCard extends ConsumerWidget {
   Future<void> _contact(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context);
     final r = report;
-    final routing = await ref.read(
-      reportRoutingProvider((
-        lat: r.location.lat,
-        lng: r.location.lng,
-        category: r.category,
-      )).future,
-    );
-    if (routing == null || !context.mounted) return;
+    final messenger = ScaffoldMessenger.of(context);
+    final routing = await routeReport(ref, (
+      lat: r.location.lat,
+      lng: r.location.lng,
+      category: r.category,
+    )).catchError((Object _) => null);
+    if (!context.mounted) return;
+    if (routing == null) {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.routingUnavailable)));
+      return;
+    }
     await showContactSheet(
       context,
       routing: routing,
