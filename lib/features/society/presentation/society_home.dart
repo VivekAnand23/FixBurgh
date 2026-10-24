@@ -112,34 +112,39 @@ class _Switcher extends ConsumerWidget {
       label: l10n.switchSociety,
       child: InkWell(
         onTap: () => unawaited(_showSwitcher(context, ref)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                  child: Text(
-                    society.name,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w700,
+        child: ConstrainedBox(
+          // Keeps the tap target at least 48 px tall.
+          constraints: const BoxConstraints(minHeight: 48),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: Text(
+                      society.name,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
-                ),
-                const Icon(Icons.arrow_drop_down),
-              ],
-            ),
-            Text(
-              [
-                l10n.homesCount(society.units),
-                l10n.youAre(l10n.role(me.role)),
-              ].join(' · '),
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+                  const Icon(Icons.arrow_drop_down),
+                ],
               ),
-            ),
-          ],
+              Text(
+                [
+                  l10n.homesCount(society.units),
+                  l10n.youAre(l10n.role(me.role)),
+                ].join(' · '),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
