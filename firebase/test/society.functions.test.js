@@ -406,3 +406,137 @@ describe('deleteAccount', () => {
     assert.equal(await read(`users/${nia.uid}`), null, 'profile stays deleted');
   });
 });
+
+// ---- Phase 2: community channels ----
+
+/** A live society with an admin and [count] more members who joined by code. */
+async function societyWithMembers(count) {
+  const { sid, admin, code } = await liveSociety();
+  const members = [];
+  for (let i = 0; i < count; i++) {
+    const m = await account(`m${i}`);
+    await call('joinWithCode', m, { code, unit: `${i + 1}A` });
+    members.push(m);
+  }
+  return { sid, admin, members };
+}
+
+const notes = (u) => list(`users/${u.uid}/notifications`);
+const general = (sid) => `societies/${sid}/channels/general`;
+
+async function writePost(sid, author, extra = {}) {
+  const id = tag('p');
+  await putDoc(`${general(sid)}/posts/${id}`, {
+    authorUid: author.uid, authorName: author.email.split('@')[0], authorUnit: '1A', text: 'Water is off in B block',
+    photos: [], mentions: [], pinned: false, reactionCounts: {}, commentCount: 0, createdAt: new Date(), ...extra,
+  });
+  return id;
+}
+
+describe('channels', () => {
+  it('every new society starts with General', async () => {
+    const { sid } = await liveSociety();
+    await eventually(async () => assert.equal((await read(general(sid)))?.name, 'General'));
+  });
+
+  it('keep the post count and preview, and push @mentions', async () => {
+    const { sid, admin, members: [meg, cal] } = await societyWithMembers(2);
+    await eventually(async () => assert.ok(await read(general(sid))));
+    await writePost(sid, meg, { text: 'Thanks @cal for fixing the gate', mentions: [cal.uid] });
+    await eventually(async () => {
+      const ch = await read(general(sid));
+      assert.equal(ch.postCount, 1);
+      assert.match(ch.lastPostText, /fixing the gate/);
+      const n = (await notes(cal)).find((x) => x.kind === 'mention');
+      assert.ok(n);
+      assert.equal(n.channelId, 'general');
+    });
+    assert.ok(!(await notes(admin)).some((x) => x.kind === 'mention'));
+  });
+
+  it('tell the author about comments and replies, unless muted or switched off', async () => {
+    const { sid, members: [meg, cal, quiet, muted] } = await societyWithMembers(4);
+    await eventually(async () => assert.ok(await read(general(sid))));
+    await putDoc(`users/${quiet.uid}`, { notify: { interactions: false }, societyIds: [sid] });
+    await putDoc(`societies/${sid}/members/${muted.uid}`, {
+      uid: muted.uid, unit: '4A', role: 'member', status: 'approved', mutes: { general: 'always' },
+    });
+
+    const pid = await writePost(sid, meg);
+    const quietPost = await writePost(sid, quiet);
+    const mutedPost = await writePost(sid, muted);
+    const comment = (post, author, extra = {}) =>
+      putDoc(`${general(sid)}/posts/${post}/comments/${tag('c')}`, {
+        authorUid: author.uid, authorName: 'Cal', text: 'Same here', replyTo: null, mentions: [],
+        reactionCounts: {}, createdAt: new Date(), ...extra,
+      });
+    const c1 = tag('c');
+    await putDoc(`${general(sid)}/posts/${pid}/comments/${c1}`, {
+      authorUid: cal.uid, authorName: 'Cal', text: 'Same here', replyTo: null, mentions: [], reactionCounts: {}, createdAt: new Date(),
+    });
+    await comment(pid, meg, { text: 'Thanks', replyTo: c1 });
+    await comment(quietPost, cal);
+    await comment(mutedPost, cal);
+
+    await eventually(async () => {
+      assert.equal((await read(`${general(sid)}/posts/${pid}`)).commentCount, 2);
+      assert.ok((await notes(meg)).some((x) => /commented on your post/.test(x.title)));
+      assert.ok((await notes(cal)).some((x) => /replied to your comment/.test(x.title)));
+    });
+    await new Promise((r) => setTimeout(r, 1500));
+    assert.ok(!(await notes(quiet)).some((x) => x.kind === 'interaction'), 'master switch off');
+    assert.ok(!(await notes(muted)).some((x) => x.kind === 'interaction'), 'muted channel');
+  });
+
+  it('send @mentions in a muted channel', async () => {
+    const { sid, members: [meg, muted] } = await societyWithMembers(2);
+    await eventually(async () => assert.ok(await read(general(sid))));
+    await putDoc(`societies/${sid}/members/${muted.uid}`, {
+      uid: muted.uid, unit: '2A', role: 'member', status: 'approved', mutes: { general: 'always' },
+    });
+    await writePost(sid, meg, { text: 'Can you check the lobby light?', mentions: [muted.uid] });
+    await eventually(async () => assert.ok((await notes(muted)).some((x) => x.kind === 'mention')));
+  });
+
+  it('bundle 5 reactions into one push for the author', async () => {
+    const { sid, members } = await societyWithMembers(6);
+    const [author, ...reactors] = members;
+    await eventually(async () => assert.ok(await read(general(sid))));
+    const pid = await writePost(sid, author);
+    for (const r of reactors) {
+      await putDoc(`${general(sid)}/posts/${pid}/reactions/${r.uid}`, { emoji: '👍', createdAt: new Date() });
+    }
+    await eventually(async () => {
+      assert.deepEqual((await read(`${general(sid)}/posts/${pid}`)).reactionCounts, { '👍': 5 });
+    });
+    await eventually(async () => {
+      const got = (await notes(author)).filter((x) => x.kind === 'interaction');
+      assert.equal(got.length, 1);
+      assert.equal(got[0].title, '5 people reacted to your post');
+    }, 20000);
+    // Changing a reaction moves the count without another push.
+    await putDoc(`${general(sid)}/posts/${pid}/reactions/${reactors[0].uid}`, { emoji: '❤️', createdAt: new Date() });
+    await eventually(async () => {
+      assert.deepEqual((await read(`${general(sid)}/posts/${pid}`)).reactionCounts, { '👍': 4, '❤️': 1 });
+    });
+    await new Promise((r) => setTimeout(r, 5000));
+    assert.equal((await notes(author)).filter((x) => x.kind === 'interaction').length, 1);
+  });
+
+  it('clean up a deleted post', async () => {
+    const { sid, members: [meg, cal] } = await societyWithMembers(2);
+    await eventually(async () => assert.ok(await read(general(sid))));
+    const pid = await writePost(sid, meg);
+    await upload(`societies/${sid}/posts/${pid}/a1.jpg`, Buffer.from([0xff, 0xd8]), 'image/jpeg');
+    await putDoc(`${general(sid)}/posts/${pid}/comments/c1`, {
+      authorUid: cal.uid, text: 'x', replyTo: null, mentions: [], reactionCounts: {}, createdAt: new Date(),
+    });
+    await eventually(async () => assert.equal((await read(general(sid))).postCount, 1));
+    await fetch(`${FIRESTORE}/${general(sid)}/posts/${pid}`, { method: 'DELETE', headers: OWNER });
+    await eventually(async () => {
+      assert.equal(await read(`${general(sid)}/posts/${pid}/comments/c1`), null);
+      assert.equal(await fileExists(`societies/${sid}/posts/${pid}/a1.jpg`), false);
+      assert.equal((await read(general(sid))).postCount, 0);
+    });
+  });
+});

@@ -62,6 +62,16 @@ service firebase.storage {
       allow delete: if hasRole(sid, ['admin']);
     }
 
+    // Channel post photos (Phase 2): members upload JPEGs into a post's
+    // folder; the onPostDeleted function removes them with the post.
+    match /societies/{sid}/posts/{postId}/{file} {
+      allow read: if isMember(sid) || isPlatformAdmin();
+      allow create: if resource == null && isMember(sid)
+        && request.resource.contentType == 'image/jpeg'
+        && request.resource.size < 2 * 1024 * 1024
+        && file.matches('[0-9a-f-]+(_thumb)?[.]jpg');
+    }
+
     match /societies/{sid}/notices/{noticeId}/{file} {
       allow read: if isMember(sid) || isPlatformAdmin();
       allow create: if hasRole(sid, ['admin', 'committee'])

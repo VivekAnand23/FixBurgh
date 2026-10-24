@@ -116,6 +116,21 @@ describe('notice attachments', () => {
   });
 });
 
+describe('channel post photos', () => {
+  it('are uploaded and read by approved members only', async () => {
+    const path = `societies/${SID}/posts/p1/0a1b-2c.jpg`;
+    await assertSucceeds(uploadBytes(ref(storage('meg'), path), jpeg, { contentType: 'image/jpeg' }));
+    await assertSucceeds(getBytes(ref(storage('cal'), path)));
+    await assertFails(getBytes(ref(storage('pat'), path)));
+    await assertFails(
+      uploadBytes(ref(storage('pat'), `societies/${SID}/posts/p1/ffff.jpg`), jpeg, { contentType: 'image/jpeg' }),
+    );
+    await assertFails(
+      uploadBytes(ref(storage('meg'), `societies/${SID}/posts/p1/x.pdf`), pdf, { contentType: 'application/pdf' }),
+    );
+  });
+});
+
 describe('report photos', () => {
   it("still accept the owner's JPEG and stay public", async () => {
     const path = 'reports/alice/r1/0a1b-2c.jpg';

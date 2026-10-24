@@ -14,17 +14,29 @@ import { METRES_PER_MILE, distanceM, neighborGeohashes } from './geo';
 
 export const DAILY_LIMIT = 5;
 
+/** Society notifications (notices, membership, channels) have their own,
+ * larger daily budget so a busy channel can't crowd out city updates. */
+export const SOCIETY_DAILY_LIMIT = 30;
+
+const SOCIETY_KINDS: NotificationKind[] = ['notice', 'society', 'interaction', 'mention'];
+
 /** `status`: reports you made or said "Me too" to. `nearby`: urgent
  * reports near a saved place. `test`: the settings screen's test button.
  * `notice`: a notice from your society's admins. `society`: your own
- * membership and claims (requests, decisions), always sent. */
-export type NotificationKind = 'status' | 'nearby' | 'test' | 'notice' | 'society';
+ * membership and claims (requests, decisions), always sent.
+ * `interaction`: comments, replies and reactions on what you posted.
+ * `mention`: someone @mentioned you in a channel. */
+export type NotificationKind =
+  | 'status' | 'nearby' | 'test' | 'notice' | 'society' | 'interaction' | 'mention';
 
-/** The `users/{uid}.notify` switch for each kind that has one. */
-const PREF: Partial<Record<NotificationKind, string>> = {
-  status: 'status',
-  nearby: 'nearby',
-  notice: 'notices',
+/** The `users/{uid}.notify` switches that must not be off for each kind.
+ * `interactions` is the master switch for channel activity. */
+const PREF: Partial<Record<NotificationKind, string[]>> = {
+  status: ['status'],
+  nearby: ['nearby'],
+  notice: ['notices'],
+  interaction: ['interactions'],
+  mention: ['interactions', 'mentions'],
 };
 
 export interface Notice {
@@ -35,12 +47,14 @@ export interface Notice {
   societyId?: string;
   noticeId?: string;
   claimId?: string;
+  channelId?: string;
+  postId?: string;
 }
 
 /** The ids a notification opens, for its data payload and record. */
 const targets = (n: Notice) =>
   Object.fromEntries(
-    (['reportId', 'societyId', 'noticeId', 'claimId'] as const)
+    (['reportId', 'societyId', 'noticeId', 'claimId', 'channelId', 'postId'] as const)
       .filter((k) => n[k])
       .map((k) => [k, n[k] as string]),
   );
@@ -87,18 +101,19 @@ export async function notifyUsers(uids: Iterable<string>, notice: Notice, key: s
     const userRef = db.collection('users').doc(uid);
     const user = (await userRef.get()).data() ?? {};
     const prefs = (user.notify ?? {}) as Record<string, unknown>;
-    const pref = PREF[notice.kind];
-    if (pref && prefs[pref] === false) continue;
+    if ((PREF[notice.kind] ?? []).some((key) => prefs[key] === false)) continue;
     if (notice.kind !== 'test' && inQuietHours(user.quietHours, user.utcOffsetMinutes)) continue;
 
     const recordRef = userRef.collection('notifications').doc(`${key}_${uid}`.slice(0, 1400));
-    const counterRef = db.collection('notifyLimits').doc(uid);
+    const society = SOCIETY_KINDS.includes(notice.kind);
+    const counterRef = db.collection('notifyLimits').doc(society ? `${uid}_society` : uid);
+    const limit = society ? SOCIETY_DAILY_LIMIT : DAILY_LIMIT;
     const allowed = await db.runTransaction(async (tx) => {
       const [record, counter] = await Promise.all([tx.get(recordRef), tx.get(counterRef)]);
       if (record.exists) return false;
       const day = utcDay();
       const count = counter.get('day') === day ? Number(counter.get('count') ?? 0) : 0;
-      if (count >= DAILY_LIMIT) return false;
+      if (count >= limit) return false;
       tx.set(counterRef, { day, count: count + 1 });
       tx.create(recordRef, {
         kind: notice.kind,

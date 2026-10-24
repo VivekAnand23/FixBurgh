@@ -21,6 +21,15 @@ import { HttpsError, onCall } from 'firebase-functions/v2/https';
 
 import { categoryLabel, notifyUsers, placeOwnersNear } from './notify';
 import { deleteSocietyData } from './society';
+export {
+  onChannelDeleted,
+  onCommentReactionWritten,
+  onCommentWritten,
+  onPostReactionWritten,
+  onPostWritten,
+  onSocietyCreated,
+  sendReactionDigest,
+} from './channels';
 
 export {
   checkSocietyDuplicates,
@@ -192,6 +201,7 @@ export const deleteAccount = onCall({ timeoutSeconds: 60 }, async (request) => {
   for (const coll of ['rateLimits', 'voteLimits', 'notifyLimits']) {
     writer.delete(db.collection(coll).doc(uid));
   }
+  writer.delete(db.collection('notifyLimits').doc(`${uid}_society`));
   await writer.close();
   // Burghood society memberships, claims and claim files.
   await deleteSocietyData(uid);

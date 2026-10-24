@@ -260,7 +260,9 @@ service cloud.firestore {
     // Notification choices and quiet hours (BRD FR-NTF-05).
     function validNotifySettings(d) {
       return (!('notify' in d) || (d.notify is map
-          && d.notify.keys().hasOnly(['status', 'nearby', 'notices'])
+          && d.notify.keys().hasOnly(['status', 'nearby', 'notices', 'interactions', 'mentions'])
+          && d.notify.get('interactions', true) is bool
+          && d.notify.get('mentions', true) is bool
           && d.notify.get('status', true) is bool
           && d.notify.get('nearby', true) is bool
           && d.notify.get('notices', true) is bool))
@@ -365,6 +367,35 @@ service cloud.firestore {
         // Leaving, or withdrawing a request. Admins hand over first.
         allow delete: if signedIn() && request.auth.uid == uid
           && resource.data.role != 'admin';
+
+        // Members keep their own channel read times and mutes (Phase 2).
+        allow update: if signedIn() && request.auth.uid == uid
+          && resource.data.status == 'approved'
+          && request.resource.data.diff(resource.data).affectedKeys()
+               .hasOnly(['lastRead', 'mutes'])
+          && request.resource.data.get('lastRead', {}) is map
+          && request.resource.data.get('lastRead', {}).size() <= 100
+          && request.resource.data.get('mutes', {}) is map
+          && request.resource.data.get('mutes', {}).size() <= 100;
+      }
+
+      // Reported posts and comments, for the society's admins and
+      // committee. One per person per item: "<postId>_<commentId>_<uid>".
+      match /flags/{flagId} {
+        allow read, delete: if canPostNotices(sid);
+        allow create: if isMember(sid)
+          && request.resource.data.keys().hasOnly(
+               ['channelId', 'postId', 'commentId', 'reporterUid', 'reason', 'createdAt'])
+          && request.resource.data.reporterUid == request.auth.uid
+          && flagId == request.resource.data.postId + '_'
+               + request.resource.data.get('commentId', '') + '_' + request.auth.uid
+          && request.resource.data.reason in ['spam', 'offensive', 'private_info', 'other']
+          && request.resource.data.createdAt == request.time;
+      }
+
+      // Reaction digests, kept by Cloud Functions to bundle pushes.
+      match /digests/{digestId} {
+        allow read, write: if false;
       }
 
       match /notices/{noticeId} {
@@ -417,30 +448,132 @@ service cloud.firestore {
         allow write: if false;
       }
 
-      // Phase 2: community channels. Closed until then.
+      // Community channels (Phase 2). General is created by Cloud
+      // Functions and can't be archived; admins add, rename and archive
+      // the rest. Counts and the last-post preview are kept by functions.
       match /channels/{channelId} {
-        allow read: if isPlatformAdmin();
-        allow write: if false;
+        allow read: if isMember(sid) || isPlatformAdmin();
+        allow create: if isSocietyAdmin(sid) && channelId != 'general'
+          && request.resource.data.keys().hasOnly(['name', 'createdBy', 'archived', 'createdAt'])
+          && validChannelName(request.resource.data.name)
+          && request.resource.data.createdBy == request.auth.uid
+          && request.resource.data.archived == false
+          && request.resource.data.createdAt == request.time;
+        allow update: if isSocietyAdmin(sid)
+          && request.resource.data.diff(resource.data).affectedKeys()
+               .hasOnly(['name', 'archived', 'updatedAt'])
+          && validChannelName(request.resource.data.name)
+          && request.resource.data.archived is bool
+          && (channelId != 'general' || request.resource.data.archived == false)
+          && request.resource.data.updatedAt == request.time;
+        allow delete: if false;
 
         match /posts/{postId} {
-          allow read: if isPlatformAdmin();
-          allow write: if false;
+          allow read: if isMember(sid) || isPlatformAdmin();
+          allow create: if isMember(sid)
+            && channelOpen(sid, channelId)
+            && validPost(sid, postId, request.resource.data)
+            && request.resource.data.createdAt == request.time;
+          // Authors edit their text; admins and committee pin.
+          allow update: if (isMember(sid)
+              && resource.data.authorUid == request.auth.uid
+              && request.resource.data.diff(resource.data).affectedKeys()
+                   .hasOnly(['text', 'mentions', 'editedAt'])
+              && validPost(sid, postId, request.resource.data)
+              && request.resource.data.editedAt == request.time)
+            || (canPostNotices(sid)
+              && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['pinned'])
+              && request.resource.data.pinned is bool);
+          allow delete: if (isMember(sid) && resource.data.authorUid == request.auth.uid)
+            || canPostNotices(sid);
 
           match /comments/{commentId} {
-            allow read: if isPlatformAdmin();
-            allow write: if false;
+            allow read: if isMember(sid) || isPlatformAdmin();
+            allow create: if isMember(sid)
+              && channelOpen(sid, channelId)
+              && validComment(request.resource.data)
+              && request.resource.data.createdAt == request.time;
+            allow update: if isMember(sid)
+              && resource.data.authorUid == request.auth.uid
+              && request.resource.data.diff(resource.data).affectedKeys()
+                   .hasOnly(['text', 'mentions', 'editedAt'])
+              && validComment(request.resource.data)
+              && request.resource.data.editedAt == request.time;
+            allow delete: if (isMember(sid) && resource.data.authorUid == request.auth.uid)
+              || canPostNotices(sid);
 
             match /reactions/{uid} {
-              allow read: if isPlatformAdmin();
-              allow write: if false;
+              allow read: if isMember(sid);
+              allow create, update: if isMember(sid) && request.auth.uid == uid
+                && validReaction(request.resource.data);
+              allow delete: if isMember(sid) && request.auth.uid == uid;
             }
           }
+
           match /reactions/{uid} {
-            allow read: if isPlatformAdmin();
-            allow write: if false;
+            allow read: if isMember(sid);
+            allow create, update: if isMember(sid) && request.auth.uid == uid
+              && validReaction(request.resource.data);
+            allow delete: if isMember(sid) && request.auth.uid == uid;
           }
         }
       }
+    }
+
+    function validChannelName(n) {
+      return n is string && n.size() >= 1 && n.size() <= 40;
+    }
+
+    function channelOpen(sid, channelId) {
+      let path = /databases/$(database)/documents/societies/$(sid)/channels/$(channelId);
+      return exists(path) && get(path).data.archived == false;
+    }
+
+    // A new or edited post: text and/or up to 6 photos in the post's own
+    // folder; counts start at zero and are kept by Cloud Functions.
+    function validPost(sid, postId, d) {
+      return d.keys().hasOnly(['authorUid', 'authorName', 'authorUnit', 'text', 'photos',
+                               'mentions', 'pinned', 'reactionCounts', 'commentCount',
+                               'createdAt', 'editedAt'])
+        && d.authorUid == request.auth.uid
+        && d.get('authorName', '') is string && d.get('authorName', '').size() <= 60
+        && d.get('authorUnit', '') is string && d.get('authorUnit', '').size() <= 20
+        && d.text is string && d.text.size() <= 2000
+        && d.photos is list && d.photos.size() <= 6
+        && (d.text.size() > 0 || d.photos.size() > 0)
+        && (d.photos.size() == 0
+            || d.photos[0].path.matches('societies/' + sid + '/posts/' + postId + '/.+'))
+        && (d.photos.size() < 2
+            || d.photos[1].path.matches('societies/' + sid + '/posts/' + postId + '/.+'))
+        && (d.photos.size() < 3
+            || d.photos[2].path.matches('societies/' + sid + '/posts/' + postId + '/.+'))
+        && (d.photos.size() < 4
+            || d.photos[3].path.matches('societies/' + sid + '/posts/' + postId + '/.+'))
+        && (d.photos.size() < 5
+            || d.photos[4].path.matches('societies/' + sid + '/posts/' + postId + '/.+'))
+        && (d.photos.size() < 6
+            || d.photos[5].path.matches('societies/' + sid + '/posts/' + postId + '/.+'))
+        && d.mentions is list && d.mentions.size() <= 20
+        && d.pinned == false
+        && d.reactionCounts == {}
+        && d.commentCount == 0;
+    }
+
+    function validComment(d) {
+      return d.keys().hasOnly(['authorUid', 'authorName', 'text', 'replyTo', 'mentions',
+                               'reactionCounts', 'createdAt', 'editedAt'])
+        && d.authorUid == request.auth.uid
+        && d.get('authorName', '') is string && d.get('authorName', '').size() <= 60
+        && d.text is string && d.text.size() > 0 && d.text.size() <= 1000
+        && (d.replyTo == null || d.replyTo is string)
+        && d.mentions is list && d.mentions.size() <= 20
+        && d.reactionCounts == {};
+    }
+
+    function validReaction(d) {
+      return d.keys().hasOnly(['emoji', 'createdAt'])
+        && d.emoji in ['👍', '❤️', '😂', '😮', '😢', '🙏']
+        && d.createdAt == request.time;
     }
 
     // Lets people list their own memberships and requests across
