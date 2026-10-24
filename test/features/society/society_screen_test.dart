@@ -4,8 +4,11 @@ import 'package:fixburgh/app/remote_config.dart';
 import 'package:fixburgh/app/theme/app_theme.dart';
 import 'package:fixburgh/features/auth/account_gate.dart';
 import 'package:fixburgh/features/auth/auth_repository.dart';
+import 'package:fixburgh/features/notifications/notification_settings.dart';
 import 'package:fixburgh/features/routing/domain/municipality_locator.dart';
+import 'package:fixburgh/features/society/data/channel_repository.dart';
 import 'package:fixburgh/features/society/data/society_repository.dart';
+import 'package:fixburgh/features/society/domain/channel.dart';
 import 'package:fixburgh/features/society/domain/society.dart';
 import 'package:fixburgh/features/society/presentation/find_society_view.dart';
 import 'package:fixburgh/features/society/presentation/manage_screen.dart';
@@ -40,12 +43,12 @@ const _maple = Society(
 const _admin = {'role': 'admin', 'status': 'approved'};
 const _member = {'role': 'member', 'status': 'approved'};
 
-FeatureFlags _flags({bool society = false}) => (
+FeatureFlags _flags({bool society = false, bool channels = false}) => (
   offlineOutbox: true,
   push: true,
   savedPlaces: true,
   society: society,
-  channels: false,
+  channels: channels,
   services: false,
   monetisation: false,
 );
@@ -81,6 +84,9 @@ void main() {
     List<SocietyNotice> notices = const [],
     Widget home = const SocietyScreen(),
     List<SocietyResult> searchResults = const [],
+    bool channels = false,
+    List<Channel> channelList = const [],
+    Map<String, Unread> unread = const {},
   }) async {
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
@@ -94,7 +100,16 @@ void main() {
       ProviderScope(
         overrides: [
           sharedPreferencesProvider.overrideWithValue(prefs),
-          featureFlagsProvider.overrideWithValue(_flags(society: flag)),
+          featureFlagsProvider.overrideWithValue(
+            _flags(society: flag, channels: channels),
+          ),
+          inboxProvider.overrideWith((ref) => Stream.value(const [])),
+          channelsProvider.overrideWith(
+            (ref, id) => Stream.value(channelList),
+          ),
+          unreadProvider.overrideWith(
+            (ref, k) async => unread[k.cid] ?? (posts: 0, mentions: 0),
+          ),
           authUserProvider.overrideWith((ref) => Stream.value(user)),
           authRepositoryProvider.overrideWithValue(
             AuthRepository(
@@ -291,4 +306,70 @@ void main() {
       handle.dispose();
     });
   }
+
+  group('channels', () {
+    final channelList = [
+      Channel(
+        id: 'general',
+        name: 'General',
+        lastPostAt: DateTime.now().subtract(const Duration(minutes: 5)),
+        lastPostText: 'Water is back on',
+        lastPostAuthor: 'Cal',
+      ),
+      Channel(
+        id: 'events',
+        name: 'Events',
+        lastPostAt: DateTime.now().subtract(const Duration(hours: 3)),
+        lastPostText: 'BBQ on Saturday',
+        lastPostAuthor: 'Ann',
+      ),
+    ];
+
+    testWidgets('show unread, mention and muted badges', (tester) async {
+      await pump(
+        tester,
+        guest: false,
+        flag: true,
+        channels: true,
+        societies: ['s1'],
+        me: Membership.fromDoc('me', const {
+          'role': 'member',
+          'status': 'approved',
+          'mutes': {'events': 'always'},
+        }),
+        channelList: channelList,
+        unread: const {
+          'general': (posts: 3, mentions: 1),
+          'events': (posts: 2, mentions: 0),
+        },
+      );
+      expect(find.text('Channels'), findsOneWidget);
+      expect(find.text('General'), findsOneWidget);
+      expect(find.text('Cal: Water is back on'), findsOneWidget);
+      expect(find.text('3'), findsOneWidget);
+      expect(find.text('@ 1'), findsOneWidget);
+      expect(find.text('2'), findsOneWidget);
+      expect(find.byIcon(Icons.notifications_off_outlined), findsOneWidget);
+      expect(find.text('New channel'), findsNothing);
+    });
+
+    testWidgets('meet accessibility guidelines', (tester) async {
+      final handle = tester.ensureSemantics();
+      await pump(
+        tester,
+        guest: false,
+        flag: true,
+        channels: true,
+        societies: ['s1'],
+        me: Membership.fromDoc('me', _admin),
+        channelList: channelList,
+        unread: const {'general': (posts: 3, mentions: 1)},
+      );
+      expect(find.text('New channel'), findsOneWidget);
+      await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
+      await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
+      await expectLater(tester, meetsGuideline(textContrastGuideline));
+      handle.dispose();
+    });
+  });
 }

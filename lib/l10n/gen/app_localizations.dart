@@ -3165,6 +3165,306 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Announcements from your society\'s admins and committee'**
   String get notifyNoticesBody;
+
+  /// No description provided for @tabChannels.
+  ///
+  /// In en, this message translates to:
+  /// **'Channels'**
+  String get tabChannels;
+
+  /// No description provided for @newChannel.
+  ///
+  /// In en, this message translates to:
+  /// **'New channel'**
+  String get newChannel;
+
+  /// No description provided for @renameChannel.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename channel'**
+  String get renameChannel;
+
+  /// No description provided for @archiveChannel.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive channel'**
+  String get archiveChannel;
+
+  /// No description provided for @channelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Channel name'**
+  String get channelName;
+
+  /// No description provided for @channelNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'For example Block B or Events'**
+  String get channelNameHint;
+
+  /// No description provided for @channelOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Channel options'**
+  String get channelOptions;
+
+  /// No description provided for @noPostsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No posts yet'**
+  String get noPostsYet;
+
+  /// No description provided for @firstPost.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here yet. Say hello to your neighbors.'**
+  String get firstPost;
+
+  /// No description provided for @messageChannel.
+  ///
+  /// In en, this message translates to:
+  /// **'Message #{name}'**
+  String messageChannel(String name);
+
+  /// No description provided for @muted.
+  ///
+  /// In en, this message translates to:
+  /// **'Muted'**
+  String get muted;
+
+  /// No description provided for @muteFor8Hours.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute for 8 hours'**
+  String get muteFor8Hours;
+
+  /// No description provided for @muteFor1Week.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute for 1 week'**
+  String get muteFor1Week;
+
+  /// No description provided for @muteAlways.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute always'**
+  String get muteAlways;
+
+  /// No description provided for @unmute.
+  ///
+  /// In en, this message translates to:
+  /// **'Unmute'**
+  String get unmute;
+
+  /// No description provided for @mentionsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 mention} other{{count} mentions}}'**
+  String mentionsCount(int count);
+
+  /// No description provided for @unreadCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 new post} other{{count} new posts}}'**
+  String unreadCount(int count);
+
+  /// No description provided for @pinnedPost.
+  ///
+  /// In en, this message translates to:
+  /// **'📌 Pinned'**
+  String get pinnedPost;
+
+  /// No description provided for @edited.
+  ///
+  /// In en, this message translates to:
+  /// **'edited'**
+  String get edited;
+
+  /// No description provided for @postOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Post options'**
+  String get postOptions;
+
+  /// No description provided for @comment.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment'**
+  String get comment;
+
+  /// No description provided for @commentsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 comment} other{{count} comments}}'**
+  String commentsCount(int count);
+
+  /// No description provided for @postPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo in post'**
+  String get postPhoto;
+
+  /// No description provided for @reactionCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{emoji} {count}'**
+  String reactionCount(String emoji, int count);
+
+  /// No description provided for @addReaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add reaction'**
+  String get addReaction;
+
+  /// No description provided for @pinPost.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin to the top'**
+  String get pinPost;
+
+  /// No description provided for @unpinPost.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpin'**
+  String get unpinPost;
+
+  /// No description provided for @deletePost.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete post'**
+  String get deletePost;
+
+  /// No description provided for @reportPost.
+  ///
+  /// In en, this message translates to:
+  /// **'Report to admins'**
+  String get reportPost;
+
+  /// No description provided for @reportSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks. The society\'s admins will take a look.'**
+  String get reportSent;
+
+  /// No description provided for @blockAuthor.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide posts from this person'**
+  String get blockAuthor;
+
+  /// No description provided for @authorBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'You won\'t see their posts or comments.'**
+  String get authorBlocked;
+
+  /// No description provided for @postGone.
+  ///
+  /// In en, this message translates to:
+  /// **'This post was removed.'**
+  String get postGone;
+
+  /// No description provided for @writeComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a comment'**
+  String get writeComment;
+
+  /// No description provided for @reply.
+  ///
+  /// In en, this message translates to:
+  /// **'Reply'**
+  String get reply;
+
+  /// No description provided for @replyingTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Replying to {name}'**
+  String replyingTo(String name);
+
+  /// No description provided for @send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get send;
+
+  /// No description provided for @addPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Add photo'**
+  String get addPhoto;
+
+  /// No description provided for @inboxTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get inboxTitle;
+
+  /// No description provided for @inboxEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing yet. Updates on your reports and your society show up here.'**
+  String get inboxEmpty;
+
+  /// No description provided for @notifyInteractions.
+  ///
+  /// In en, this message translates to:
+  /// **'Interaction notifications'**
+  String get notifyInteractions;
+
+  /// No description provided for @notifyInteractionsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Comments, replies, reactions and @mentions in your society\'s channels. Turn off to stop all of them.'**
+  String get notifyInteractionsBody;
+
+  /// No description provided for @notifyMentions.
+  ///
+  /// In en, this message translates to:
+  /// **'@mentions'**
+  String get notifyMentions;
+
+  /// No description provided for @notifyMentionsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'When a neighbor mentions you, even in a muted channel'**
+  String get notifyMentionsBody;
+
+  /// No description provided for @mutedChannels.
+  ///
+  /// In en, this message translates to:
+  /// **'Muted channels'**
+  String get mutedChannels;
+
+  /// No description provided for @mutedChannelsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'No comment or reaction notifications from these. @mentions still come through.'**
+  String get mutedChannelsBody;
+
+  /// No description provided for @noMutedChannels.
+  ///
+  /// In en, this message translates to:
+  /// **'None. Mute a channel from its menu.'**
+  String get noMutedChannels;
+
+  /// No description provided for @mutedAlways.
+  ///
+  /// In en, this message translates to:
+  /// **'Muted always'**
+  String get mutedAlways;
+
+  /// No description provided for @mutedUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Muted until {time}'**
+  String mutedUntil(String time);
+
+  /// No description provided for @done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
 }
 
 class _AppLocalizationsDelegate

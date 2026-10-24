@@ -132,6 +132,16 @@ Claim files are deleted 30 days after the decision
 with the `purgeClaimFilesNow` function. The verification wording and the
 privacy policy additions are drafts: see `docs/society-verification.md`.
 
+### Channels (Burghood Phase 2)
+
+Behind `feature_channels` (and `feature_society`). Reaction pushes are
+bundled through the `sendReactionDigest` Cloud Tasks queue: the first
+reaction starts a 120-second timer (`REACTION_DIGEST_SECONDS`; 3 seconds in
+the emulator). `integration_test/channels_walkthrough_test.dart` runs the
+Phase 2 exit check on two devices; seed the emulators first with
+`node firebase/test/seed-channels-walkthrough.js fixburgh-dev` and pass the
+dart-defines it prints, plus `--dart-define=SKIP_LOCATION=true`.
+
 ### Platform admins
 
 Burghood staff get the `platformAdmin` custom claim, which opens the admin

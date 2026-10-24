@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fixburgh/app/remote_config.dart';
-import 'package:fixburgh/app/router.dart';
 import 'package:fixburgh/features/auth/auth_repository.dart';
+import 'package:fixburgh/features/notifications/inbox_screen.dart';
 import 'package:fixburgh/features/notifications/push_service.dart';
 import 'package:fixburgh/features/report/presentation/outbox_controller.dart';
-import 'package:fixburgh/features/report/presentation/report_detail_sheet.dart';
+import 'package:fixburgh/features/society/data/channel_repository.dart';
 import 'package:fixburgh/features/society/data/society_repository.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -71,20 +71,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   }
 
   void _open(RemoteMessage m) {
-    if (!mounted) return;
-    final id = m.data['reportId'];
-    final society = m.data['societyId'];
-    final notice = m.data['noticeId'];
-    if (id is String && id.isNotEmpty) {
-      unawaited(showReportSheet(context, id));
-    } else if (society is String && society.isNotEmpty) {
-      // A notice, a join decision or a request for admins.
-      ref.read(selectedSocietyProvider.notifier).select(society);
-      final router = GoRouter.of(context)..go(Routes.society);
-      if (notice is String && notice.isNotEmpty) {
-        unawaited(router.push(Routes.notice(society, notice)));
-      }
-    }
+    if (mounted) openNotification(context, ref, m.data);
   }
 
   /// The system doesn't show notifications while the app is open.
@@ -105,14 +92,21 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     );
   }
 
-  /// Join requests waiting for this admin, shown on the Society tab.
+  /// Join requests waiting for this admin plus unread channel posts,
+  /// shown on the Society tab.
   int _pendingRequests() {
     if (!ref.watch(featureFlagsProvider).society) return 0;
     final sid = ref.watch(currentSocietyIdProvider);
     final uid = ref.watch(authUserProvider).value?.uid;
     if (sid == null || uid == null) return 0;
     final s = ref.watch(societyProvider(sid)).value;
-    return s != null && s.adminUids.contains(uid) ? s.pendingCount : 0;
+    final requests = s != null && s.adminUids.contains(uid)
+        ? s.pendingCount
+        : 0;
+    final unread = ref.watch(featureFlagsProvider).channels
+        ? ref.watch(societyUnreadProvider(sid)).value ?? 0
+        : 0;
+    return requests + unread;
   }
 
   @override

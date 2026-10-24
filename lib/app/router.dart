@@ -2,6 +2,7 @@ import 'package:fixburgh/app/home_shell.dart';
 import 'package:fixburgh/features/activity/activity_screen.dart';
 import 'package:fixburgh/features/auth/sign_in_screen.dart';
 import 'package:fixburgh/features/map/map_screen.dart';
+import 'package:fixburgh/features/notifications/inbox_screen.dart';
 import 'package:fixburgh/features/notifications/notifications_screen.dart';
 import 'package:fixburgh/features/notifications/saved_places_screen.dart';
 import 'package:fixburgh/features/onboarding/age_gate_screen.dart';
@@ -11,11 +12,13 @@ import 'package:fixburgh/features/profile/data_sources_screen.dart';
 import 'package:fixburgh/features/profile/profile_screen.dart';
 import 'package:fixburgh/features/report/report_screen.dart';
 import 'package:fixburgh/features/society/domain/society.dart';
+import 'package:fixburgh/features/society/presentation/channel_screen.dart';
 import 'package:fixburgh/features/society/presentation/claim_status.dart';
 import 'package:fixburgh/features/society/presentation/create_society_screen.dart';
 import 'package:fixburgh/features/society/presentation/find_society_view.dart';
 import 'package:fixburgh/features/society/presentation/manage_screen.dart';
 import 'package:fixburgh/features/society/presentation/notice_screens.dart';
+import 'package:fixburgh/features/society/presentation/post_screen.dart';
 import 'package:fixburgh/features/society/society_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,6 +46,11 @@ abstract final class Routes {
   static String newNotice(String sid) => '/society/$sid/notices/new';
   static String notice(String sid, String id) => '/society/$sid/notices/$id';
   static String uploadDocument(String sid) => '/society/$sid/documents/new';
+  static String channel(String sid, String cid) =>
+      '/society/$sid/channels/$cid';
+  static String post(String sid, String cid, String pid) =>
+      '/society/$sid/channels/$cid/posts/$pid';
+  static const inbox = '/inbox';
 }
 
 /// Picks the onboarding screen the user must see, or null when done.
@@ -124,6 +132,22 @@ final routerProvider = Provider<GoRouter>((ref) {
           noticeId: s.pathParameters['id']!,
         ),
       ),
+      GoRoute(
+        path: '/society/:sid/channels/:cid',
+        builder: (_, s) => ChannelScreen(
+          societyId: s.pathParameters['sid']!,
+          channelId: s.pathParameters['cid']!,
+        ),
+      ),
+      GoRoute(
+        path: '/society/:sid/channels/:cid/posts/:pid',
+        builder: (_, s) => PostScreen(
+          societyId: s.pathParameters['sid']!,
+          channelId: s.pathParameters['cid']!,
+          postId: s.pathParameters['pid']!,
+        ),
+      ),
+      GoRoute(path: Routes.inbox, builder: (_, _) => const InboxScreen()),
       GoRoute(
         path: '/society/:sid/documents/new',
         builder: (_, s) =>

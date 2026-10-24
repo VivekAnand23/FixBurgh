@@ -1008,5 +1008,107 @@
   "documentUploaded": "Document uploaded.",
   "documentsMembersOnly": "Only approved members can open documents.",
   "notifyNotices": "Notices from admins",
-  "notifyNoticesBody": "Announcements from your society's admins and committee"
+  "notifyNoticesBody": "Announcements from your society's admins and committee",
+  "tabChannels": "Channels",
+  "newChannel": "New channel",
+  "renameChannel": "Rename channel",
+  "archiveChannel": "Archive channel",
+  "channelName": "Channel name",
+  "channelNameHint": "For example Block B or Events",
+  "channelOptions": "Channel options",
+  "noPostsYet": "No posts yet",
+  "firstPost": "Nothing here yet. Say hello to your neighbors.",
+  "messageChannel": "Message #{name}",
+  "@messageChannel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "muted": "Muted",
+  "muteFor8Hours": "Mute for 8 hours",
+  "muteFor1Week": "Mute for 1 week",
+  "muteAlways": "Mute always",
+  "unmute": "Unmute",
+  "mentionsCount": "{count, plural, =1{1 mention} other{{count} mentions}}",
+  "@mentionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unreadCount": "{count, plural, =1{1 new post} other{{count} new posts}}",
+  "@unreadCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pinnedPost": "📌 Pinned",
+  "edited": "edited",
+  "postOptions": "Post options",
+  "comment": "Comment",
+  "commentsCount": "{count, plural, =1{1 comment} other{{count} comments}}",
+  "@commentsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "postPhoto": "Photo in post",
+  "reactionCount": "{emoji} {count}",
+  "@reactionCount": {
+    "placeholders": {
+      "emoji": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "addReaction": "Add reaction",
+  "pinPost": "Pin to the top",
+  "unpinPost": "Unpin",
+  "deletePost": "Delete post",
+  "reportPost": "Report to admins",
+  "reportSent": "Thanks. The society's admins will take a look.",
+  "blockAuthor": "Hide posts from this person",
+  "authorBlocked": "You won't see their posts or comments.",
+  "postGone": "This post was removed.",
+  "writeComment": "Write a comment",
+  "reply": "Reply",
+  "replyingTo": "Replying to {name}",
+  "@replyingTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "send": "Send",
+  "addPhoto": "Add photo",
+  "inboxTitle": "Notifications",
+  "inboxEmpty": "Nothing yet. Updates on your reports and your society show up here.",
+  "notifyInteractions": "Interaction notifications",
+  "notifyInteractionsBody": "Comments, replies, reactions and @mentions in your society's channels. Turn off to stop all of them.",
+  "notifyMentions": "@mentions",
+  "notifyMentionsBody": "When a neighbor mentions you, even in a muted channel",
+  "mutedChannels": "Muted channels",
+  "mutedChannelsBody": "No comment or reaction notifications from these. @mentions still come through.",
+  "noMutedChannels": "None. Mute a channel from its menu.",
+  "mutedAlways": "Muted always",
+  "mutedUntil": "Muted until {time}",
+  "@mutedUntil": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "done": "Done"
 }

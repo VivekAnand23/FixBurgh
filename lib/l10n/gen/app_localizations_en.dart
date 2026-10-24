@@ -1827,4 +1827,190 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get notifyNoticesBody =>
       'Announcements from your society\'s admins and committee';
+
+  @override
+  String get tabChannels => 'Channels';
+
+  @override
+  String get newChannel => 'New channel';
+
+  @override
+  String get renameChannel => 'Rename channel';
+
+  @override
+  String get archiveChannel => 'Archive channel';
+
+  @override
+  String get channelName => 'Channel name';
+
+  @override
+  String get channelNameHint => 'For example Block B or Events';
+
+  @override
+  String get channelOptions => 'Channel options';
+
+  @override
+  String get noPostsYet => 'No posts yet';
+
+  @override
+  String get firstPost => 'Nothing here yet. Say hello to your neighbors.';
+
+  @override
+  String messageChannel(String name) {
+    return 'Message #$name';
+  }
+
+  @override
+  String get muted => 'Muted';
+
+  @override
+  String get muteFor8Hours => 'Mute for 8 hours';
+
+  @override
+  String get muteFor1Week => 'Mute for 1 week';
+
+  @override
+  String get muteAlways => 'Mute always';
+
+  @override
+  String get unmute => 'Unmute';
+
+  @override
+  String mentionsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count mentions',
+      one: '1 mention',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String unreadCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count new posts',
+      one: '1 new post',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get pinnedPost => '📌 Pinned';
+
+  @override
+  String get edited => 'edited';
+
+  @override
+  String get postOptions => 'Post options';
+
+  @override
+  String get comment => 'Comment';
+
+  @override
+  String commentsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count comments',
+      one: '1 comment',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get postPhoto => 'Photo in post';
+
+  @override
+  String reactionCount(String emoji, int count) {
+    return '$emoji $count';
+  }
+
+  @override
+  String get addReaction => 'Add reaction';
+
+  @override
+  String get pinPost => 'Pin to the top';
+
+  @override
+  String get unpinPost => 'Unpin';
+
+  @override
+  String get deletePost => 'Delete post';
+
+  @override
+  String get reportPost => 'Report to admins';
+
+  @override
+  String get reportSent => 'Thanks. The society\'s admins will take a look.';
+
+  @override
+  String get blockAuthor => 'Hide posts from this person';
+
+  @override
+  String get authorBlocked => 'You won\'t see their posts or comments.';
+
+  @override
+  String get postGone => 'This post was removed.';
+
+  @override
+  String get writeComment => 'Write a comment';
+
+  @override
+  String get reply => 'Reply';
+
+  @override
+  String replyingTo(String name) {
+    return 'Replying to $name';
+  }
+
+  @override
+  String get send => 'Send';
+
+  @override
+  String get addPhoto => 'Add photo';
+
+  @override
+  String get inboxTitle => 'Notifications';
+
+  @override
+  String get inboxEmpty =>
+      'Nothing yet. Updates on your reports and your society show up here.';
+
+  @override
+  String get notifyInteractions => 'Interaction notifications';
+
+  @override
+  String get notifyInteractionsBody =>
+      'Comments, replies, reactions and @mentions in your society\'s channels. Turn off to stop all of them.';
+
+  @override
+  String get notifyMentions => '@mentions';
+
+  @override
+  String get notifyMentionsBody =>
+      'When a neighbor mentions you, even in a muted channel';
+
+  @override
+  String get mutedChannels => 'Muted channels';
+
+  @override
+  String get mutedChannelsBody =>
+      'No comment or reaction notifications from these. @mentions still come through.';
+
+  @override
+  String get noMutedChannels => 'None. Mute a channel from its menu.';
+
+  @override
+  String get mutedAlways => 'Muted always';
+
+  @override
+  String mutedUntil(String time) {
+    return 'Muted until $time';
+  }
+
+  @override
+  String get done => 'Done';
 }

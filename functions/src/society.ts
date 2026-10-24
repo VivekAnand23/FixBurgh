@@ -17,6 +17,7 @@ import { onDocumentCreated, onDocumentWritten } from 'firebase-functions/v2/fire
 import { CallableRequest, HttpsError, onCall } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 
+import { ensureGeneralChannel } from './channels';
 import { distanceM, neighborGeohashes } from './geo';
 import { notifyUsers } from './notify';
 
@@ -371,6 +372,8 @@ export const onMemberWritten = onDocumentWritten('societies/{sid}/members/{uid}'
     society.get(),
   ]);
   if (!snap.exists) return;
+  // Societies from before Phase 2 get their General channel here.
+  await ensureGeneralChannel(sid);
   await society.update({
     memberCount: approved.data().count,
     pendingCount: pending.data().count,

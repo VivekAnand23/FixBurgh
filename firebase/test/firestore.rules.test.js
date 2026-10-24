@@ -405,11 +405,6 @@ describe('notification settings', () => {
 
 describe('Burghood closed collections', () => {
   const paths = [
-    'societies/s1/channels/general',
-    'societies/s1/channels/general/posts/p1',
-    'societies/s1/channels/general/posts/p1/comments/c1',
-    'societies/s1/channels/general/posts/p1/reactions/alice',
-    'societies/s1/channels/general/posts/p1/comments/c1/reactions/alice',
     'serviceRequests/r1',
     'providers/pr1',
     'providers/pr1/reviews/v1',
@@ -765,5 +760,148 @@ describe('profile society list', () => {
       setDoc(doc(account('nia'), 'users/nia'), { notify: { status: true, notices: false } }, { merge: true }),
     );
     await assertFails(updateDoc(doc(account('nia'), 'users/nia'), { societyIds: ['s1', 's2'] }));
+  });
+});
+
+describe('community channels', () => {
+  const ch = (id = 'general') => `societies/${SID}/channels/${id}`;
+  const post = (uid, extra = {}) => ({
+    authorUid: uid,
+    authorName: 'Meg',
+    authorUnit: '1A',
+    text: 'Anyone else lose water?',
+    photos: [],
+    mentions: [],
+    pinned: false,
+    reactionCounts: {},
+    commentCount: 0,
+    createdAt: serverTimestamp(),
+    ...extra,
+  });
+  const comment = (uid, extra = {}) => ({
+    authorUid: uid,
+    authorName: 'Cal',
+    text: 'Yes, since 9.',
+    replyTo: null,
+    mentions: [],
+    reactionCounts: {},
+    createdAt: serverTimestamp(),
+    ...extra,
+  });
+
+  beforeEach(async () => {
+    await seedSociety();
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      const f = ctx.firestore();
+      await setDoc(doc(f, ch()), { name: 'General', archived: false });
+      await setDoc(doc(f, ch('old')), { name: 'Old', archived: true });
+      await setDoc(doc(f, `${ch()}/posts/p1`), { ...post('meg'), createdAt: new Date() });
+      await setDoc(doc(f, `${ch()}/posts/p1/comments/c1`), { ...comment('cal'), createdAt: new Date() });
+    });
+  });
+
+  it('are readable by approved members only', async () => {
+    for (const p of [ch(), `${ch()}/posts/p1`, `${ch()}/posts/p1/comments/c1`]) {
+      await assertSucceeds(getDoc(doc(account('meg'), p)));
+      await assertFails(getDoc(doc(account('pat'), p)));
+      await assertFails(getDoc(doc(account('nia'), p)));
+    }
+  });
+
+  it('are created, renamed and archived by admins, and General stays', async () => {
+    const add = (uid, id, data = {}) =>
+      setDoc(doc(account(uid), ch(id)), {
+        name: 'Events', createdBy: uid, archived: false, createdAt: serverTimestamp(), ...data,
+      });
+    await assertSucceeds(add('ann', 'events'));
+    await assertFails(add('cal', 'events2'));
+    await assertFails(add('ann', 'general'));
+    await assertFails(add('ann', 'long', { name: 'x'.repeat(41) }));
+    const edit = (uid, id, data) => updateDoc(doc(account(uid), ch(id)), { updatedAt: serverTimestamp(), ...data });
+    await assertSucceeds(edit('ann', 'events', { name: 'Block B' }));
+    await assertSucceeds(edit('ann', 'events', { archived: true }));
+    await assertFails(edit('ann', 'general', { archived: true }));
+    await assertFails(edit('meg', 'general', { name: 'Mine' }));
+    await assertFails(deleteDoc(doc(account('ann'), ch('events'))));
+  });
+
+  it('take posts from members, with counts left to Cloud Functions', async () => {
+    const at = (id) => `${ch()}/posts/${id}`;
+    await assertSucceeds(setDoc(doc(account('meg'), at('a')), post('meg')));
+    await assertSucceeds(setDoc(doc(account('meg'), at('b')), post('meg', {
+      text: '', photos: [{ path: `societies/${SID}/posts/b/1.jpg`, thumbPath: `societies/${SID}/posts/b/1_thumb.jpg`, thumbUrl: 'u' }],
+    })));
+    await assertFails(setDoc(doc(account('pat'), at('c')), post('pat')));
+    await assertFails(setDoc(doc(account('meg'), at('c')), post('cal')));
+    await assertFails(setDoc(doc(account('meg'), at('c')), post('meg', { text: '' })));
+    await assertFails(setDoc(doc(account('meg'), at('c')), post('meg', { commentCount: 5 })));
+    await assertFails(setDoc(doc(account('meg'), at('c')), post('meg', { reactionCounts: { '👍': 9 } })));
+    await assertFails(setDoc(doc(account('meg'), at('c')), post('meg', { pinned: true })));
+    await assertFails(setDoc(doc(account('meg'), at('c')), post('meg', {
+      photos: [{ path: 'reports/x/1.jpg', thumbPath: 't', thumbUrl: 'u' }],
+    })));
+    await assertFails(setDoc(doc(account('meg'), `${ch('old')}/posts/c`), post('meg')));
+  });
+
+  it('let authors edit and delete their posts, and moderators pin and remove', async () => {
+    const p = `${ch()}/posts/p1`;
+    await assertSucceeds(updateDoc(doc(account('meg'), p), { text: 'Fixed now', editedAt: serverTimestamp() }));
+    await assertFails(updateDoc(doc(account('cal'), p), { text: 'Hacked', editedAt: serverTimestamp() }));
+    await assertFails(updateDoc(doc(account('meg'), p), { commentCount: 99 }));
+    await assertFails(updateDoc(doc(account('meg'), p), { pinned: true }));
+    await assertSucceeds(updateDoc(doc(account('cal'), p), { pinned: true }));
+    await assertFails(deleteDoc(doc(account('pat'), p)));
+    await assertSucceeds(deleteDoc(doc(account('ann'), p)));
+  });
+
+  it('take comments and one-level replies from members', async () => {
+    const at = (id) => `${ch()}/posts/p1/comments/${id}`;
+    await assertSucceeds(setDoc(doc(account('meg'), at('a')), comment('meg')));
+    await assertSucceeds(setDoc(doc(account('meg'), at('b')), comment('meg', { replyTo: 'c1' })));
+    await assertFails(setDoc(doc(account('pat'), at('c')), comment('pat')));
+    await assertFails(setDoc(doc(account('meg'), at('c')), comment('meg', { text: '' })));
+    await assertFails(setDoc(doc(account('meg'), at('c')), comment('meg', { reactionCounts: { '👍': 1 } })));
+    await assertFails(deleteDoc(doc(account('meg'), at('c1'))));
+    await assertSucceeds(deleteDoc(doc(account('cal'), at('c1'))));
+  });
+
+  it('allow one reaction per member from the emoji set', async () => {
+    const r = (uid, path = `${ch()}/posts/p1`) => `${path}/reactions/${uid}`;
+    const react = (emoji) => ({ emoji, createdAt: serverTimestamp() });
+    await assertSucceeds(setDoc(doc(account('meg'), r('meg')), react('👍')));
+    await assertSucceeds(setDoc(doc(account('meg'), r('meg')), react('❤️')));
+    await assertFails(setDoc(doc(account('meg'), r('cal')), react('👍')));
+    await assertFails(setDoc(doc(account('meg'), r('meg')), react('💩')));
+    await assertFails(setDoc(doc(account('pat'), r('pat')), react('👍')));
+    await assertSucceeds(setDoc(doc(account('cal'), r('cal', `${ch()}/posts/p1/comments/c1`)), react('😂')));
+    await assertSucceeds(deleteDoc(doc(account('meg'), r('meg'))));
+  });
+
+  it('let members keep their own read times and mutes, nothing else', async () => {
+    const me = (uid) => doc(account(uid), `societies/${SID}/members/${uid}`);
+    await assertSucceeds(updateDoc(me('meg'), { lastRead: { general: new Date() } }));
+    await assertSucceeds(updateDoc(me('meg'), { mutes: { general: 'always' } }));
+    await assertFails(updateDoc(me('meg'), { role: 'admin' }));
+    await assertFails(updateDoc(me('pat'), { lastRead: { general: new Date() } }));
+    await assertFails(updateDoc(doc(account('meg'), `societies/${SID}/members/cal`), { mutes: {} }));
+  });
+
+  it('take reports from members and show them to moderators', async () => {
+    const flag = (uid, extra = {}) => ({
+      channelId: 'general', postId: 'p1', commentId: '', reporterUid: uid, reason: 'spam', createdAt: serverTimestamp(), ...extra,
+    });
+    await assertSucceeds(setDoc(doc(account('meg'), `societies/${SID}/flags/p1__meg`), flag('meg')));
+    await assertFails(setDoc(doc(account('meg'), `societies/${SID}/flags/p1__cal`), flag('meg')));
+    await assertFails(setDoc(doc(account('pat'), `societies/${SID}/flags/p1__pat`), flag('pat')));
+    await assertSucceeds(getDoc(doc(account('cal'), `societies/${SID}/flags/p1__meg`)));
+    await assertFails(getDoc(doc(account('meg'), `societies/${SID}/flags/p1__meg`)));
+    await assertFails(getDoc(doc(account('meg'), `societies/${SID}/digests/p1`)));
+  });
+
+  it('accepts the new notification switches', async () => {
+    await assertSucceeds(
+      setDoc(doc(account('meg'), 'users/meg'), { notify: { interactions: false, mentions: true, notices: true } }),
+    );
+    await assertFails(setDoc(doc(account('meg'), 'users/meg'), { notify: { interactions: 'off' } }));
   });
 });
