@@ -1,16 +1,20 @@
-<p align="center"><img src="Images/Logo.jpeg" alt="FixBurgh logo" width="120"/></p>
+<p align="center"><img src="Images/Logo.jpeg" alt="Burghood logo" width="120"/></p>
 
-# FixBurgh
+# Burghood
+
+_Formerly FixBurgh. The bundle IDs (`com.fixburgh.app`, `com.fixburgh.app.dev`),
+Firebase projects and Dart package name keep the old name so existing installs
+update in place._
 
 Snap, pin and route local infrastructure problems anywhere in Allegheny County,
-Pennsylvania. FixBurgh tells residents exactly which office fixes a pothole,
+Pennsylvania. Burghood tells residents exactly which office fixes a pothole,
 landslide, dark streetlight or blocked drain: PennDOT, Allegheny County or one
 of the county's 130 municipalities.
 
 - Business requirements: [BRD/FixBurgh_BRD.md](BRD/FixBurgh_BRD.md)
 - Data sources: [docs/data-sources.md](docs/data-sources.md)
 
-**FixBurgh is not an emergency service. Call 911 for emergencies.**
+**Burghood is not an emergency service. Call 911 for emergencies.**
 
 ## Stack
 
@@ -79,7 +83,7 @@ Rules and functions tests run against the emulators:
 
 ```bash
 firebase emulators:exec --only auth,firestore,functions,storage --project demo-fixburgh \
-  "npm --prefix firebase/test test && npm --prefix firebase/test run test:functions"
+  "npm --prefix firebase/test test && npm --prefix firebase/test run test:storage && npm --prefix firebase/test run test:functions"
 ```
 
 ### Phase 2 switches
@@ -107,6 +111,22 @@ npm --prefix functions run seed:agencies -- --project fixburgh-dev
 
 Edits to any `agencies` document (including in the console) bump
 `config/directory.version`, and apps refetch on their next launch.
+
+### Platform admins
+
+Burghood staff get the `platformAdmin` custom claim, which opens the admin
+console at `/admin` on the Hosting site and lets the rules show them the
+Burghood collections. Existing claims are kept; `--revoke` removes it.
+
+```bash
+npm --prefix functions run set:platform-admin -- --project fixburgh-dev --email you@example.com
+```
+
+The console (`hosting/public/admin`) reads the project's config from
+Hosting's `/__/firebase/init.json`. To try it locally, run
+`firebase emulators:start --only hosting,auth --project demo-fixburgh`, open
+`http://127.0.0.1:5002/admin`, sign in, then run the script above with
+`FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099 --project demo-fixburgh`.
 
 ## Updating GIS data
 

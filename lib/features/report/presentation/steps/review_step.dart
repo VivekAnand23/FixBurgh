@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:fixburgh/app/remote_config.dart';
+import 'package:fixburgh/app/router.dart';
 import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/moderation/text_filter.dart';
 import 'package:fixburgh/features/notifications/push_prompt.dart';
@@ -77,7 +78,7 @@ class _ReviewStepState extends ConsumerState<ReviewStep> {
             photoIds: photoIds,
             routing: routing == null ? null : routingFields(routing),
           );
-      await finish(l10n.savedForLater, '/my-reports');
+      await finish(l10n.savedForLater, Routes.activity);
     }
 
     try {
@@ -138,7 +139,7 @@ class _ReviewStepState extends ConsumerState<ReviewStep> {
           onContacted: (c) => repo.markSent(reportId, c.name),
         );
       }
-      await finish(l10n.reportSubmitted, '/my-reports');
+      await finish(l10n.reportSubmitted, Routes.activity);
     } on DailyLimitReached catch (e) {
       messenger.showSnackBar(
         SnackBar(

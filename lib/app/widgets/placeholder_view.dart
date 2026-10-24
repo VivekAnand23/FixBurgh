@@ -14,25 +14,56 @@ class PlaceholderView extends StatelessWidget {
   final String message;
 
   @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: Text(title)),
+    body: PlaceholderBody(icon: icon, message: message),
+  );
+}
+
+/// The centred icon and message of [PlaceholderView], for screens that
+/// have their own app bar. [action] goes under the message.
+class PlaceholderBody extends StatelessWidget {
+  const PlaceholderBody({
+    required this.icon,
+    required this.message,
+    this.title,
+    this.action,
+    super.key,
+  });
+
+  final IconData icon;
+  final String message;
+  final String? title;
+  final Widget? action;
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(icon, size: 64, color: theme.colorScheme.primary),
-              const SizedBox(height: 16),
+    final title = this.title;
+    final action = this.action;
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 64, color: theme.colorScheme.primary),
+            const SizedBox(height: 16),
+            if (title != null) ...[
               Text(
-                message,
-                style: theme.textTheme.bodyLarge,
+                title,
+                style: theme.textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
+              const SizedBox(height: 8),
             ],
-          ),
+            Text(
+              message,
+              style: theme.textTheme.bodyLarge,
+              textAlign: TextAlign.center,
+            ),
+            if (action != null) ...[const SizedBox(height: 24), action],
+          ],
         ),
       ),
     );

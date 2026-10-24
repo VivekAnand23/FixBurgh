@@ -1,7 +1,7 @@
 import 'package:fixburgh/app/home_shell.dart';
+import 'package:fixburgh/features/activity/activity_screen.dart';
 import 'package:fixburgh/features/auth/sign_in_screen.dart';
 import 'package:fixburgh/features/map/map_screen.dart';
-import 'package:fixburgh/features/my_reports/my_reports_screen.dart';
 import 'package:fixburgh/features/notifications/notifications_screen.dart';
 import 'package:fixburgh/features/notifications/saved_places_screen.dart';
 import 'package:fixburgh/features/onboarding/age_gate_screen.dart';
@@ -10,6 +10,7 @@ import 'package:fixburgh/features/onboarding/welcome_screen.dart';
 import 'package:fixburgh/features/profile/data_sources_screen.dart';
 import 'package:fixburgh/features/profile/profile_screen.dart';
 import 'package:fixburgh/features/report/report_screen.dart';
+import 'package:fixburgh/features/society/society_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -19,8 +20,9 @@ abstract final class Routes {
   static const age = '/age';
   static const ageBlocked = '/age-blocked';
   static const map = '/map';
+  static const society = '/society';
   static const report = '/report';
-  static const myReports = '/my-reports';
+  static const activity = '/activity';
   static const profile = '/profile';
   static const signIn = '/sign-in';
   static const dataSources = '/data-sources';
@@ -88,6 +90,14 @@ final routerProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
+                path: Routes.society,
+                builder: (_, _) => const SocietyScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
                 path: Routes.report,
                 builder: (_, _) => const ReportScreen(),
               ),
@@ -96,8 +106,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: Routes.myReports,
-                builder: (_, _) => const MyReportsScreen(),
+                path: Routes.activity,
+                builder: (_, _) => const ActivityScreen(),
               ),
             ],
           ),

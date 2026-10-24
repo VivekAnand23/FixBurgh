@@ -1,0 +1,6 @@
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
+.bar h1 { margin-bottom: 0; }
+button { font: inherit; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); cursor: pointer; }
+button.primary { background: var(--navy); border-color: var(--navy); color: var(--bg); }
+.panel { border: 1px solid var(--line); border-radius: 12px; padding: 0 16px 8px; margin-top: 16px; }
+.panel h2 { margin-top: 16px; }

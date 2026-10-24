@@ -52,4 +52,4 @@ jobs:
       - run: npm ci --prefix functions && npm --prefix functions run build
       - run: >-
           firebase emulators:exec --only auth,firestore,functions,storage --project demo-fixburgh
-          "npm --prefix firebase/test test && npm --prefix firebase/test run test:functions"
+          "npm --prefix firebase/test test && npm --prefix firebase/test run test:storage && npm --prefix firebase/test run test:functions"
