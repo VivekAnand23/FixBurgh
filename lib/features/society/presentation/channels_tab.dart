@@ -195,14 +195,49 @@ Future<void> editChannelName(
   required String societyId,
   Channel? channel,
 }) async {
-  final l10n = AppLocalizations.of(context);
-  final controller = TextEditingController(text: channel?.name ?? '');
   final name = await showDialog<String>(
     context: context,
-    builder: (c) => AlertDialog(
-      title: Text(channel == null ? l10n.newChannel : l10n.renameChannel),
+    builder: (_) => _ChannelNameDialog(channel: channel),
+  );
+  if (name == null || name.isEmpty) return;
+  final repo = ref.read(channelRepositoryProvider);
+  final uid = ref.read(myMembershipProvider(societyId)).value?.uid;
+  if (uid == null) return;
+  if (channel == null) {
+    await repo.createChannel(societyId, uid, name);
+  } else {
+    await repo.updateChannel(societyId, channel.id, name: name);
+  }
+}
+
+/// Owns its text controller, so it outlives the closing animation.
+class _ChannelNameDialog extends StatefulWidget {
+  const _ChannelNameDialog({this.channel});
+
+  final Channel? channel;
+
+  @override
+  State<_ChannelNameDialog> createState() => _ChannelNameDialogState();
+}
+
+class _ChannelNameDialogState extends State<_ChannelNameDialog> {
+  late final _name = TextEditingController(text: widget.channel?.name ?? '');
+
+  @override
+  void dispose() {
+    _name.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return AlertDialog(
+      title: Text(
+        widget.channel == null ? l10n.newChannel : l10n.renameChannel,
+      ),
       content: TextField(
-        controller: controller,
+        controller: _name,
         autofocus: true,
         maxLength: 40,
         decoration: InputDecoration(
@@ -212,24 +247,14 @@ Future<void> editChannelName(
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(c),
+          onPressed: () => Navigator.pop(context),
           child: Text(l10n.cancel),
         ),
         TextButton(
-          onPressed: () => Navigator.pop(c, controller.text.trim()),
+          onPressed: () => Navigator.pop(context, _name.text.trim()),
           child: Text(l10n.save),
         ),
       ],
-    ),
-  );
-  controller.dispose();
-  if (name == null || name.isEmpty) return;
-  final repo = ref.read(channelRepositoryProvider);
-  final uid = ref.read(myMembershipProvider(societyId)).value?.uid;
-  if (uid == null) return;
-  if (channel == null) {
-    await repo.createChannel(societyId, uid, name);
-  } else {
-    await repo.updateChannel(societyId, channel.id, name: name);
+    );
   }
 }

@@ -105,6 +105,11 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   /// Centers on the user when they allow location (FR-MAP-01); stays on
   /// downtown Pittsburgh otherwise, or when they are outside the county.
+  /// Debug builds can skip the location prompt at launch, for the
+  /// walkthrough tests: `--dart-define=SKIP_LOCATION=true`.
+  static const bool _skipLocation =
+      !kReleaseMode && bool.fromEnvironment('SKIP_LOCATION');
+
   Future<void> _centerOnUser() async {
     try {
       var perm = await Geolocator.checkPermission();
@@ -297,7 +302,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                       initialCameraPosition: _start,
                       onMapCreated: (c) {
                         _map = c;
-                        unawaited(_centerOnUser());
+                        if (!_skipLocation) unawaited(_centerOnUser());
                       },
                       onCameraIdle: _onCameraIdle,
                       myLocationEnabled: _locationOn,

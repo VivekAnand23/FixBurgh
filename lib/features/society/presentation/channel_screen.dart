@@ -453,7 +453,6 @@ class ReactionBar extends ConsumerWidget {
                 child: Container(
                   constraints: const BoxConstraints(minHeight: 32),
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: mine == e
                         ? (theme.brightness == Brightness.dark
@@ -463,7 +462,11 @@ class ReactionBar extends ConsumerWidget {
                     border: Border.all(color: theme.colorScheme.outlineVariant),
                     borderRadius: const BorderRadius.all(Radius.circular(16)),
                   ),
-                  child: Text('$e ${counts[e]}'),
+                  // widthFactor 1 keeps the chip as wide as its label.
+                  child: Center(
+                    widthFactor: 1,
+                    child: Text('$e ${counts[e]}'),
+                  ),
                 ),
               ),
             ),
