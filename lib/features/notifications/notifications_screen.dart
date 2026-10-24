@@ -120,6 +120,14 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
               onTap: () => context.push('/saved-places'),
             ),
           ],
+          if (flags.society)
+            SwitchListTile(
+              secondary: const Icon(Icons.campaign_outlined),
+              title: Text(l10n.notifyNotices),
+              subtitle: Text(l10n.notifyNoticesBody),
+              value: s.notices,
+              onChanged: (v) => _save(s.copyWith(notices: v)),
+            ),
           const Divider(),
           SwitchListTile(
             secondary: const Icon(Icons.bedtime_outlined),

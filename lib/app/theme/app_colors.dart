@@ -13,4 +13,11 @@ abstract final class AppColors {
   static const danger = Color(0xFFC53030);
   static const neutral900 = Color(0xFF1A202C);
   static const neutral600 = Color(0xFF4A5568);
+
+  // Burghood surfaces (light theme).
+  static const navyTint = Color(0xFFDCE6F5);
+  static const pageBg = Color(0xFFF7F9FD);
+  static const cardBorder = Color(0xFFD5DBE5);
+  static const tealTint = Color(0xFFEAF5F3);
+  static const orangeTint = Color(0xFFFFF7F0);
 }
