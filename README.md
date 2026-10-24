@@ -122,6 +122,12 @@ Burghood collections. Existing claims are kept; `--revoke` removes it.
 npm --prefix functions run set:platform-admin -- --project fixburgh-dev --email you@example.com
 ```
 
+The console (`hosting/public/admin`) reads the project's config from
+Hosting's `/__/firebase/init.json`. To try it locally, run
+`firebase emulators:start --only hosting,auth --project demo-fixburgh`, open
+`http://127.0.0.1:5002/admin`, sign in, then run the script above with
+`FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099 --project demo-fixburgh`.
+
 ## Updating GIS data
 
 ```bash

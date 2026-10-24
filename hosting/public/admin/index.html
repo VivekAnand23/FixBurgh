@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Burghood admin</title>
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+<main>
+<header class="bar">
+<h1>Burghood admin</h1>
+<div id="who" hidden><span id="email"></span> <button id="sign-out" type="button">Sign out</button></div>
+</header>
+
+<p id="status" class="meta">Loading…</p>
+
+<section id="signed-out" hidden>
+<p>Sign in with the Google account that has platform admin access.</p>
+<button id="sign-in" type="button" class="primary">Sign in with Google</button>
+</section>
+
+<section id="denied" hidden>
+<h2>Not authorised</h2>
+<p>This account isn't a Burghood platform admin. Sign out and use another account, or ask an existing admin to run <code>set-platform-admin</code> for you.</p>
+</section>
+
+<section id="console" hidden>
+<nav aria-label="Sections">
+<a href="#claims">Claims</a> · <a href="#providers">Providers</a> · <a href="#payments">Payments</a> · <a href="#sponsors">Sponsors</a>
+</nav>
+<section id="claims" class="panel">
+<h2>Claims</h2>
+<p class="meta">Society claims waiting for review appear here (Phase 1).</p>
+</section>
+<section id="providers" class="panel">
+<h2>Providers</h2>
+<p class="meta">Provider applications and background checks appear here (Phase 3).</p>
+</section>
+<section id="payments" class="panel">
+<h2>Payments</h2>
+<p class="meta">The payment ledger and audit report appear here (Phase 4).</p>
+</section>
+<section id="sponsors" class="panel">
+<h2>Sponsors</h2>
+<p class="meta">Sponsored listings appear here (Phase 4).</p>
+</section>
+</section>
+</main>
+<script type="module" src="/admin/admin.js"></script>
+</body>
+</html>
