@@ -15,6 +15,11 @@ service cloud.firestore {
             || request.auth.token.email_verified == true);
     }
 
+    // Burghood platform staff, set by functions/scripts/set-platform-admin.js.
+    function isPlatformAdmin() {
+      return signedIn() && request.auth.token.get('platformAdmin', false) == true;
+    }
+
     function isModerator() {
       return signedIn() && request.auth.token.get('role', '') in ['moderator', 'admin'];
     }
@@ -275,6 +280,86 @@ service cloud.firestore {
         && p.geohash is string && p.geohash.size() == 9
         && p.radiusMiles is number && p.radiusMiles >= 0.25 && p.radiusMiles <= 2
         && p.updatedAt == request.time;
+    }
+
+    // Burghood collections (Phase 0 skeleton). Closed to everyone but
+    // platform admins, who can read them from the web console. Each phase
+    // opens what its features need, with tests. Writes go through Cloud
+    // Functions or the console until then.
+    match /societies/{societyId} {
+      allow read: if isPlatformAdmin();
+      allow write: if false;
+
+      match /members/{uid} {
+        allow read: if isPlatformAdmin();
+        allow write: if false;
+      }
+      match /channels/{channelId} {
+        allow read: if isPlatformAdmin();
+        allow write: if false;
+
+        match /posts/{postId} {
+          allow read: if isPlatformAdmin();
+          allow write: if false;
+
+          match /comments/{commentId} {
+            allow read: if isPlatformAdmin();
+            allow write: if false;
+
+            match /reactions/{uid} {
+              allow read: if isPlatformAdmin();
+              allow write: if false;
+            }
+          }
+          match /reactions/{uid} {
+            allow read: if isPlatformAdmin();
+            allow write: if false;
+          }
+        }
+      }
+      match /notices/{noticeId} {
+        allow read: if isPlatformAdmin();
+        allow write: if false;
+      }
+      match /documents/{documentId} {
+        allow read: if isPlatformAdmin();
+        allow write: if false;
+      }
+      match /hoa/{docId} {
+        allow read: if isPlatformAdmin();
+        allow write: if false;
+      }
+    }
+
+    match /societyClaims/{claimId} {
+      allow read: if isPlatformAdmin();
+      allow write: if false;
+    }
+
+    match /serviceRequests/{requestId} {
+      allow read: if isPlatformAdmin();
+      allow write: if false;
+    }
+
+    match /providers/{providerId} {
+      allow read: if isPlatformAdmin();
+      allow write: if false;
+
+      match /reviews/{reviewId} {
+        allow read: if isPlatformAdmin();
+        allow write: if false;
+      }
+    }
+
+    match /sponsorships/{sponsorshipId} {
+      allow read: if isPlatformAdmin();
+      allow write: if false;
+    }
+
+    // Append-only ledger (Phase 4): even admins can't edit or delete.
+    match /payments/{paymentId} {
+      allow read: if isPlatformAdmin();
+      allow write: if false;
     }
   }
 }

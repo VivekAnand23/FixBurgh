@@ -397,3 +397,57 @@ describe('notification settings', () => {
     await assertFails(setDoc(doc(db('alice'), 'users/alice/notifications/n1'), { title: 'x' }));
   });
 });
+
+describe('Burghood collections', () => {
+  const paths = [
+    'societies/s1',
+    'societies/s1/members/alice',
+    'societies/s1/channels/general',
+    'societies/s1/channels/general/posts/p1',
+    'societies/s1/channels/general/posts/p1/comments/c1',
+    'societies/s1/channels/general/posts/p1/reactions/alice',
+    'societies/s1/channels/general/posts/p1/comments/c1/reactions/alice',
+    'societies/s1/notices/n1',
+    'societies/s1/documents/d1',
+    'societies/s1/hoa/info',
+    'societyClaims/c1',
+    'serviceRequests/r1',
+    'providers/pr1',
+    'providers/pr1/reviews/v1',
+    'sponsorships/sp1',
+    'payments/pay1',
+  ];
+
+  const signedIn = (uid, claims = {}) =>
+    env
+      .authenticatedContext(uid, { firebase: { sign_in_provider: 'google.com' }, ...claims })
+      .firestore();
+
+  beforeEach(async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      for (const p of paths) await setDoc(doc(ctx.firestore(), p), { name: 'x' });
+    });
+  });
+
+  for (const p of paths) {
+    it(`denies ${p} to guests, residents and the public`, async () => {
+      for (const d of [db('guest'), signedIn('alice'), env.unauthenticatedContext().firestore()]) {
+        await assertFails(getDoc(doc(d, p)));
+        await assertFails(setDoc(doc(d, p), { name: 'y' }));
+        await assertFails(deleteDoc(doc(d, p)));
+      }
+    });
+
+    it(`lets platform admins read ${p} but not write it`, async () => {
+      const admin = signedIn('admin', { platformAdmin: true });
+      await assertSucceeds(getDoc(doc(admin, p)));
+      await assertFails(setDoc(doc(admin, p), { name: 'y' }));
+      await assertFails(deleteDoc(doc(admin, p)));
+    });
+  }
+
+  it('ignores a platformAdmin claim that is not exactly true', async () => {
+    await assertFails(getDoc(doc(signedIn('eve', { platformAdmin: 'true' }), 'payments/pay1')));
+    await assertFails(getDoc(doc(signedIn('mod', { role: 'admin' }), 'societyClaims/c1')));
+  });
+});

@@ -1,6 +1,7 @@
 rules_version = '2';
 
-// Report photos live at reports/{uid}/{reportId}/{photo}.jpg.
+// Report photos live at reports/{uid}/{reportId}/{photo}.jpg; society
+// claim files under societyClaims/.
 service firebase.storage {
   match /b/{bucket}/o {
     match /reports/{uid}/{reportId}/{file} {
@@ -15,6 +16,14 @@ service firebase.storage {
         && file.matches('[0-9a-f-]+(_thumb)?\\.jpg');
 
       allow delete: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Burghood society claims: photo ID and proof of office. Only platform
+    // admins can read them; uploads open in Phase 1.
+    match /societyClaims/{allPaths=**} {
+      allow read: if request.auth != null
+        && request.auth.token.get('platformAdmin', false) == true;
+      allow write: if false;
     }
   }
 }

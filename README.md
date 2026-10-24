@@ -83,7 +83,7 @@ Rules and functions tests run against the emulators:
 
 ```bash
 firebase emulators:exec --only auth,firestore,functions,storage --project demo-fixburgh \
-  "npm --prefix firebase/test test && npm --prefix firebase/test run test:functions"
+  "npm --prefix firebase/test test && npm --prefix firebase/test run test:storage && npm --prefix firebase/test run test:functions"
 ```
 
 ### Phase 2 switches
