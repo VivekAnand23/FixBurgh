@@ -819,8 +819,8 @@
   "photoIdHelp": "Driver's license, state ID or passport",
   "proofOfOffice": "Proof of office",
   "proofOfOfficeHelp": "Board resolution, election minutes or management agreement naming you",
-  "chooseFile": "Choose file",
-  "replaceFile": "Replace",
+  "chooseFile": "Files",
+  "choosePhoto": "Photos",
   "fileTooLarge": "That file is too large. The limit is {mb} MB.",
   "@fileTooLarge": {
     "placeholders": {

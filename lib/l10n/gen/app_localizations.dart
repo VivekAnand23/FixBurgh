@@ -2653,14 +2653,14 @@ abstract class AppLocalizations {
   /// No description provided for @chooseFile.
   ///
   /// In en, this message translates to:
-  /// **'Choose file'**
+  /// **'Files'**
   String get chooseFile;
 
-  /// No description provided for @replaceFile.
+  /// No description provided for @choosePhoto.
   ///
   /// In en, this message translates to:
-  /// **'Replace'**
-  String get replaceFile;
+  /// **'Photos'**
+  String get choosePhoto;
 
   /// No description provided for @fileTooLarge.
   ///

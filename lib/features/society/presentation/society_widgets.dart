@@ -27,20 +27,23 @@ class SocietyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    return Container(
+    // Material, not a decorated box, so list rows inside show their ink.
+    return SizedBox(
       width: double.infinity,
-      padding: padding,
-      decoration: BoxDecoration(
+      child: Material(
         color:
             color ?? (_dark(context) ? scheme.surfaceContainer : Colors.white),
-        borderRadius: const BorderRadius.all(Radius.circular(16)),
-        border: Border.all(
-          color:
-              borderColor ??
-              (_dark(context) ? scheme.outlineVariant : AppColors.cardBorder),
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: const BorderRadius.all(Radius.circular(16)),
+          side: BorderSide(
+            color:
+                borderColor ??
+                (_dark(context) ? scheme.outlineVariant : AppColors.cardBorder),
+          ),
         ),
+        child: Padding(padding: padding, child: child),
       ),
-      child: child,
     );
   }
 }

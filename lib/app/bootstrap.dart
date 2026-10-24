@@ -24,7 +24,7 @@ import 'package:workmanager/workmanager.dart';
 const bool useEmulators =
     !kReleaseMode && bool.fromEnvironment('USE_EMULATORS');
 
-Future<void> _connectEmulators() async {
+Future<void> connectEmulators() async {
   // The Android emulator reaches the host at 10.0.2.2.
   final host = Platform.isAndroid ? '10.0.2.2' : 'localhost';
   await FirebaseAuth.instance.useAuthEmulator(host, 9099);
@@ -41,7 +41,7 @@ Future<void> bootstrap(Flavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: flavor.firebaseOptions);
-  if (useEmulators) await _connectEmulators();
+  if (useEmulators) await connectEmulators();
 
   // Debug builds use the App Check debug provider; register the token printed
   // in the device log under App Check > Apps > Manage debug tokens.

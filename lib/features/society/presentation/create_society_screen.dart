@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:fixburgh/app/links.dart';
 import 'package:fixburgh/app/providers.dart';
 import 'package:fixburgh/app/router.dart';
@@ -11,6 +10,7 @@ import 'package:fixburgh/features/routing/data/routing_providers.dart';
 import 'package:fixburgh/features/routing/domain/municipality_locator.dart';
 import 'package:fixburgh/features/society/data/society_repository.dart';
 import 'package:fixburgh/features/society/domain/society.dart';
+import 'package:fixburgh/features/society/presentation/pickers.dart';
 import 'package:fixburgh/features/society/presentation/society_widgets.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -131,23 +131,10 @@ class _CreateSocietyScreenState extends ConsumerState<CreateSocietyScreen> {
     });
   }
 
-  Future<void> _pickFile({required bool id, bool camera = false}) async {
-    File? file;
-    if (camera) {
-      final shot = await ImagePicker().pickImage(
-        source: ImageSource.camera,
-        maxWidth: 2400,
-        imageQuality: 85,
-      );
-      if (shot != null) file = File(shot.path);
-    } else {
-      final picked = await FilePicker.pickFile(
-        type: FileType.custom,
-        allowedExtensions: const ['pdf', 'jpg', 'jpeg', 'png'],
-      );
-      final path = picked?.path;
-      if (path != null) file = File(path);
-    }
+  Future<void> _pickFile({required bool id, ImageSource? image}) async {
+    final file = image != null
+        ? await ref.read(pickImageProvider)(image)
+        : await ref.read(pickFileProvider)(const ['pdf', 'jpg', 'jpeg', 'png']);
     if (file == null || !mounted) return;
     if (await file.length() >= maxClaimFileBytes) {
       if (!mounted) return;
@@ -348,7 +335,8 @@ class _CreateSocietyScreenState extends ConsumerState<CreateSocietyScreen> {
               title: l10n.photoId,
               help: l10n.photoIdHelp,
               file: _idFile,
-              onCamera: () => _pickFile(id: true, camera: true),
+              onCamera: () => _pickFile(id: true, image: ImageSource.camera),
+              onPhotos: () => _pickFile(id: true, image: ImageSource.gallery),
               onFile: () => _pickFile(id: true),
             ),
             const SizedBox(height: 12),
@@ -356,7 +344,8 @@ class _CreateSocietyScreenState extends ConsumerState<CreateSocietyScreen> {
               title: l10n.proofOfOffice,
               help: l10n.proofOfOfficeHelp,
               file: _proofFile,
-              onCamera: () => _pickFile(id: false, camera: true),
+              onCamera: () => _pickFile(id: false, image: ImageSource.camera),
+              onPhotos: () => _pickFile(id: false, image: ImageSource.gallery),
               onFile: () => _pickFile(id: false),
             ),
             const SizedBox(height: 16),
@@ -434,6 +423,7 @@ class _FileRow extends StatelessWidget {
     required this.help,
     required this.file,
     required this.onCamera,
+    required this.onPhotos,
     required this.onFile,
   });
 
@@ -441,6 +431,7 @@ class _FileRow extends StatelessWidget {
   final String help;
   final File? file;
   final VoidCallback onCamera;
+  final VoidCallback onPhotos;
   final VoidCallback onFile;
 
   @override
@@ -479,6 +470,7 @@ class _FileRow extends StatelessWidget {
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
+            runSpacing: 8,
             children: [
               OutlinedButton.icon(
                 icon: const Icon(Icons.photo_camera_outlined),
@@ -486,8 +478,13 @@ class _FileRow extends StatelessWidget {
                 onPressed: onCamera,
               ),
               OutlinedButton.icon(
+                icon: const Icon(Icons.photo_library_outlined),
+                label: Text(l10n.choosePhoto),
+                onPressed: onPhotos,
+              ),
+              OutlinedButton.icon(
                 icon: const Icon(Icons.attach_file),
-                label: Text(f == null ? l10n.chooseFile : l10n.replaceFile),
+                label: Text(l10n.chooseFile),
                 onPressed: onFile,
               ),
             ],

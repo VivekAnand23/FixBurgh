@@ -1530,10 +1530,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Board resolution, election minutes or management agreement naming you';
 
   @override
-  String get chooseFile => 'Choose file';
+  String get chooseFile => 'Files';
 
   @override
-  String get replaceFile => 'Replace';
+  String get choosePhoto => 'Photos';
 
   @override
   String fileTooLarge(int mb) {

@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/society/data/society_repository.dart';
 import 'package:fixburgh/features/society/domain/society.dart';
+import 'package:fixburgh/features/society/presentation/pickers.dart';
 import 'package:fixburgh/features/society/presentation/society_home.dart';
 import 'package:fixburgh/features/society/presentation/society_widgets.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
@@ -152,13 +152,8 @@ class _ComposeNoticeScreenState extends ConsumerState<ComposeNoticeScreen> {
   }
 
   Future<void> _pickAttachment() async {
-    final f = await FilePicker.pickFile(
-      type: FileType.custom,
-      allowedExtensions: const ['pdf', 'jpg', 'jpeg'],
-    );
-    final path = f?.path;
-    if (path == null) return;
-    final file = File(path);
+    final file = await ref.read(pickFileProvider)(const ['pdf', 'jpg', 'jpeg']);
+    if (file == null) return;
     if (await file.length() >= 10 * 1024 * 1024) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -317,16 +312,12 @@ class _UploadDocumentScreenState extends ConsumerState<UploadDocumentScreen> {
   }
 
   Future<void> _pick() async {
-    final f = await FilePicker.pickFile(
-      type: FileType.custom,
-      allowedExtensions: const ['pdf'],
-    );
-    final path = f?.path;
-    if (path == null) return;
+    final file = await ref.read(pickFileProvider)(const ['pdf']);
+    if (file == null) return;
     setState(() {
-      _file = File(path);
+      _file = file;
       if (_title.text.isEmpty) {
-        _title.text = f!.name.replaceAll(
+        _title.text = file.uri.pathSegments.last.replaceAll(
           RegExp(r'\.pdf$', caseSensitive: false),
           '',
         );

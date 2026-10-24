@@ -191,10 +191,12 @@ async function openClaim(id) {
     );
   } else {
     decide.append(
-      el('h3', {}, 'Decision'),
-      el('p', {}, el('span', { class: `pill ${c.status}` }, c.status), ` by ${c.decidedByEmail || c.decidedBy} on ${when(c.decidedAt)}`),
-      c.reason ? el('p', {}, `Reason: ${c.reason}`) : null,
-      c.societyId ? el('p', { class: 'meta' }, `Society id: ${c.societyId}`) : null,
+      ...[
+        el('h3', {}, 'Decision'),
+        el('p', {}, el('span', { class: `pill ${c.status}` }, c.status), ` by ${c.decidedByEmail || c.decidedBy} on ${when(c.decidedAt)}`),
+        c.reason ? el('p', {}, `Reason: ${c.reason}`) : null,
+        c.societyId ? el('p', { class: 'meta' }, `Society id: ${c.societyId}`) : null,
+      ].filter(Boolean),
     );
   }
 

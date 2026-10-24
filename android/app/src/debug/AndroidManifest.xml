@@ -4,4 +4,7 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Debug builds only: lets USE_EMULATORS=true reach the Firebase
+         emulators on the host over plain HTTP. -->
+    <application android:usesCleartextTraffic="true"/>
 </manifest>
