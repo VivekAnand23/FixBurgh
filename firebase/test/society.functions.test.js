@@ -324,6 +324,22 @@ describe('joining', () => {
       assert.equal((await read(`societies/${sid}`)).memberCount, 1);
     });
   });
+
+  it('drops the society from a profile when someone joins and leaves at once', async () => {
+    const { sid } = await liveSociety();
+    const lee = await account('lee');
+    const member = { uid: lee.uid, unit: '3D', displayName: 'Lee', role: 'member' };
+    await putDoc(`societies/${sid}/members/${lee.uid}`, { ...member, status: 'approved' });
+    await putDoc(`societies/${sid}/members/${lee.uid}`, { ...member, status: 'removed' });
+    const left = async () => {
+      assert.equal((await read(`societies/${sid}`)).memberCount, 1);
+      assert.deepEqual((await read(`users/${lee.uid}`))?.societyIds ?? [], []);
+    };
+    await eventually(left);
+    // Give a late trigger the chance to put it back.
+    await new Promise((r) => setTimeout(r, 1500));
+    await left();
+  });
 });
 
 describe('regenerateInviteCode', () => {
