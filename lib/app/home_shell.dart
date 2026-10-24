@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fixburgh/app/remote_config.dart';
+import 'package:fixburgh/app/router.dart';
 import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/notifications/push_service.dart';
 import 'package:fixburgh/features/report/presentation/outbox_controller.dart';
 import 'package:fixburgh/features/report/presentation/report_detail_sheet.dart';
+import 'package:fixburgh/features/society/data/society_repository.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -69,9 +71,19 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   }
 
   void _open(RemoteMessage m) {
+    if (!mounted) return;
     final id = m.data['reportId'];
-    if (id is String && id.isNotEmpty && mounted) {
+    final society = m.data['societyId'];
+    final notice = m.data['noticeId'];
+    if (id is String && id.isNotEmpty) {
       unawaited(showReportSheet(context, id));
+    } else if (society is String && society.isNotEmpty) {
+      // A notice, a join decision or a request for admins.
+      ref.read(selectedSocietyProvider.notifier).select(society);
+      final router = GoRouter.of(context)..go(Routes.society);
+      if (notice is String && notice.isNotEmpty) {
+        unawaited(router.push(Routes.notice(society, notice)));
+      }
     }
   }
 
@@ -79,7 +91,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   void _showInApp(RemoteMessage m) {
     final n = m.notification;
     if (n == null || !mounted) return;
-    final id = m.data['reportId'];
+    final id = m.data['reportId'] ?? m.data['societyId'];
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text([n.title, n.body].whereType<String>().join('\n')),
@@ -93,10 +105,21 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     );
   }
 
+  /// Join requests waiting for this admin, shown on the Society tab.
+  int _pendingRequests() {
+    if (!ref.watch(featureFlagsProvider).society) return 0;
+    final sid = ref.watch(currentSocietyIdProvider);
+    final uid = ref.watch(authUserProvider).value?.uid;
+    if (sid == null || uid == null) return 0;
+    final s = ref.watch(societyProvider(sid)).value;
+    return s != null && s.adminUids.contains(uid) ? s.pendingCount : 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final shell = widget.navigationShell;
+    final requests = _pendingRequests();
     return Scaffold(
       body: OutboxRunner(child: shell),
       bottomNavigationBar: NavigationBar(
@@ -110,8 +133,16 @@ class _HomeShellState extends ConsumerState<HomeShell> {
             label: l10n.navMap,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.apartment_outlined),
-            selectedIcon: const Icon(Icons.apartment),
+            icon: Badge(
+              isLabelVisible: requests > 0,
+              label: Text('$requests'),
+              child: const Icon(Icons.apartment_outlined),
+            ),
+            selectedIcon: Badge(
+              isLabelVisible: requests > 0,
+              label: Text('$requests'),
+              child: const Icon(Icons.apartment),
+            ),
             label: l10n.navSociety,
           ),
           NavigationDestination(

@@ -1215,4 +1215,618 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get view => 'View';
+
+  @override
+  String get findSocietyTitle => 'Find your society';
+
+  @override
+  String get findSocietyHint => 'Your address or society name';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get noSocietiesFound => 'No society found here yet.';
+
+  @override
+  String societiesNearAddress(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count societies near this address',
+      one: '1 society near this address',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String homesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count homes',
+      one: '1 home',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String distanceAway(String distance) {
+    return '$distance away';
+  }
+
+  @override
+  String get verified => 'Verified';
+
+  @override
+  String get requestToJoin => 'Request to join';
+
+  @override
+  String get requestSent => 'Request sent';
+
+  @override
+  String get requestSentBody =>
+      'Request sent. The society admin will review it.';
+
+  @override
+  String get dontSeeYours => 'Don\'t see yours?';
+
+  @override
+  String get createSociety => 'Create a society';
+
+  @override
+  String get createSocietyBody =>
+      'For presidents, board members or managers. We check your documents before the society goes live.';
+
+  @override
+  String get createSocietyNeeds =>
+      'You\'ll need: a government photo ID, and proof of office (board resolution, election minutes or management agreement).';
+
+  @override
+  String get imTheAdmin => 'I\'m the admin, create it';
+
+  @override
+  String get notTheAdmin => 'Not the admin? Invite them';
+
+  @override
+  String inviteAdminMessage(String link) {
+    return 'Our society could use Burghood for notices, documents and neighbors. Could you set it up as our admin? Get the app: $link';
+  }
+
+  @override
+  String get haveInviteCode => 'Have an invite code?';
+
+  @override
+  String requestPendingTitle(String name) {
+    return 'Request to join $name';
+  }
+
+  @override
+  String get requestPendingBody => 'Waiting for the society admin.';
+
+  @override
+  String get withdraw => 'Withdraw';
+
+  @override
+  String joinSocietyTitle(String name) {
+    return 'Join $name';
+  }
+
+  @override
+  String get joinSocietyBody =>
+      'Add your unit number so the admin knows you live there. They\'ll approve or decline your request.';
+
+  @override
+  String get unitNumber => 'Unit or house number';
+
+  @override
+  String get unitNumberHint => 'For example 4B or 1200';
+
+  @override
+  String get unitNumberOptional => 'Unit or house number (optional)';
+
+  @override
+  String get joinWithCodeTitle => 'Join with an invite code';
+
+  @override
+  String get joinWithCodeBody =>
+      'Your society admin can give you an 8-character code. With it you join straight away.';
+
+  @override
+  String get inviteCode => 'Invite code';
+
+  @override
+  String get inviteCodeInvalid =>
+      'That code didn\'t work. Check it with your society admin.';
+
+  @override
+  String get join => 'Join';
+
+  @override
+  String get joinedSociety => 'You\'ve joined.';
+
+  @override
+  String get societySignInTitle => 'Sign in to find your society';
+
+  @override
+  String get societySignInBody =>
+      'Societies are for neighbors with an account, so admins know who\'s asking to join.';
+
+  @override
+  String get claimTitle => 'Your society claim';
+
+  @override
+  String claimPendingTitle(String name) {
+    return 'Checking $name';
+  }
+
+  @override
+  String get claimPendingBody =>
+      'We\'re reviewing your documents, usually within 2 working days.';
+
+  @override
+  String claimApprovedTitle(String name) {
+    return '$name is live';
+  }
+
+  @override
+  String get claimApprovedBody => 'You\'re its admin.';
+
+  @override
+  String claimRejectedTitle(String name) {
+    return 'We couldn\'t verify $name';
+  }
+
+  @override
+  String get claimRejectedBody => 'See why, and send it again.';
+
+  @override
+  String get claimStepSubmitted => 'Submitted';
+
+  @override
+  String get claimStepReview => 'Being reviewed';
+
+  @override
+  String get claimStepReviewBody =>
+      'Burghood staff check your photo ID and proof of office.';
+
+  @override
+  String get claimStepDecision => 'Decision';
+
+  @override
+  String get claimStepApproved => 'Approved: your society is live';
+
+  @override
+  String get claimStepRejected => 'Not approved';
+
+  @override
+  String get claimReason => 'Reason';
+
+  @override
+  String get resubmit => 'Fix and send again';
+
+  @override
+  String get openSociety => 'Open my society';
+
+  @override
+  String get claimFilesNote =>
+      'Your ID and proof of office are seen only by Burghood staff and are deleted 30 days after the decision.';
+
+  @override
+  String get claimSubmitted => 'Sent for review.';
+
+  @override
+  String get createSocietyIntro =>
+      'Tell us about your society and show that you run it. Burghood staff check every claim before the society appears in search.';
+
+  @override
+  String get sectionSociety => 'Society';
+
+  @override
+  String get societyName => 'Society name';
+
+  @override
+  String get societyAddress => 'Address';
+
+  @override
+  String get societyAddressHelp =>
+      'Street address of the society or its main building';
+
+  @override
+  String get checkAddress => 'Check address';
+
+  @override
+  String get outsideCountySociety =>
+      'That address is outside Allegheny County. Burghood only covers Allegheny County for now.';
+
+  @override
+  String get numberOfHomes => 'Number of homes';
+
+  @override
+  String get numberOfHomesInvalid => 'Enter a number from 2 to 5000.';
+
+  @override
+  String get societyDuplicateTitle => 'A society may already exist here';
+
+  @override
+  String societyDuplicateActive(String name, String distance) {
+    return '$name is on Burghood, $distance away.';
+  }
+
+  @override
+  String societyDuplicatePending(String name, String distance) {
+    return 'A claim for $name, $distance away, is being reviewed.';
+  }
+
+  @override
+  String get societyDuplicateBody =>
+      'If it\'s yours, ask to join it instead. Only claim a new society if it\'s a different one.';
+
+  @override
+  String get sectionYou => 'You';
+
+  @override
+  String get yourFullName => 'Your full name, as on your ID';
+
+  @override
+  String get yourPosition => 'Your position';
+
+  @override
+  String get positionPresident => 'President';
+
+  @override
+  String get positionSecretary => 'Secretary';
+
+  @override
+  String get positionBoardMember => 'Board member';
+
+  @override
+  String get positionManager => 'Manager';
+
+  @override
+  String get sectionHoa => 'HOA management company';
+
+  @override
+  String get hoaHelp =>
+      'Members get one button that opens your management company\'s account page. Burghood stores the link only, never balances or payments.';
+
+  @override
+  String get hoaCompany => 'Company name';
+
+  @override
+  String get hoaWebsite => 'Website';
+
+  @override
+  String get hoaAccountLink => 'Account section link';
+
+  @override
+  String get hoaAccountLinkHelp =>
+      'The page where residents sign in to their HOA account. Your management company can give you this link.';
+
+  @override
+  String get invalidLink => 'Enter a web address starting with https://';
+
+  @override
+  String get sectionDocuments => 'Your documents';
+
+  @override
+  String get verificationRequirements =>
+      'We need two documents.\n1. A government photo ID: a driver\'s license, state ID or passport, with your name and photo easy to read.\n2. Proof of office that names you and the society: a board resolution, election minutes, or a management agreement.\nPhotos or PDFs, up to 5 MB each. The name on both must match.';
+
+  @override
+  String get draftWording => 'Draft wording';
+
+  @override
+  String get photoId => 'Government photo ID';
+
+  @override
+  String get photoIdHelp => 'Driver\'s license, state ID or passport';
+
+  @override
+  String get proofOfOffice => 'Proof of office';
+
+  @override
+  String get proofOfOfficeHelp =>
+      'Board resolution, election minutes or management agreement naming you';
+
+  @override
+  String get chooseFile => 'Files';
+
+  @override
+  String get choosePhoto => 'Photos';
+
+  @override
+  String fileTooLarge(int mb) {
+    return 'That file is too large. The limit is $mb MB.';
+  }
+
+  @override
+  String get claimConfirm =>
+      'I hold this position in the society, and these documents are genuine.';
+
+  @override
+  String get howWeUseDocuments => 'How we use your documents';
+
+  @override
+  String get submitForReview => 'Send for review';
+
+  @override
+  String get reviewTarget => 'We aim to decide within 2 working days.';
+
+  @override
+  String get requiredField => 'Required';
+
+  @override
+  String get switchSociety => 'Switch society';
+
+  @override
+  String youAre(String role) {
+    return 'You\'re $role';
+  }
+
+  @override
+  String get roleMember => 'a member';
+
+  @override
+  String get roleCommittee => 'on the committee';
+
+  @override
+  String get roleAdmin => 'an admin';
+
+  @override
+  String get joinAnotherSociety => 'Join or create another society';
+
+  @override
+  String get manage => 'Manage';
+
+  @override
+  String get hoaAccount => 'HOA account';
+
+  @override
+  String get tabNotices => 'Notices';
+
+  @override
+  String get tabDocs => 'Docs';
+
+  @override
+  String get tabMembers => 'Members';
+
+  @override
+  String get noNotices => 'No notices yet.';
+
+  @override
+  String get noDocuments => 'No documents yet.';
+
+  @override
+  String get newNotice => 'New notice';
+
+  @override
+  String get pinnedNotice => '📌 Notice';
+
+  @override
+  String pinnedNoticeFrom(String name) {
+    return '📌 Notice · from $name';
+  }
+
+  @override
+  String postedAgo(String when) {
+    return 'Posted $when';
+  }
+
+  @override
+  String expiresOn(String date) {
+    return 'Expires $date';
+  }
+
+  @override
+  String get hasAttachment => 'Attachment';
+
+  @override
+  String get justNow => 'just now';
+
+  @override
+  String minutesAgo(int n) {
+    return '${n}m ago';
+  }
+
+  @override
+  String hoursAgo(int n) {
+    return '${n}h ago';
+  }
+
+  @override
+  String daysAgo(int n) {
+    return '${n}d ago';
+  }
+
+  @override
+  String get uploadDocument => 'Upload document';
+
+  @override
+  String deleteDocumentTitle(String title) {
+    return 'Delete $title?';
+  }
+
+  @override
+  String get docBylaws => 'Bylaws';
+
+  @override
+  String get docMinutes => 'Minutes';
+
+  @override
+  String get docBudget => 'Budget';
+
+  @override
+  String get docRules => 'Rules';
+
+  @override
+  String get docOther => 'Other';
+
+  @override
+  String get neighbor => 'Neighbor';
+
+  @override
+  String youName(String name) {
+    return '$name (you)';
+  }
+
+  @override
+  String unitLabel(String unit) {
+    return 'Unit $unit';
+  }
+
+  @override
+  String get memberActions => 'Member options';
+
+  @override
+  String get makeMember => 'Make member';
+
+  @override
+  String get makeCommittee => 'Add to committee';
+
+  @override
+  String get makeAdmin => 'Make co-admin';
+
+  @override
+  String get removeMember => 'Remove';
+
+  @override
+  String get removeMemberTitle => 'Remove this member?';
+
+  @override
+  String get removeMemberBody =>
+      'They lose access to notices and documents. They can ask to join again.';
+
+  @override
+  String manageSociety(String name) {
+    return 'Manage $name';
+  }
+
+  @override
+  String get adminsOnly => 'Only society admins can see this.';
+
+  @override
+  String joinRequests(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Join requests ($count)',
+      zero: 'Join requests',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noJoinRequests => 'No requests waiting.';
+
+  @override
+  String get approve => 'Approve';
+
+  @override
+  String get decline => 'Decline';
+
+  @override
+  String get inviteCodeBody =>
+      'Anyone with this code joins straight away, without your approval. Share it with residents only.';
+
+  @override
+  String get copy => 'Copy';
+
+  @override
+  String get copied => 'Copied';
+
+  @override
+  String get share => 'Share';
+
+  @override
+  String get newCode => 'New code';
+
+  @override
+  String get newCodeTitle => 'Make a new invite code?';
+
+  @override
+  String get newCodeBody =>
+      'The current code will stop working. People who already joined stay in.';
+
+  @override
+  String inviteMembersMessage(String society, String code, String link) {
+    return 'Join $society on Burghood for notices and documents. Get the app at $link and enter invite code $code.';
+  }
+
+  @override
+  String get shareWithMembers => 'Share with members';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get saved => 'Saved';
+
+  @override
+  String get noticeGone => 'This notice was removed.';
+
+  @override
+  String get noticeTitle => 'Title';
+
+  @override
+  String get noticeBody => 'Message';
+
+  @override
+  String get pinNotice => 'Pin to the top';
+
+  @override
+  String get pinNoticeBody => 'Pinned notices show first until they expire.';
+
+  @override
+  String get noExpiry => 'No expiry date';
+
+  @override
+  String get addExpiry => 'Add';
+
+  @override
+  String get removeExpiry => 'Remove expiry date';
+
+  @override
+  String get noAttachment => 'No attachment';
+
+  @override
+  String get attachFile => 'Attach';
+
+  @override
+  String get removeAttachment => 'Remove attachment';
+
+  @override
+  String get postNotice => 'Post notice';
+
+  @override
+  String get noticePushNote => 'Every member gets a notification.';
+
+  @override
+  String get noticePosted => 'Notice posted.';
+
+  @override
+  String get choosePdf => 'Choose a PDF';
+
+  @override
+  String get documentTitle => 'Title';
+
+  @override
+  String get documentCategory => 'Category';
+
+  @override
+  String get upload => 'Upload';
+
+  @override
+  String get documentUploaded => 'Document uploaded.';
+
+  @override
+  String get documentsMembersOnly =>
+      'Only approved members can open documents.';
+
+  @override
+  String get notifyNotices => 'Notices from admins';
+
+  @override
+  String get notifyNoticesBody =>
+      'Announcements from your society\'s admins and committee';
 }

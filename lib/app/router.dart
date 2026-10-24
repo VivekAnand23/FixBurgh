@@ -10,6 +10,12 @@ import 'package:fixburgh/features/onboarding/welcome_screen.dart';
 import 'package:fixburgh/features/profile/data_sources_screen.dart';
 import 'package:fixburgh/features/profile/profile_screen.dart';
 import 'package:fixburgh/features/report/report_screen.dart';
+import 'package:fixburgh/features/society/domain/society.dart';
+import 'package:fixburgh/features/society/presentation/claim_status.dart';
+import 'package:fixburgh/features/society/presentation/create_society_screen.dart';
+import 'package:fixburgh/features/society/presentation/find_society_view.dart';
+import 'package:fixburgh/features/society/presentation/manage_screen.dart';
+import 'package:fixburgh/features/society/presentation/notice_screens.dart';
 import 'package:fixburgh/features/society/society_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,6 +34,15 @@ abstract final class Routes {
   static const dataSources = '/data-sources';
   static const notifications = '/notifications';
   static const savedPlaces = '/saved-places';
+
+  // Burghood societies. Screens on top of the tab bar.
+  static const findSociety = '/society/find';
+  static const createSociety = '/society/create';
+  static String claim(String id) => '/society/claims/$id';
+  static String manageSociety(String sid) => '/society/$sid/manage';
+  static String newNotice(String sid) => '/society/$sid/notices/new';
+  static String notice(String sid, String id) => '/society/$sid/notices/$id';
+  static String uploadDocument(String sid) => '/society/$sid/documents/new';
 }
 
 /// Picks the onboarding screen the user must see, or null when done.
@@ -78,6 +93,41 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.savedPlaces,
         builder: (_, _) => const SavedPlacesScreen(),
+      ),
+      GoRoute(
+        path: Routes.findSociety,
+        builder: (_, _) => const FindSocietyView(),
+      ),
+      GoRoute(
+        path: Routes.createSociety,
+        // A rejected claim to resubmit, if any.
+        builder: (_, s) =>
+            CreateSocietyScreen(previous: s.extra as SocietyClaim?),
+      ),
+      GoRoute(
+        path: '/society/claims/:id',
+        builder: (_, s) => ClaimStatusScreen(claimId: s.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/society/:sid/manage',
+        builder: (_, s) => ManageScreen(societyId: s.pathParameters['sid']!),
+      ),
+      GoRoute(
+        path: '/society/:sid/notices/new',
+        builder: (_, s) =>
+            ComposeNoticeScreen(societyId: s.pathParameters['sid']!),
+      ),
+      GoRoute(
+        path: '/society/:sid/notices/:id',
+        builder: (_, s) => NoticeScreen(
+          societyId: s.pathParameters['sid']!,
+          noticeId: s.pathParameters['id']!,
+        ),
+      ),
+      GoRoute(
+        path: '/society/:sid/documents/new',
+        builder: (_, s) =>
+            UploadDocumentScreen(societyId: s.pathParameters['sid']!),
       ),
       StatefulShellRoute.indexedStack(
         builder: (_, _, shell) => HomeShell(navigationShell: shell),

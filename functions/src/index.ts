@@ -1,15 +1,17 @@
 /**
- * FixBurgh Cloud Functions.
+ * Burghood (formerly FixBurgh) Cloud Functions. Society functions are in
+ * society.ts.
  *
  * onFlagCreated: counts flags per report and hides a report from the public
  * map once FLAG_HIDE_THRESHOLD different people have flagged it
  * (BRD FR-MOD-02). Moderators restore or remove it in the console.
  */
-import { initializeApp } from 'firebase-admin/app';
+import './options';
+
 import { getAuth } from 'firebase-admin/auth';
 import { DocumentData, FieldValue, getFirestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
-import { logger, setGlobalOptions } from 'firebase-functions/v2';
+import { logger } from 'firebase-functions/v2';
 import {
   onDocumentCreated,
   onDocumentDeleted,
@@ -18,11 +20,19 @@ import {
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 
 import { categoryLabel, notifyUsers, placeOwnersNear } from './notify';
+import { deleteSocietyData } from './society';
 
-initializeApp();
-
-// Same region as the Firestore database.
-setGlobalOptions({ region: 'us-east1', maxInstances: 5 });
+export {
+  checkSocietyDuplicates,
+  decideClaim,
+  getClaimFile,
+  joinWithCode,
+  onMemberWritten,
+  onNoticeCreated,
+  purgeClaimFiles,
+  purgeClaimFilesNow,
+  regenerateInviteCode,
+} from './society';
 
 const FLAG_HIDE_THRESHOLD = 3;
 
@@ -183,6 +193,8 @@ export const deleteAccount = onCall({ timeoutSeconds: 60 }, async (request) => {
     writer.delete(db.collection(coll).doc(uid));
   }
   await writer.close();
+  // Burghood society memberships, claims and claim files.
+  await deleteSocietyData(uid);
   // The profile with its devices, saved places and notifications.
   await db.recursiveDelete(db.collection('users').doc(uid));
 

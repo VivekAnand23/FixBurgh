@@ -15,15 +15,35 @@ import { METRES_PER_MILE, distanceM, neighborGeohashes } from './geo';
 export const DAILY_LIMIT = 5;
 
 /** `status`: reports you made or said "Me too" to. `nearby`: urgent
- * reports near a saved place. `test`: the settings screen's test button. */
-export type NotificationKind = 'status' | 'nearby' | 'test';
+ * reports near a saved place. `test`: the settings screen's test button.
+ * `notice`: a notice from your society's admins. `society`: your own
+ * membership and claims (requests, decisions), always sent. */
+export type NotificationKind = 'status' | 'nearby' | 'test' | 'notice' | 'society';
+
+/** The `users/{uid}.notify` switch for each kind that has one. */
+const PREF: Partial<Record<NotificationKind, string>> = {
+  status: 'status',
+  nearby: 'nearby',
+  notice: 'notices',
+};
 
 export interface Notice {
   kind: NotificationKind;
   title: string;
   body: string;
   reportId?: string;
+  societyId?: string;
+  noticeId?: string;
+  claimId?: string;
 }
+
+/** The ids a notification opens, for its data payload and record. */
+const targets = (n: Notice) =>
+  Object.fromEntries(
+    (['reportId', 'societyId', 'noticeId', 'claimId'] as const)
+      .filter((k) => n[k])
+      .map((k) => [k, n[k] as string]),
+  );
 
 const CATEGORY: Record<string, string> = {
   pothole: 'pothole',
@@ -67,7 +87,8 @@ export async function notifyUsers(uids: Iterable<string>, notice: Notice, key: s
     const userRef = db.collection('users').doc(uid);
     const user = (await userRef.get()).data() ?? {};
     const prefs = (user.notify ?? {}) as Record<string, unknown>;
-    if (notice.kind !== 'test' && prefs[notice.kind] === false) continue;
+    const pref = PREF[notice.kind];
+    if (pref && prefs[pref] === false) continue;
     if (notice.kind !== 'test' && inQuietHours(user.quietHours, user.utcOffsetMinutes)) continue;
 
     const recordRef = userRef.collection('notifications').doc(`${key}_${uid}`.slice(0, 1400));
@@ -84,6 +105,7 @@ export async function notifyUsers(uids: Iterable<string>, notice: Notice, key: s
         title: notice.title,
         body: notice.body,
         reportId: notice.reportId ?? null,
+        ...targets(notice),
         at: FieldValue.serverTimestamp(),
       });
       return true;
@@ -103,7 +125,7 @@ async function sendToDevices(uid: string, notice: Notice) {
     const res = await getMessaging().sendEachForMulticast({
       tokens,
       notification: { title: notice.title, body: notice.body },
-      data: { kind: notice.kind, ...(notice.reportId ? { reportId: notice.reportId } : {}) },
+      data: { kind: notice.kind, ...targets(notice) },
       android: { priority: notice.kind === 'nearby' ? 'high' : 'normal' },
       apns: { payload: { aps: { sound: 'default' } } },
     });

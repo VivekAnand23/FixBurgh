@@ -112,6 +112,26 @@ npm --prefix functions run seed:agencies -- --project fixburgh-dev
 Edits to any `agencies` document (including in the console) bump
 `config/directory.version`, and apps refetch on their next launch.
 
+### Societies (Burghood Phase 1)
+
+Behind the `feature_society` Remote Config flag (off by default). Debug
+builds can turn flags on with `--dart-define=FEATURES=society` and talk to
+the local emulators with `--dart-define=USE_EMULATORS=true`:
+
+```bash
+firebase emulators:start --project fixburgh-dev
+flutter run --flavor dev -t lib/main_dev.dart --dart-define=USE_EMULATORS=true --dart-define=FEATURES=society
+```
+
+`integration_test/society_walkthrough_test.dart` runs the Phase 1 exit check
+on two devices against those emulators: `ROLE=admin` claims a society
+(approve it in the console at `http://127.0.0.1:5002/admin`), `ROLE=resident`
+finds it, asks to join, and reads the notice and document the admin posts.
+Claim files are deleted 30 days after the decision
+(`CLAIM_FILE_RETENTION_DAYS`); platform admins can run the clean-up now
+with the `purgeClaimFilesNow` function. The verification wording and the
+privacy policy additions are drafts: see `docs/society-verification.md`.
+
 ### Platform admins
 
 Burghood staff get the `platformAdmin` custom claim, which opens the admin

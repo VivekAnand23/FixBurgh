@@ -13,6 +13,7 @@ class NotifySettings {
   const NotifySettings({
     this.status = true,
     this.nearby = true,
+    this.notices = true,
     this.quietEnabled = false,
     this.quietStart = 22 * 60,
     this.quietEnd = 7 * 60,
@@ -24,6 +25,7 @@ class NotifySettings {
     return NotifySettings(
       status: n['status'] as bool? ?? true,
       nearby: n['nearby'] as bool? ?? true,
+      notices: n['notices'] as bool? ?? true,
       quietEnabled: q['enabled'] as bool? ?? false,
       quietStart: (q['start'] as num?)?.toInt() ?? 22 * 60,
       quietEnd: (q['end'] as num?)?.toInt() ?? 7 * 60,
@@ -35,6 +37,9 @@ class NotifySettings {
 
   /// New urgent reports near your saved places.
   final bool nearby;
+
+  /// Notices from your society's admins and committee (Burghood).
+  final bool notices;
   final bool quietEnabled;
 
   /// Minutes after local midnight.
@@ -42,7 +47,7 @@ class NotifySettings {
   final int quietEnd;
 
   Map<String, Object> toDoc({required int utcOffsetMinutes}) => {
-    'notify': {'status': status, 'nearby': nearby},
+    'notify': {'status': status, 'nearby': nearby, 'notices': notices},
     'quietHours': {
       'enabled': quietEnabled,
       'start': quietStart,
@@ -55,12 +60,14 @@ class NotifySettings {
   NotifySettings copyWith({
     bool? status,
     bool? nearby,
+    bool? notices,
     bool? quietEnabled,
     int? quietStart,
     int? quietEnd,
   }) => NotifySettings(
     status: status ?? this.status,
     nearby: nearby ?? this.nearby,
+    notices: notices ?? this.notices,
     quietEnabled: quietEnabled ?? this.quietEnabled,
     quietStart: quietStart ?? this.quietStart,
     quietEnd: quietEnd ?? this.quietEnd,

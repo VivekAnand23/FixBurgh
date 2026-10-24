@@ -1,4 +1,5 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Remote Config defaults. Phase 2 features are on unless the project's
@@ -110,10 +111,16 @@ typedef FeatureFlags = ({
   bool monetisation,
 });
 
+/// Debug builds can switch flags on without Remote Config, e.g.
+/// `--dart-define=FEATURES=society,channels`.
+const _forcedFeatures = kReleaseMode ? '' : String.fromEnvironment('FEATURES');
+
 final featureFlagsProvider = Provider<FeatureFlags>((ref) {
   final rc = ref.watch(remoteConfigProvider).value;
+  final forced = _forcedFeatures.split(',').map((f) => 'feature_${f.trim()}');
   bool flag(String key) =>
-      rc?.getBool(key) ?? remoteConfigDefaults[key]! as bool;
+      forced.contains(key) ||
+      (rc?.getBool(key) ?? remoteConfigDefaults[key]! as bool);
   return (
     offlineOutbox: flag('feature_offline_outbox'),
     push: flag('feature_push'),

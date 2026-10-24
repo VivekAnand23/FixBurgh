@@ -648,5 +648,366 @@
   "placeTapMap": "Search, use your location, or tap the map to choose the spot.",
   "placeChosen": "Tap the map to move the spot.",
   "savePlace": "Save place",
-  "view": "View"
+  "view": "View",
+  "findSocietyTitle": "Find your society",
+  "findSocietyHint": "Your address or society name",
+  "search": "Search",
+  "noSocietiesFound": "No society found here yet.",
+  "societiesNearAddress": "{count, plural, =1{1 society near this address} other{{count} societies near this address}}",
+  "@societiesNearAddress": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homesCount": "{count, plural, =1{1 home} other{{count} homes}}",
+  "@homesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "distanceAway": "{distance} away",
+  "@distanceAway": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "verified": "Verified",
+  "requestToJoin": "Request to join",
+  "requestSent": "Request sent",
+  "requestSentBody": "Request sent. The society admin will review it.",
+  "dontSeeYours": "Don't see yours?",
+  "createSociety": "Create a society",
+  "createSocietyBody": "For presidents, board members or managers. We check your documents before the society goes live.",
+  "createSocietyNeeds": "You'll need: a government photo ID, and proof of office (board resolution, election minutes or management agreement).",
+  "imTheAdmin": "I'm the admin, create it",
+  "notTheAdmin": "Not the admin? Invite them",
+  "inviteAdminMessage": "Our society could use Burghood for notices, documents and neighbors. Could you set it up as our admin? Get the app: {link}",
+  "@inviteAdminMessage": {
+    "placeholders": {
+      "link": {
+        "type": "String"
+      }
+    }
+  },
+  "haveInviteCode": "Have an invite code?",
+  "requestPendingTitle": "Request to join {name}",
+  "@requestPendingTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "requestPendingBody": "Waiting for the society admin.",
+  "withdraw": "Withdraw",
+  "joinSocietyTitle": "Join {name}",
+  "@joinSocietyTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "joinSocietyBody": "Add your unit number so the admin knows you live there. They'll approve or decline your request.",
+  "unitNumber": "Unit or house number",
+  "unitNumberHint": "For example 4B or 1200",
+  "unitNumberOptional": "Unit or house number (optional)",
+  "joinWithCodeTitle": "Join with an invite code",
+  "joinWithCodeBody": "Your society admin can give you an 8-character code. With it you join straight away.",
+  "inviteCode": "Invite code",
+  "inviteCodeInvalid": "That code didn't work. Check it with your society admin.",
+  "join": "Join",
+  "joinedSociety": "You've joined.",
+  "societySignInTitle": "Sign in to find your society",
+  "societySignInBody": "Societies are for neighbors with an account, so admins know who's asking to join.",
+  "claimTitle": "Your society claim",
+  "claimPendingTitle": "Checking {name}",
+  "@claimPendingTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "claimPendingBody": "We're reviewing your documents, usually within 2 working days.",
+  "claimApprovedTitle": "{name} is live",
+  "@claimApprovedTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "claimApprovedBody": "You're its admin.",
+  "claimRejectedTitle": "We couldn't verify {name}",
+  "@claimRejectedTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "claimRejectedBody": "See why, and send it again.",
+  "claimStepSubmitted": "Submitted",
+  "claimStepReview": "Being reviewed",
+  "claimStepReviewBody": "Burghood staff check your photo ID and proof of office.",
+  "claimStepDecision": "Decision",
+  "claimStepApproved": "Approved: your society is live",
+  "claimStepRejected": "Not approved",
+  "claimReason": "Reason",
+  "resubmit": "Fix and send again",
+  "openSociety": "Open my society",
+  "claimFilesNote": "Your ID and proof of office are seen only by Burghood staff and are deleted 30 days after the decision.",
+  "claimSubmitted": "Sent for review.",
+  "createSocietyIntro": "Tell us about your society and show that you run it. Burghood staff check every claim before the society appears in search.",
+  "sectionSociety": "Society",
+  "societyName": "Society name",
+  "societyAddress": "Address",
+  "societyAddressHelp": "Street address of the society or its main building",
+  "checkAddress": "Check address",
+  "outsideCountySociety": "That address is outside Allegheny County. Burghood only covers Allegheny County for now.",
+  "numberOfHomes": "Number of homes",
+  "numberOfHomesInvalid": "Enter a number from 2 to 5000.",
+  "societyDuplicateTitle": "A society may already exist here",
+  "societyDuplicateActive": "{name} is on Burghood, {distance} away.",
+  "@societyDuplicateActive": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "societyDuplicatePending": "A claim for {name}, {distance} away, is being reviewed.",
+  "@societyDuplicatePending": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "societyDuplicateBody": "If it's yours, ask to join it instead. Only claim a new society if it's a different one.",
+  "sectionYou": "You",
+  "yourFullName": "Your full name, as on your ID",
+  "yourPosition": "Your position",
+  "positionPresident": "President",
+  "positionSecretary": "Secretary",
+  "positionBoardMember": "Board member",
+  "positionManager": "Manager",
+  "sectionHoa": "HOA management company",
+  "hoaHelp": "Members get one button that opens your management company's account page. Burghood stores the link only, never balances or payments.",
+  "hoaCompany": "Company name",
+  "hoaWebsite": "Website",
+  "hoaAccountLink": "Account section link",
+  "hoaAccountLinkHelp": "The page where residents sign in to their HOA account. Your management company can give you this link.",
+  "invalidLink": "Enter a web address starting with https://",
+  "sectionDocuments": "Your documents",
+  "verificationRequirements": "We need two documents.\n1. A government photo ID: a driver's license, state ID or passport, with your name and photo easy to read.\n2. Proof of office that names you and the society: a board resolution, election minutes, or a management agreement.\nPhotos or PDFs, up to 5 MB each. The name on both must match.",
+  "draftWording": "Draft wording",
+  "photoId": "Government photo ID",
+  "photoIdHelp": "Driver's license, state ID or passport",
+  "proofOfOffice": "Proof of office",
+  "proofOfOfficeHelp": "Board resolution, election minutes or management agreement naming you",
+  "chooseFile": "Files",
+  "choosePhoto": "Photos",
+  "fileTooLarge": "That file is too large. The limit is {mb} MB.",
+  "@fileTooLarge": {
+    "placeholders": {
+      "mb": {
+        "type": "int"
+      }
+    }
+  },
+  "claimConfirm": "I hold this position in the society, and these documents are genuine.",
+  "howWeUseDocuments": "How we use your documents",
+  "submitForReview": "Send for review",
+  "reviewTarget": "We aim to decide within 2 working days.",
+  "requiredField": "Required",
+  "switchSociety": "Switch society",
+  "youAre": "You're {role}",
+  "@youAre": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "roleMember": "a member",
+  "roleCommittee": "on the committee",
+  "roleAdmin": "an admin",
+  "joinAnotherSociety": "Join or create another society",
+  "manage": "Manage",
+  "hoaAccount": "HOA account",
+  "tabNotices": "Notices",
+  "tabDocs": "Docs",
+  "tabMembers": "Members",
+  "noNotices": "No notices yet.",
+  "noDocuments": "No documents yet.",
+  "newNotice": "New notice",
+  "pinnedNotice": "📌 Notice",
+  "pinnedNoticeFrom": "📌 Notice · from {name}",
+  "@pinnedNoticeFrom": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "postedAgo": "Posted {when}",
+  "@postedAgo": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "expiresOn": "Expires {date}",
+  "@expiresOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "hasAttachment": "Attachment",
+  "justNow": "just now",
+  "minutesAgo": "{n}m ago",
+  "@minutesAgo": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursAgo": "{n}h ago",
+  "@hoursAgo": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "daysAgo": "{n}d ago",
+  "@daysAgo": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "uploadDocument": "Upload document",
+  "deleteDocumentTitle": "Delete {title}?",
+  "@deleteDocumentTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "docBylaws": "Bylaws",
+  "docMinutes": "Minutes",
+  "docBudget": "Budget",
+  "docRules": "Rules",
+  "docOther": "Other",
+  "neighbor": "Neighbor",
+  "youName": "{name} (you)",
+  "@youName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "unitLabel": "Unit {unit}",
+  "@unitLabel": {
+    "placeholders": {
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "memberActions": "Member options",
+  "makeMember": "Make member",
+  "makeCommittee": "Add to committee",
+  "makeAdmin": "Make co-admin",
+  "removeMember": "Remove",
+  "removeMemberTitle": "Remove this member?",
+  "removeMemberBody": "They lose access to notices and documents. They can ask to join again.",
+  "manageSociety": "Manage {name}",
+  "@manageSociety": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "adminsOnly": "Only society admins can see this.",
+  "joinRequests": "{count, plural, =0{Join requests} other{Join requests ({count})}}",
+  "@joinRequests": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noJoinRequests": "No requests waiting.",
+  "approve": "Approve",
+  "decline": "Decline",
+  "inviteCodeBody": "Anyone with this code joins straight away, without your approval. Share it with residents only.",
+  "copy": "Copy",
+  "copied": "Copied",
+  "share": "Share",
+  "newCode": "New code",
+  "newCodeTitle": "Make a new invite code?",
+  "newCodeBody": "The current code will stop working. People who already joined stay in.",
+  "inviteMembersMessage": "Join {society} on Burghood for notices and documents. Get the app at {link} and enter invite code {code}.",
+  "@inviteMembersMessage": {
+    "placeholders": {
+      "society": {
+        "type": "String"
+      },
+      "code": {
+        "type": "String"
+      },
+      "link": {
+        "type": "String"
+      }
+    }
+  },
+  "shareWithMembers": "Share with members",
+  "save": "Save",
+  "saved": "Saved",
+  "noticeGone": "This notice was removed.",
+  "noticeTitle": "Title",
+  "noticeBody": "Message",
+  "pinNotice": "Pin to the top",
+  "pinNoticeBody": "Pinned notices show first until they expire.",
+  "noExpiry": "No expiry date",
+  "addExpiry": "Add",
+  "removeExpiry": "Remove expiry date",
+  "noAttachment": "No attachment",
+  "attachFile": "Attach",
+  "removeAttachment": "Remove attachment",
+  "postNotice": "Post notice",
+  "noticePushNote": "Every member gets a notification.",
+  "noticePosted": "Notice posted.",
+  "choosePdf": "Choose a PDF",
+  "documentTitle": "Title",
+  "documentCategory": "Category",
+  "upload": "Upload",
+  "documentUploaded": "Document uploaded.",
+  "documentsMembersOnly": "Only approved members can open documents.",
+  "notifyNotices": "Notices from admins",
+  "notifyNoticesBody": "Announcements from your society's admins and committee"
 }

@@ -2127,6 +2127,1050 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View'**
   String get view;
+
+  /// No description provided for @findSocietyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Find your society'**
+  String get findSocietyTitle;
+
+  /// No description provided for @findSocietyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your address or society name'**
+  String get findSocietyHint;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// No description provided for @noSocietiesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No society found here yet.'**
+  String get noSocietiesFound;
+
+  /// No description provided for @societiesNearAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 society near this address} other{{count} societies near this address}}'**
+  String societiesNearAddress(int count);
+
+  /// No description provided for @homesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 home} other{{count} homes}}'**
+  String homesCount(int count);
+
+  /// No description provided for @distanceAway.
+  ///
+  /// In en, this message translates to:
+  /// **'{distance} away'**
+  String distanceAway(String distance);
+
+  /// No description provided for @verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get verified;
+
+  /// No description provided for @requestToJoin.
+  ///
+  /// In en, this message translates to:
+  /// **'Request to join'**
+  String get requestToJoin;
+
+  /// No description provided for @requestSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Request sent'**
+  String get requestSent;
+
+  /// No description provided for @requestSentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Request sent. The society admin will review it.'**
+  String get requestSentBody;
+
+  /// No description provided for @dontSeeYours.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t see yours?'**
+  String get dontSeeYours;
+
+  /// No description provided for @createSociety.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a society'**
+  String get createSociety;
+
+  /// No description provided for @createSocietyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'For presidents, board members or managers. We check your documents before the society goes live.'**
+  String get createSocietyBody;
+
+  /// No description provided for @createSocietyNeeds.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll need: a government photo ID, and proof of office (board resolution, election minutes or management agreement).'**
+  String get createSocietyNeeds;
+
+  /// No description provided for @imTheAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m the admin, create it'**
+  String get imTheAdmin;
+
+  /// No description provided for @notTheAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Not the admin? Invite them'**
+  String get notTheAdmin;
+
+  /// No description provided for @inviteAdminMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Our society could use Burghood for notices, documents and neighbors. Could you set it up as our admin? Get the app: {link}'**
+  String inviteAdminMessage(String link);
+
+  /// No description provided for @haveInviteCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Have an invite code?'**
+  String get haveInviteCode;
+
+  /// No description provided for @requestPendingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Request to join {name}'**
+  String requestPendingTitle(String name);
+
+  /// No description provided for @requestPendingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the society admin.'**
+  String get requestPendingBody;
+
+  /// No description provided for @withdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw'**
+  String get withdraw;
+
+  /// No description provided for @joinSocietyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Join {name}'**
+  String joinSocietyTitle(String name);
+
+  /// No description provided for @joinSocietyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your unit number so the admin knows you live there. They\'ll approve or decline your request.'**
+  String get joinSocietyBody;
+
+  /// No description provided for @unitNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit or house number'**
+  String get unitNumber;
+
+  /// No description provided for @unitNumberHint.
+  ///
+  /// In en, this message translates to:
+  /// **'For example 4B or 1200'**
+  String get unitNumberHint;
+
+  /// No description provided for @unitNumberOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit or house number (optional)'**
+  String get unitNumberOptional;
+
+  /// No description provided for @joinWithCodeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Join with an invite code'**
+  String get joinWithCodeTitle;
+
+  /// No description provided for @joinWithCodeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your society admin can give you an 8-character code. With it you join straight away.'**
+  String get joinWithCodeBody;
+
+  /// No description provided for @inviteCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite code'**
+  String get inviteCode;
+
+  /// No description provided for @inviteCodeInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'That code didn\'t work. Check it with your society admin.'**
+  String get inviteCodeInvalid;
+
+  /// No description provided for @join.
+  ///
+  /// In en, this message translates to:
+  /// **'Join'**
+  String get join;
+
+  /// No description provided for @joinedSociety.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve joined.'**
+  String get joinedSociety;
+
+  /// No description provided for @societySignInTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to find your society'**
+  String get societySignInTitle;
+
+  /// No description provided for @societySignInBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Societies are for neighbors with an account, so admins know who\'s asking to join.'**
+  String get societySignInBody;
+
+  /// No description provided for @claimTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your society claim'**
+  String get claimTitle;
+
+  /// No description provided for @claimPendingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking {name}'**
+  String claimPendingTitle(String name);
+
+  /// No description provided for @claimPendingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re reviewing your documents, usually within 2 working days.'**
+  String get claimPendingBody;
+
+  /// No description provided for @claimApprovedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is live'**
+  String claimApprovedTitle(String name);
+
+  /// No description provided for @claimApprovedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re its admin.'**
+  String get claimApprovedBody;
+
+  /// No description provided for @claimRejectedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t verify {name}'**
+  String claimRejectedTitle(String name);
+
+  /// No description provided for @claimRejectedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'See why, and send it again.'**
+  String get claimRejectedBody;
+
+  /// No description provided for @claimStepSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted'**
+  String get claimStepSubmitted;
+
+  /// No description provided for @claimStepReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Being reviewed'**
+  String get claimStepReview;
+
+  /// No description provided for @claimStepReviewBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Burghood staff check your photo ID and proof of office.'**
+  String get claimStepReviewBody;
+
+  /// No description provided for @claimStepDecision.
+  ///
+  /// In en, this message translates to:
+  /// **'Decision'**
+  String get claimStepDecision;
+
+  /// No description provided for @claimStepApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved: your society is live'**
+  String get claimStepApproved;
+
+  /// No description provided for @claimStepRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not approved'**
+  String get claimStepRejected;
+
+  /// No description provided for @claimReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason'**
+  String get claimReason;
+
+  /// No description provided for @resubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Fix and send again'**
+  String get resubmit;
+
+  /// No description provided for @openSociety.
+  ///
+  /// In en, this message translates to:
+  /// **'Open my society'**
+  String get openSociety;
+
+  /// No description provided for @claimFilesNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your ID and proof of office are seen only by Burghood staff and are deleted 30 days after the decision.'**
+  String get claimFilesNote;
+
+  /// No description provided for @claimSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent for review.'**
+  String get claimSubmitted;
+
+  /// No description provided for @createSocietyIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us about your society and show that you run it. Burghood staff check every claim before the society appears in search.'**
+  String get createSocietyIntro;
+
+  /// No description provided for @sectionSociety.
+  ///
+  /// In en, this message translates to:
+  /// **'Society'**
+  String get sectionSociety;
+
+  /// No description provided for @societyName.
+  ///
+  /// In en, this message translates to:
+  /// **'Society name'**
+  String get societyName;
+
+  /// No description provided for @societyAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get societyAddress;
+
+  /// No description provided for @societyAddressHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Street address of the society or its main building'**
+  String get societyAddressHelp;
+
+  /// No description provided for @checkAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Check address'**
+  String get checkAddress;
+
+  /// No description provided for @outsideCountySociety.
+  ///
+  /// In en, this message translates to:
+  /// **'That address is outside Allegheny County. Burghood only covers Allegheny County for now.'**
+  String get outsideCountySociety;
+
+  /// No description provided for @numberOfHomes.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of homes'**
+  String get numberOfHomes;
+
+  /// No description provided for @numberOfHomesInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a number from 2 to 5000.'**
+  String get numberOfHomesInvalid;
+
+  /// No description provided for @societyDuplicateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A society may already exist here'**
+  String get societyDuplicateTitle;
+
+  /// No description provided for @societyDuplicateActive.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is on Burghood, {distance} away.'**
+  String societyDuplicateActive(String name, String distance);
+
+  /// No description provided for @societyDuplicatePending.
+  ///
+  /// In en, this message translates to:
+  /// **'A claim for {name}, {distance} away, is being reviewed.'**
+  String societyDuplicatePending(String name, String distance);
+
+  /// No description provided for @societyDuplicateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'If it\'s yours, ask to join it instead. Only claim a new society if it\'s a different one.'**
+  String get societyDuplicateBody;
+
+  /// No description provided for @sectionYou.
+  ///
+  /// In en, this message translates to:
+  /// **'You'**
+  String get sectionYou;
+
+  /// No description provided for @yourFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Your full name, as on your ID'**
+  String get yourFullName;
+
+  /// No description provided for @yourPosition.
+  ///
+  /// In en, this message translates to:
+  /// **'Your position'**
+  String get yourPosition;
+
+  /// No description provided for @positionPresident.
+  ///
+  /// In en, this message translates to:
+  /// **'President'**
+  String get positionPresident;
+
+  /// No description provided for @positionSecretary.
+  ///
+  /// In en, this message translates to:
+  /// **'Secretary'**
+  String get positionSecretary;
+
+  /// No description provided for @positionBoardMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Board member'**
+  String get positionBoardMember;
+
+  /// No description provided for @positionManager.
+  ///
+  /// In en, this message translates to:
+  /// **'Manager'**
+  String get positionManager;
+
+  /// No description provided for @sectionHoa.
+  ///
+  /// In en, this message translates to:
+  /// **'HOA management company'**
+  String get sectionHoa;
+
+  /// No description provided for @hoaHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Members get one button that opens your management company\'s account page. Burghood stores the link only, never balances or payments.'**
+  String get hoaHelp;
+
+  /// No description provided for @hoaCompany.
+  ///
+  /// In en, this message translates to:
+  /// **'Company name'**
+  String get hoaCompany;
+
+  /// No description provided for @hoaWebsite.
+  ///
+  /// In en, this message translates to:
+  /// **'Website'**
+  String get hoaWebsite;
+
+  /// No description provided for @hoaAccountLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Account section link'**
+  String get hoaAccountLink;
+
+  /// No description provided for @hoaAccountLinkHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The page where residents sign in to their HOA account. Your management company can give you this link.'**
+  String get hoaAccountLinkHelp;
+
+  /// No description provided for @invalidLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a web address starting with https://'**
+  String get invalidLink;
+
+  /// No description provided for @sectionDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Your documents'**
+  String get sectionDocuments;
+
+  /// No description provided for @verificationRequirements.
+  ///
+  /// In en, this message translates to:
+  /// **'We need two documents.\n1. A government photo ID: a driver\'s license, state ID or passport, with your name and photo easy to read.\n2. Proof of office that names you and the society: a board resolution, election minutes, or a management agreement.\nPhotos or PDFs, up to 5 MB each. The name on both must match.'**
+  String get verificationRequirements;
+
+  /// No description provided for @draftWording.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft wording'**
+  String get draftWording;
+
+  /// No description provided for @photoId.
+  ///
+  /// In en, this message translates to:
+  /// **'Government photo ID'**
+  String get photoId;
+
+  /// No description provided for @photoIdHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver\'s license, state ID or passport'**
+  String get photoIdHelp;
+
+  /// No description provided for @proofOfOffice.
+  ///
+  /// In en, this message translates to:
+  /// **'Proof of office'**
+  String get proofOfOffice;
+
+  /// No description provided for @proofOfOfficeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Board resolution, election minutes or management agreement naming you'**
+  String get proofOfOfficeHelp;
+
+  /// No description provided for @chooseFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Files'**
+  String get chooseFile;
+
+  /// No description provided for @choosePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos'**
+  String get choosePhoto;
+
+  /// No description provided for @fileTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'That file is too large. The limit is {mb} MB.'**
+  String fileTooLarge(int mb);
+
+  /// No description provided for @claimConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'I hold this position in the society, and these documents are genuine.'**
+  String get claimConfirm;
+
+  /// No description provided for @howWeUseDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'How we use your documents'**
+  String get howWeUseDocuments;
+
+  /// No description provided for @submitForReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Send for review'**
+  String get submitForReview;
+
+  /// No description provided for @reviewTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'We aim to decide within 2 working days.'**
+  String get reviewTarget;
+
+  /// No description provided for @requiredField.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get requiredField;
+
+  /// No description provided for @switchSociety.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch society'**
+  String get switchSociety;
+
+  /// No description provided for @youAre.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re {role}'**
+  String youAre(String role);
+
+  /// No description provided for @roleMember.
+  ///
+  /// In en, this message translates to:
+  /// **'a member'**
+  String get roleMember;
+
+  /// No description provided for @roleCommittee.
+  ///
+  /// In en, this message translates to:
+  /// **'on the committee'**
+  String get roleCommittee;
+
+  /// No description provided for @roleAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'an admin'**
+  String get roleAdmin;
+
+  /// No description provided for @joinAnotherSociety.
+  ///
+  /// In en, this message translates to:
+  /// **'Join or create another society'**
+  String get joinAnotherSociety;
+
+  /// No description provided for @manage.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage'**
+  String get manage;
+
+  /// No description provided for @hoaAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'HOA account'**
+  String get hoaAccount;
+
+  /// No description provided for @tabNotices.
+  ///
+  /// In en, this message translates to:
+  /// **'Notices'**
+  String get tabNotices;
+
+  /// No description provided for @tabDocs.
+  ///
+  /// In en, this message translates to:
+  /// **'Docs'**
+  String get tabDocs;
+
+  /// No description provided for @tabMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Members'**
+  String get tabMembers;
+
+  /// No description provided for @noNotices.
+  ///
+  /// In en, this message translates to:
+  /// **'No notices yet.'**
+  String get noNotices;
+
+  /// No description provided for @noDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'No documents yet.'**
+  String get noDocuments;
+
+  /// No description provided for @newNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'New notice'**
+  String get newNotice;
+
+  /// No description provided for @pinnedNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'📌 Notice'**
+  String get pinnedNotice;
+
+  /// No description provided for @pinnedNoticeFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'📌 Notice · from {name}'**
+  String pinnedNoticeFrom(String name);
+
+  /// No description provided for @postedAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'Posted {when}'**
+  String postedAgo(String when);
+
+  /// No description provided for @expiresOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires {date}'**
+  String expiresOn(String date);
+
+  /// No description provided for @hasAttachment.
+  ///
+  /// In en, this message translates to:
+  /// **'Attachment'**
+  String get hasAttachment;
+
+  /// No description provided for @justNow.
+  ///
+  /// In en, this message translates to:
+  /// **'just now'**
+  String get justNow;
+
+  /// No description provided for @minutesAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{n}m ago'**
+  String minutesAgo(int n);
+
+  /// No description provided for @hoursAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{n}h ago'**
+  String hoursAgo(int n);
+
+  /// No description provided for @daysAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{n}d ago'**
+  String daysAgo(int n);
+
+  /// No description provided for @uploadDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload document'**
+  String get uploadDocument;
+
+  /// No description provided for @deleteDocumentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {title}?'**
+  String deleteDocumentTitle(String title);
+
+  /// No description provided for @docBylaws.
+  ///
+  /// In en, this message translates to:
+  /// **'Bylaws'**
+  String get docBylaws;
+
+  /// No description provided for @docMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get docMinutes;
+
+  /// No description provided for @docBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget'**
+  String get docBudget;
+
+  /// No description provided for @docRules.
+  ///
+  /// In en, this message translates to:
+  /// **'Rules'**
+  String get docRules;
+
+  /// No description provided for @docOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get docOther;
+
+  /// No description provided for @neighbor.
+  ///
+  /// In en, this message translates to:
+  /// **'Neighbor'**
+  String get neighbor;
+
+  /// No description provided for @youName.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} (you)'**
+  String youName(String name);
+
+  /// No description provided for @unitLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit {unit}'**
+  String unitLabel(String unit);
+
+  /// No description provided for @memberActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Member options'**
+  String get memberActions;
+
+  /// No description provided for @makeMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Make member'**
+  String get makeMember;
+
+  /// No description provided for @makeCommittee.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to committee'**
+  String get makeCommittee;
+
+  /// No description provided for @makeAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Make co-admin'**
+  String get makeAdmin;
+
+  /// No description provided for @removeMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get removeMember;
+
+  /// No description provided for @removeMemberTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this member?'**
+  String get removeMemberTitle;
+
+  /// No description provided for @removeMemberBody.
+  ///
+  /// In en, this message translates to:
+  /// **'They lose access to notices and documents. They can ask to join again.'**
+  String get removeMemberBody;
+
+  /// No description provided for @manageSociety.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage {name}'**
+  String manageSociety(String name);
+
+  /// No description provided for @adminsOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Only society admins can see this.'**
+  String get adminsOnly;
+
+  /// No description provided for @joinRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Join requests} other{Join requests ({count})}}'**
+  String joinRequests(int count);
+
+  /// No description provided for @noJoinRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'No requests waiting.'**
+  String get noJoinRequests;
+
+  /// No description provided for @approve.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get approve;
+
+  /// No description provided for @decline.
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get decline;
+
+  /// No description provided for @inviteCodeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Anyone with this code joins straight away, without your approval. Share it with residents only.'**
+  String get inviteCodeBody;
+
+  /// No description provided for @copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get copy;
+
+  /// No description provided for @copied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied'**
+  String get copied;
+
+  /// No description provided for @share.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share;
+
+  /// No description provided for @newCode.
+  ///
+  /// In en, this message translates to:
+  /// **'New code'**
+  String get newCode;
+
+  /// No description provided for @newCodeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Make a new invite code?'**
+  String get newCodeTitle;
+
+  /// No description provided for @newCodeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The current code will stop working. People who already joined stay in.'**
+  String get newCodeBody;
+
+  /// No description provided for @inviteMembersMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Join {society} on Burghood for notices and documents. Get the app at {link} and enter invite code {code}.'**
+  String inviteMembersMessage(String society, String code, String link);
+
+  /// No description provided for @shareWithMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Share with members'**
+  String get shareWithMembers;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get saved;
+
+  /// No description provided for @noticeGone.
+  ///
+  /// In en, this message translates to:
+  /// **'This notice was removed.'**
+  String get noticeGone;
+
+  /// No description provided for @noticeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get noticeTitle;
+
+  /// No description provided for @noticeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get noticeBody;
+
+  /// No description provided for @pinNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin to the top'**
+  String get pinNotice;
+
+  /// No description provided for @pinNoticeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Pinned notices show first until they expire.'**
+  String get pinNoticeBody;
+
+  /// No description provided for @noExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'No expiry date'**
+  String get noExpiry;
+
+  /// No description provided for @addExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get addExpiry;
+
+  /// No description provided for @removeExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove expiry date'**
+  String get removeExpiry;
+
+  /// No description provided for @noAttachment.
+  ///
+  /// In en, this message translates to:
+  /// **'No attachment'**
+  String get noAttachment;
+
+  /// No description provided for @attachFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Attach'**
+  String get attachFile;
+
+  /// No description provided for @removeAttachment.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove attachment'**
+  String get removeAttachment;
+
+  /// No description provided for @postNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Post notice'**
+  String get postNotice;
+
+  /// No description provided for @noticePushNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Every member gets a notification.'**
+  String get noticePushNote;
+
+  /// No description provided for @noticePosted.
+  ///
+  /// In en, this message translates to:
+  /// **'Notice posted.'**
+  String get noticePosted;
+
+  /// No description provided for @choosePdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a PDF'**
+  String get choosePdf;
+
+  /// No description provided for @documentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get documentTitle;
+
+  /// No description provided for @documentCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get documentCategory;
+
+  /// No description provided for @upload.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload'**
+  String get upload;
+
+  /// No description provided for @documentUploaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Document uploaded.'**
+  String get documentUploaded;
+
+  /// No description provided for @documentsMembersOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Only approved members can open documents.'**
+  String get documentsMembersOnly;
+
+  /// No description provided for @notifyNotices.
+  ///
+  /// In en, this message translates to:
+  /// **'Notices from admins'**
+  String get notifyNotices;
+
+  /// No description provided for @notifyNoticesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Announcements from your society\'s admins and committee'**
+  String get notifyNoticesBody;
 }
 
 class _AppLocalizationsDelegate
