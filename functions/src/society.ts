@@ -359,12 +359,19 @@ export const onMemberWritten = onDocumentWritten('societies/{sid}/members/{uid}'
   const society = db().collection('societies').doc(sid);
   const members = society.collection('members');
   const userRef = db().collection('users').doc(uid);
-  if (now === 'approved') {
-    await userRef.set({ societyIds: FieldValue.arrayUnion(sid) }, { merge: true });
-  } else {
-    // update, not set: a deleted account's profile must stay deleted.
-    await userRef.update({ societyIds: FieldValue.arrayRemove(sid) }).catch(() => undefined);
-  }
+  // Triggers can run out of order when someone joins and leaves within a
+  // second, so this follows the membership as it is now, not this event.
+  await db()
+    .runTransaction(async (tx) => {
+      const current = await tx.get(members.doc(uid));
+      if (current.exists && current.get('status') === 'approved') {
+        tx.set(userRef, { societyIds: FieldValue.arrayUnion(sid) }, { merge: true });
+      } else {
+        // update, not set: a deleted account's profile must stay deleted.
+        const profile = await tx.get(userRef);
+        if (profile.exists) tx.update(userRef, { societyIds: FieldValue.arrayRemove(sid) });
+      }
+    });
   const [approved, pending, admins, snap] = await Promise.all([
     members.where('status', '==', 'approved').count().get(),
     members.where('status', '==', 'pending').count().get(),
