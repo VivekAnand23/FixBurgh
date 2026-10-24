@@ -1,6 +1,10 @@
+import 'package:fixburgh/app/providers.dart';
 import 'package:fixburgh/app/router.dart';
 import 'package:fixburgh/features/onboarding/onboarding_controller.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 OnboardingState s({
   bool welcome = true,
@@ -39,5 +43,36 @@ void main() {
   test('finished onboarding goes to the map and stays out of onboarding', () {
     expect(onboardingRedirect(s(), Routes.welcome), Routes.map);
     expect(onboardingRedirect(s(), Routes.profile), isNull);
+  });
+
+  test('finished onboarding can open every tab', () {
+    for (final tab in [Routes.society, Routes.activity]) {
+      expect(onboardingRedirect(s(), tab), isNull);
+    }
+  });
+
+  test('the bottom bar is Map, Society, Report, Activity, Profile', () async {
+    SharedPreferences.setMockInitialValues({});
+    final prefs = await SharedPreferences.getInstance();
+    final container = ProviderContainer(
+      overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
+    );
+    addTearDown(container.dispose);
+    final shell = container
+        .read(routerProvider)
+        .configuration
+        .routes
+        .whereType<StatefulShellRoute>()
+        .single;
+    expect(
+      [for (final b in shell.branches) (b.routes.single as GoRoute).path],
+      [
+        Routes.map,
+        Routes.society,
+        Routes.report,
+        Routes.activity,
+        Routes.profile,
+      ],
+    );
   });
 }

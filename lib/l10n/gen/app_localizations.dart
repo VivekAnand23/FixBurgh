@@ -106,17 +106,23 @@ abstract class AppLocalizations {
   /// **'Map'**
   String get navMap;
 
+  /// No description provided for @navSociety.
+  ///
+  /// In en, this message translates to:
+  /// **'Society'**
+  String get navSociety;
+
   /// No description provided for @navReport.
   ///
   /// In en, this message translates to:
   /// **'Report'**
   String get navReport;
 
-  /// No description provided for @navMyReports.
+  /// No description provided for @navActivity.
   ///
   /// In en, this message translates to:
-  /// **'My Reports'**
-  String get navMyReports;
+  /// **'Activity'**
+  String get navActivity;
 
   /// No description provided for @navProfile.
   ///
@@ -214,11 +220,71 @@ abstract class AppLocalizations {
   /// **'Report a problem'**
   String get reportTitle;
 
-  /// No description provided for @myReportsTitle.
+  /// No description provided for @activityTitle.
   ///
   /// In en, this message translates to:
-  /// **'My Reports'**
-  String get myReportsTitle;
+  /// **'Activity'**
+  String get activityTitle;
+
+  /// No description provided for @activityCityReports.
+  ///
+  /// In en, this message translates to:
+  /// **'City reports'**
+  String get activityCityReports;
+
+  /// No description provided for @societyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Society'**
+  String get societyTitle;
+
+  /// No description provided for @societyComingSoonBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Join your building or neighborhood society to read notices, find documents and talk with neighbors.'**
+  String get societyComingSoonBody;
+
+  /// No description provided for @societySignInToJoin.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to join a society'**
+  String get societySignInToJoin;
+
+  /// No description provided for @societySignedInNote.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re signed in. We\'ll let you know when societies open.'**
+  String get societySignedInNote;
+
+  /// No description provided for @societyFindBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Find your society by address or name.'**
+  String get societyFindBody;
+
+  /// No description provided for @accountGateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to continue'**
+  String get accountGateTitle;
+
+  /// No description provided for @accountGateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This needs an account. Sign in with Apple, Google or email, and anything you reported as a guest moves to your account.'**
+  String get accountGateBody;
+
+  /// No description provided for @accountGateSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get accountGateSignIn;
+
+  /// No description provided for @accountGateNotNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get accountGateNotNow;
 
   /// No description provided for @myReportsEmpty.
   ///

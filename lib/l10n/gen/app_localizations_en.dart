@@ -15,10 +15,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navMap => 'Map';
 
   @override
+  String get navSociety => 'Society';
+
+  @override
   String get navReport => 'Report';
 
   @override
-  String get navMyReports => 'My Reports';
+  String get navActivity => 'Activity';
 
   @override
   String get navProfile => 'Profile';
@@ -73,7 +76,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reportTitle => 'Report a problem';
 
   @override
-  String get myReportsTitle => 'My Reports';
+  String get activityTitle => 'Activity';
+
+  @override
+  String get activityCityReports => 'City reports';
+
+  @override
+  String get societyTitle => 'Society';
+
+  @override
+  String get societyComingSoonBody =>
+      'Join your building or neighborhood society to read notices, find documents and talk with neighbors.';
+
+  @override
+  String get societySignInToJoin => 'Sign in to join a society';
+
+  @override
+  String get societySignedInNote =>
+      'You\'re signed in. We\'ll let you know when societies open.';
+
+  @override
+  String get societyFindBody => 'Find your society by address or name.';
+
+  @override
+  String get accountGateTitle => 'Sign in to continue';
+
+  @override
+  String get accountGateBody =>
+      'This needs an account. Sign in with Apple, Google or email, and anything you reported as a guest moves to your account.';
+
+  @override
+  String get accountGateSignIn => 'Sign in';
+
+  @override
+  String get accountGateNotNow => 'Not now';
 
   @override
   String get myReportsEmpty => 'You haven\'t reported anything yet.';

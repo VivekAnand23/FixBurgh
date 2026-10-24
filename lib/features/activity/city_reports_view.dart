@@ -16,8 +16,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class MyReportsScreen extends ConsumerWidget {
-  const MyReportsScreen({super.key});
+/// The City reports segment of Activity: the reports this person made,
+/// with any still waiting in the outbox.
+class CityReportsView extends ConsumerWidget {
+  const CityReportsView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,27 +27,16 @@ class MyReportsScreen extends ConsumerWidget {
     final reports = ref.watch(myReportsProvider);
     final waiting = ref.watch(outboxProvider);
     return reports.when(
-      loading: () => Scaffold(
-        appBar: AppBar(title: Text(l10n.myReportsTitle)),
-        body: const Center(child: CircularProgressIndicator()),
-      ),
-      error: (_, _) => PlaceholderView(
-        icon: Icons.cloud_off,
-        title: l10n.myReportsTitle,
-        message: l10n.errorGeneric,
-      ),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (_, _) =>
+          PlaceholderBody(icon: Icons.cloud_off, message: l10n.errorGeneric),
       data: (list) => list.isEmpty && waiting.isEmpty
-          ? PlaceholderView(
-              icon: Icons.list_alt,
-              title: l10n.myReportsTitle,
-              message: l10n.myReportsEmpty,
-            )
+          ? PlaceholderBody(icon: Icons.list_alt, message: l10n.myReportsEmpty)
           : DefaultTabController(
               length: 3,
-              child: Scaffold(
-                appBar: AppBar(
-                  title: Text(l10n.myReportsTitle),
-                  bottom: TabBar(
+              child: Column(
+                children: [
+                  TabBar(
                     tabs: [
                       Tab(text: l10n.tabAll(list.length + waiting.length)),
                       Tab(
@@ -56,17 +47,19 @@ class MyReportsScreen extends ConsumerWidget {
                       Tab(text: l10n.tabFixed(list.where(_fixed).length)),
                     ],
                   ),
-                ),
-                body: TabBarView(
-                  children: [
-                    _ReportList(reports: list, waiting: waiting),
-                    _ReportList(
-                      reports: list.where(_open).toList(),
-                      waiting: waiting,
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        _ReportList(reports: list, waiting: waiting),
+                        _ReportList(
+                          reports: list.where(_open).toList(),
+                          waiting: waiting,
+                        ),
+                        _ReportList(reports: list.where(_fixed).toList()),
+                      ],
                     ),
-                    _ReportList(reports: list.where(_fixed).toList()),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
     );

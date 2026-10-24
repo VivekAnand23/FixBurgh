@@ -11,7 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-/// Bottom navigation: Map, Report, My Reports, Profile.
+/// Bottom navigation: Map, Society, Report, Activity, Profile. The order
+/// matches the shell branches in `router.dart`.
 class HomeShell extends ConsumerStatefulWidget {
   const HomeShell({required this.navigationShell, super.key});
 
@@ -109,14 +110,19 @@ class _HomeShellState extends ConsumerState<HomeShell> {
             label: l10n.navMap,
           ),
           NavigationDestination(
+            icon: const Icon(Icons.apartment_outlined),
+            selectedIcon: const Icon(Icons.apartment),
+            label: l10n.navSociety,
+          ),
+          NavigationDestination(
             icon: const Icon(Icons.add_circle_outline),
             selectedIcon: const Icon(Icons.add_circle),
             label: l10n.navReport,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.list_alt_outlined),
-            selectedIcon: const Icon(Icons.list_alt),
-            label: l10n.navMyReports,
+            icon: const Icon(Icons.receipt_long_outlined),
+            selectedIcon: const Icon(Icons.receipt_long),
+            label: l10n.navActivity,
           ),
           NavigationDestination(
             icon: const Icon(Icons.person_outline),

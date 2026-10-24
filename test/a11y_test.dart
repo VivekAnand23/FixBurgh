@@ -1,5 +1,7 @@
 import 'package:fixburgh/app/providers.dart';
 import 'package:fixburgh/app/theme/app_theme.dart';
+import 'package:fixburgh/features/auth/account_gate.dart';
+import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/auth/sign_in_screen.dart';
 import 'package:fixburgh/features/notifications/push_prompt.dart';
 import 'package:fixburgh/features/onboarding/age_gate_screen.dart';
@@ -9,6 +11,7 @@ import 'package:fixburgh/features/profile/profile_screen.dart';
 import 'package:fixburgh/features/report/presentation/steps/details_step.dart';
 import 'package:fixburgh/features/report/presentation/steps/photo_step.dart';
 import 'package:fixburgh/features/report/presentation/steps/safety_step.dart';
+import 'package:fixburgh/features/society/society_screen.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,6 +32,8 @@ void main() {
     'data sources': const DataSourcesScreen(),
     'delete account dialog': const Scaffold(body: DeleteAccountDialog()),
     'notification explanation': const Scaffold(body: NotificationRationale()),
+    'society coming soon': const SocietyScreen(),
+    'sign in to continue': const Scaffold(body: AccountGateSheet()),
   };
 
   for (final dark in [false, true]) {
@@ -40,7 +45,10 @@ void main() {
         final handle = tester.ensureSemantics();
         await tester.pumpWidget(
           ProviderScope(
-            overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
+            overrides: [
+              sharedPreferencesProvider.overrideWithValue(prefs),
+              authUserProvider.overrideWith((ref) => Stream.value(null)),
+            ],
             child: MaterialApp(
               theme: dark ? AppTheme.dark() : AppTheme.light(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
