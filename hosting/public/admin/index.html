@@ -32,8 +32,12 @@
 <a href="#claims">Claims</a> · <a href="#providers">Providers</a> · <a href="#payments">Payments</a> · <a href="#sponsors">Sponsors</a>
 </nav>
 <section id="claims" class="panel">
-<h2>Claims</h2>
-<p class="meta">Society claims waiting for review appear here (Phase 1).</p>
+<header class="bar"><h2>Claims<span id="claims-count"></span></h2><button id="claims-refresh" type="button">Refresh</button></header>
+<p class="meta">Check that the photo ID and proof of office name the same person, and that the proof names the society. Target: decide within 2 working days.</p>
+<h3>Waiting for review</h3>
+<div id="claims-pending" class="rows"></div>
+<h3>Recently decided</h3>
+<div id="claims-decided" class="rows"></div>
 </section>
 <section id="providers" class="panel">
 <h2>Providers</h2>
@@ -49,6 +53,14 @@
 </section>
 </section>
 </main>
+<dialog id="claim-dialog" aria-label="Claim">
+<button id="claim-close" type="button" class="close" aria-label="Close">×</button>
+<div id="claim-body"></div>
+</dialog>
+<dialog id="file-dialog" aria-label="Document">
+<button id="file-close" type="button" class="close" aria-label="Close">×</button>
+<div id="file-body"></div>
+</dialog>
 <script type="module" src="/admin/admin.js"></script>
 </body>
 </html>
