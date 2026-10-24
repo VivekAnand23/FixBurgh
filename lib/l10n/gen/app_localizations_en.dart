@@ -1511,16 +1511,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get verificationRequirements =>
-      'We need two documents.\n1. A government photo ID: a driver\'s license, state ID or passport, with your name and photo easy to read.\n2. Proof of office that names you and the society: a board resolution, election minutes, or a management agreement.\nPhotos or PDFs, up to 5 MB each. The name on both must match.';
-
-  @override
-  String get draftWording => 'Draft wording';
+      'We need two documents.\n1. A government photo ID: a driver\'s license, state ID, passport or passport card, or military ID, with your name and photo easy to read.\n2. Proof of office that names you and the society: a board resolution, election minutes, or a management agreement.\nPhotos or PDFs, up to 5 MB each. The name on both must match.';
 
   @override
   String get photoId => 'Government photo ID';
 
   @override
-  String get photoIdHelp => 'Driver\'s license, state ID or passport';
+  String get photoIdHelp =>
+      'Driver\'s license, state ID, passport or military ID';
 
   @override
   String get proofOfOffice => 'Proof of office';
