@@ -166,7 +166,7 @@ class SocietyRepository {
     ]);
     final found = <String, SocietyResult>{};
     for (final d in snaps.expand((s) => s.docs)) {
-      final s = Society.fromDoc(d.id, _plain(d.data()));
+      final s = Society.fromDoc(d.id, plain(d.data()));
       final m = distanceM(point, s.location);
       if (m <= nearbySocietyM) found[s.id] = (society: s, distanceM: m);
     }
@@ -188,7 +188,7 @@ class SocietyRepository {
         .get();
     return [
       for (final d in snap.docs)
-        if (Society.fromDoc(d.id, _plain(d.data())) case final s)
+        if (Society.fromDoc(d.id, plain(d.data())) case final s)
           (
             society: s,
             distanceM: near == null ? null : distanceM(near, s.location),
@@ -197,7 +197,7 @@ class SocietyRepository {
   }
 
   Stream<Society?> watchSociety(String sid) => _society(sid).snapshots().map(
-    (d) => d.exists ? Society.fromDoc(d.id, _plain(d.data()!)) : null,
+    (d) => d.exists ? Society.fromDoc(d.id, plain(d.data()!)) : null,
   );
 
   Stream<List<String>> watchSocietyIds(String uid) => _db
@@ -227,7 +227,7 @@ class SocietyRepository {
       .doc(uid)
       .snapshots()
       .map(
-        (d) => d.exists ? Membership.fromDoc(d.id, _plain(d.data()!)) : null,
+        (d) => d.exists ? Membership.fromDoc(d.id, plain(d.data()!)) : null,
       );
 
   Stream<List<Membership>> watchMembers(String sid) => _society(sid)
@@ -235,7 +235,7 @@ class SocietyRepository {
       .snapshots()
       .map(
         (s) => [
-          for (final d in s.docs) Membership.fromDoc(d.id, _plain(d.data())),
+          for (final d in s.docs) Membership.fromDoc(d.id, plain(d.data())),
         ],
       );
 
@@ -246,7 +246,7 @@ class SocietyRepository {
       .snapshots()
       .map(
         (s) => [
-          for (final d in s.docs) SocietyNotice.fromDoc(d.id, _plain(d.data())),
+          for (final d in s.docs) SocietyNotice.fromDoc(d.id, plain(d.data())),
         ],
       );
 
@@ -257,7 +257,7 @@ class SocietyRepository {
       .map(
         (s) => [
           for (final d in s.docs)
-            SocietyDocument.fromDoc(d.id, _plain(d.data())),
+            SocietyDocument.fromDoc(d.id, plain(d.data())),
         ],
       );
 
@@ -280,7 +280,7 @@ class SocietyRepository {
       .snapshots()
       .map(
         (s) => [
-          for (final d in s.docs) SocietyClaim.fromDoc(d.id, _plain(d.data())),
+          for (final d in s.docs) SocietyClaim.fromDoc(d.id, plain(d.data())),
         ],
       );
 
@@ -529,13 +529,13 @@ String _safeName(String name) =>
 String _take(String s, int n) => s.length <= n ? s : s.substring(0, n);
 
 /// Firestore timestamps as [DateTime], so the models stay plain Dart.
-Map<String, dynamic> _plain(Map<String, dynamic> d) => {
+Map<String, dynamic> plain(Map<String, dynamic> d) => {
   for (final MapEntry(:key, :value) in d.entries) key: _plainValue(value),
 };
 
 Object? _plainValue(Object? v) => switch (v) {
   final Timestamp t => t.toDate(),
-  final Map<String, dynamic> m => _plain(m),
+  final Map<String, dynamic> m => plain(m),
   final List<Object?> l => l.map(_plainValue).toList(),
   _ => v,
 };

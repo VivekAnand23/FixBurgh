@@ -1,4 +1,5 @@
 import 'package:fixburgh/features/routing/domain/municipality_locator.dart';
+import 'package:fixburgh/features/society/domain/channel.dart';
 import 'package:flutter/foundation.dart';
 
 /// A verified society: an HOA, condo association or apartment community.
@@ -95,6 +96,8 @@ class Membership {
     this.unit = '',
     this.displayName = '',
     this.requestedAt,
+    this.lastRead = const {},
+    this.mutes = const {},
   });
 
   factory Membership.fromDoc(String uid, Map<String, dynamic> d) => Membership(
@@ -104,6 +107,16 @@ class Membership {
     unit: d['unit'] as String? ?? '',
     displayName: d['displayName'] as String? ?? '',
     requestedAt: _date(d['requestedAt']),
+    lastRead: {
+      for (final MapEntry(:key, :value)
+          in ((d['lastRead'] as Map<Object?, Object?>?) ?? const {}).entries)
+        if ((key, value) case (final String k, final DateTime v)) k: v,
+    },
+    mutes: {
+      for (final MapEntry(:key, :value)
+          in ((d['mutes'] as Map<Object?, Object?>?) ?? const {}).entries)
+        if ((key, Mute.parse(value)) case (final String k, final Mute m)) k: m,
+    },
   );
 
   final String uid;
@@ -112,6 +125,15 @@ class Membership {
   final String unit;
   final String displayName;
   final DateTime? requestedAt;
+
+  /// When they last opened each channel.
+  final Map<String, DateTime> lastRead;
+
+  /// Channels they muted.
+  final Map<String, Mute> mutes;
+
+  bool isMuted(String channelId, DateTime now) =>
+      mutes[channelId]?.isActive(now) ?? false;
 
   bool get isApproved => status == MemberStatus.approved;
   bool get isAdmin => isApproved && role == MemberRole.admin;

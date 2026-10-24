@@ -5,6 +5,7 @@ import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/notifications/notification_settings.dart';
 import 'package:fixburgh/features/notifications/push_prompt.dart';
 import 'package:fixburgh/features/notifications/push_service.dart';
+import 'package:fixburgh/features/society/presentation/muted_channels.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -120,6 +121,32 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
               onTap: () => context.push('/saved-places'),
             ),
           ],
+          if (flags.society && flags.channels) ...[
+            const Divider(),
+            Card(
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              color: theme.colorScheme.primaryContainer,
+              child: SwitchListTile(
+                secondary: const Icon(Icons.forum_outlined),
+                title: Text(
+                  l10n.notifyInteractions,
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+                subtitle: Text(l10n.notifyInteractionsBody),
+                value: s.interactions,
+                onChanged: (v) => _save(s.copyWith(interactions: v)),
+              ),
+            ),
+            SwitchListTile(
+              secondary: const Icon(Icons.alternate_email),
+              title: Text(l10n.notifyMentions),
+              subtitle: Text(l10n.notifyMentionsBody),
+              value: s.interactions && s.mentions,
+              onChanged: s.interactions
+                  ? (v) => _save(s.copyWith(mentions: v))
+                  : null,
+            ),
+          ],
           if (flags.society)
             SwitchListTile(
               secondary: const Icon(Icons.campaign_outlined),
@@ -128,6 +155,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
               value: s.notices,
               onChanged: (v) => _save(s.copyWith(notices: v)),
             ),
+          if (flags.society && flags.channels) const MutedChannelsList(),
           const Divider(),
           SwitchListTile(
             secondary: const Icon(Icons.bedtime_outlined),

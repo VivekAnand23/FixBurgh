@@ -14,6 +14,8 @@ class NotifySettings {
     this.status = true,
     this.nearby = true,
     this.notices = true,
+    this.interactions = true,
+    this.mentions = true,
     this.quietEnabled = false,
     this.quietStart = 22 * 60,
     this.quietEnd = 7 * 60,
@@ -26,6 +28,8 @@ class NotifySettings {
       status: n['status'] as bool? ?? true,
       nearby: n['nearby'] as bool? ?? true,
       notices: n['notices'] as bool? ?? true,
+      interactions: n['interactions'] as bool? ?? true,
+      mentions: n['mentions'] as bool? ?? true,
       quietEnabled: q['enabled'] as bool? ?? false,
       quietStart: (q['start'] as num?)?.toInt() ?? 22 * 60,
       quietEnd: (q['end'] as num?)?.toInt() ?? 7 * 60,
@@ -40,6 +44,13 @@ class NotifySettings {
 
   /// Notices from your society's admins and committee (Burghood).
   final bool notices;
+
+  /// Master switch for channel activity: comments, replies, reactions and
+  /// @mentions.
+  final bool interactions;
+
+  /// @mentions in channels (only while [interactions] is on).
+  final bool mentions;
   final bool quietEnabled;
 
   /// Minutes after local midnight.
@@ -47,7 +58,13 @@ class NotifySettings {
   final int quietEnd;
 
   Map<String, Object> toDoc({required int utcOffsetMinutes}) => {
-    'notify': {'status': status, 'nearby': nearby, 'notices': notices},
+    'notify': {
+      'status': status,
+      'nearby': nearby,
+      'notices': notices,
+      'interactions': interactions,
+      'mentions': mentions,
+    },
     'quietHours': {
       'enabled': quietEnabled,
       'start': quietStart,
@@ -61,6 +78,8 @@ class NotifySettings {
     bool? status,
     bool? nearby,
     bool? notices,
+    bool? interactions,
+    bool? mentions,
     bool? quietEnabled,
     int? quietStart,
     int? quietEnd,
@@ -68,6 +87,8 @@ class NotifySettings {
     status: status ?? this.status,
     nearby: nearby ?? this.nearby,
     notices: notices ?? this.notices,
+    interactions: interactions ?? this.interactions,
+    mentions: mentions ?? this.mentions,
     quietEnabled: quietEnabled ?? this.quietEnabled,
     quietStart: quietStart ?? this.quietStart,
     quietEnd: quietEnd ?? this.quietEnd,
@@ -144,8 +165,55 @@ final StreamProvider<List<SavedPlace>> savedPlacesProvider =
       return ref.watch(notificationsRepositoryProvider).watchPlaces(uid);
     });
 
+/// A notification as recorded by the server in `users/{uid}/notifications`.
+typedef InboxItem = ({
+  String id,
+  String kind,
+  String title,
+  String body,
+  DateTime? at,
+  Map<String, String> targets,
+});
+
+/// The person's notifications, newest first (the bell).
+final StreamProvider<List<InboxItem>> inboxProvider =
+    StreamProvider.autoDispose<List<InboxItem>>((ref) {
+      final uid = ref.watch(authUserProvider).value?.uid;
+      if (uid == null) return Stream.value(const []);
+      return ref.watch(notificationsRepositoryProvider).watchInbox(uid);
+    });
+
 class NotificationsRepository {
   NotificationsRepository(this._db);
+
+  Stream<List<InboxItem>> watchInbox(String uid) => _user(uid)
+      .collection('notifications')
+      .orderBy('at', descending: true)
+      .limit(100)
+      .snapshots()
+      .map(
+        (s) => [
+          for (final d in s.docs)
+            (
+              id: d.id,
+              kind: d.data()['kind'] as String? ?? '',
+              title: d.data()['title'] as String? ?? '',
+              body: d.data()['body'] as String? ?? '',
+              at: (d.data()['at'] as Timestamp?)?.toDate(),
+              targets: {
+                for (final k in const [
+                  'reportId',
+                  'societyId',
+                  'noticeId',
+                  'claimId',
+                  'channelId',
+                  'postId',
+                ])
+                  if (d.data()[k] case final String v when v.isNotEmpty) k: v,
+              },
+            ),
+        ],
+      );
 
   final FirebaseFirestore _db;
 

@@ -1,10 +1,13 @@
 import 'dart:async';
 
+import 'package:fixburgh/app/remote_config.dart';
 import 'package:fixburgh/app/router.dart';
 import 'package:fixburgh/app/theme/app_colors.dart';
 import 'package:fixburgh/features/auth/auth_repository.dart';
+import 'package:fixburgh/features/notifications/inbox_screen.dart';
 import 'package:fixburgh/features/society/data/society_repository.dart';
 import 'package:fixburgh/features/society/domain/society.dart';
+import 'package:fixburgh/features/society/presentation/channels_tab.dart';
 import 'package:fixburgh/features/society/presentation/society_widgets.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +34,10 @@ class SocietyHome extends ConsumerWidget {
     if (society == null || me == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
+    final channels = ref.watch(featureFlagsProvider).channels;
+    final unseen = ref.watch(inboxUnseenProvider);
     final tabs = [
+      if (channels) Tab(text: l10n.tabChannels),
       Tab(text: l10n.tabNotices),
       Tab(text: l10n.tabDocs),
       if (isAdmin) Tab(text: l10n.tabMembers),
@@ -46,6 +52,17 @@ class SocietyHome extends ConsumerWidget {
         appBar: AppBar(
           centerTitle: false,
           title: _Switcher(society: society, me: me),
+          actions: [
+            IconButton(
+              tooltip: l10n.inboxTitle,
+              icon: Badge(
+                isLabelVisible: unseen > 0,
+                label: Text('$unseen'),
+                child: const Icon(Icons.notifications_outlined),
+              ),
+              onPressed: () => context.push(Routes.inbox),
+            ),
+          ],
           bottom: TabBar(
             tabs: tabs,
             labelStyle: const TextStyle(fontWeight: FontWeight.w700),
@@ -84,6 +101,7 @@ class SocietyHome extends ConsumerWidget {
             Expanded(
               child: TabBarView(
                 children: [
+                  if (channels) ChannelsTab(societyId: societyId, me: me),
                   _NoticesTab(societyId: societyId, me: me),
                   _DocsTab(societyId: societyId, me: me),
                   if (isAdmin) MembersTab(societyId: societyId, me: me),
