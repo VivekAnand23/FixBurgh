@@ -23,7 +23,7 @@ void main() {
   });
 
   test('reads a society document', () {
-    final s = Society.fromDoc('abc', {
+    final s = Society.fromDoc('abc', const {
       'name': 'Maple Court HOA',
       'address': '1200 Maple Ct, Pittsburgh, PA',
       'lat': 40.44,
@@ -112,11 +112,11 @@ void main() {
     expect(
       societySummary(
         l10n,
-        Society(
+        const Society(
           id: 's',
           name: 'Maple',
           address: '1200 Maple Ct, Pittsburgh, PA',
-          location: const GeoPoint(0, 0),
+          location: GeoPoint(0, 0),
           units: 84,
         ),
         distanceM: 60,

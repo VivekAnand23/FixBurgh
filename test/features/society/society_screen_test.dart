@@ -193,7 +193,7 @@ void main() {
         guest: false,
         flag: true,
         societies: ['s1'],
-        me: Membership.fromDoc('me', {'role': 'member', 'status': 'approved'}),
+        me: Membership.fromDoc('me', const {'role': 'member', 'status': 'approved'}),
         notices: [
           SocietyNotice(
             id: 'n1',
@@ -227,7 +227,7 @@ void main() {
         guest: false,
         flag: true,
         societies: ['s1'],
-        me: Membership.fromDoc('me', {'role': 'admin', 'status': 'approved'}),
+        me: Membership.fromDoc('me', const {'role': 'admin', 'status': 'approved'}),
       );
       expect(find.text('Manage'), findsOneWidget);
       expect(find.text('1'), findsOneWidget);
@@ -242,9 +242,9 @@ void main() {
       guest: false,
       flag: true,
       home: const ManageScreen(societyId: 's1'),
-      me: Membership.fromDoc('me', {'role': 'admin', 'status': 'approved'}),
+      me: Membership.fromDoc('me', const {'role': 'admin', 'status': 'approved'}),
       members: [
-        Membership.fromDoc('pat', {
+        Membership.fromDoc('pat', const {
           'role': 'member',
           'status': 'pending',
           'unit': '2C',
@@ -278,7 +278,7 @@ void main() {
         guest: false,
         flag: true,
         societies: societies,
-        me: Membership.fromDoc('me', {'role': 'admin', 'status': 'approved'}),
+        me: Membership.fromDoc('me', const {'role': 'admin', 'status': 'approved'}),
         searchResults: const [(society: _maple, distanceM: 60)],
       );
       await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
