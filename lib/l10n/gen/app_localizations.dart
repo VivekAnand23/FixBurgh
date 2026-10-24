@@ -271,7 +271,7 @@ abstract class AppLocalizations {
   /// No description provided for @accountGateBody.
   ///
   /// In en, this message translates to:
-  /// **'This needs an account. Sign in with Apple, Google or email, and anything you reported as a guest moves to your account.'**
+  /// **'This needs an account. When you sign in, anything you reported as a guest moves to your account.'**
   String get accountGateBody;
 
   /// No description provided for @accountGateSignIn.

@@ -29,7 +29,7 @@
   "societySignedInNote": "You're signed in. We'll let you know when societies open.",
   "societyFindBody": "Find your society by address or name.",
   "accountGateTitle": "Sign in to continue",
-  "accountGateBody": "This needs an account. Sign in with Apple, Google or email, and anything you reported as a guest moves to your account.",
+  "accountGateBody": "This needs an account. When you sign in, anything you reported as a guest moves to your account.",
   "accountGateSignIn": "Sign in",
   "accountGateNotNow": "Not now",
   "myReportsEmpty": "You haven't reported anything yet.",

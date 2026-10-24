@@ -103,7 +103,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accountGateBody =>
-      'This needs an account. Sign in with Apple, Google or email, and anything you reported as a guest moves to your account.';
+      'This needs an account. When you sign in, anything you reported as a guest moves to your account.';
 
   @override
   String get accountGateSignIn => 'Sign in';
