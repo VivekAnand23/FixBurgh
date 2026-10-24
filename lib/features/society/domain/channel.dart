@@ -170,8 +170,7 @@ List<(Comment comment, bool isReply)> threadComments(List<Comment> comments) {
   return [
     for (final t in tops) ...[
       (t, false),
-      for (final r in (replies[t.id] ?? const <Comment>[])..sort(byTime))
-        (r, true),
+      for (final r in [...?replies[t.id]]..sort(byTime)) (r, true),
     ],
   ];
 }
