@@ -1,22 +1,22 @@
-# Society admin verification (draft, pending approval)
+# Society admin verification
 
-Burghood Phase 1. This is the wording the app and the privacy policy use
-for checking that the person creating a society runs it. **Every block
-below is a draft for Vivek's approval.** Change the text here and in the
-places listed, then remove the "pending" markers.
+Burghood Phase 1. The wording the app and the privacy policy use for
+checking that the person creating a society runs it. Approved by Vivek on
+24 October 2026. Where it appears:
 
 | Where | File |
 |---|---|
-| Create a society, "Your documents" box | `lib/l10n/app_en.arb` key `verificationRequirements` (dev builds show a "Draft wording" chip next to it) |
+| Create a society, "Your documents" box | `lib/l10n/app_en.arb` key `verificationRequirements` |
 | Find your society, "Create a society" card | `createSocietyNeeds` |
 | Claim status screen | `claimFilesNote`, `claimStepReviewBody` |
-| Privacy policy | `hosting/public/privacy.html`, the "Societies" and "Verifying society admins" sections and the retention line (marked PENDING APPROVAL) |
+| Privacy policy | `hosting/public/privacy.html`, the "Societies" and "Verifying society admins" sections and the retention line |
 | Console reviewer note | `hosting/public/admin/index.html`, Claims section |
 
 ## What the applicant sees
 
 > We need two documents.
-> 1. A government photo ID: a driver's license, state ID or passport, with
+> 1. A government photo ID: a driver's license, state ID, passport or
+>    passport card, or military ID, with
 >    your name and photo easy to read.
 > 2. Proof of office that names you and the society: a board resolution,
 >    election minutes, or a management agreement.
@@ -57,11 +57,12 @@ Suggested rejection reasons (typed by the reviewer, shown to the applicant):
   reviewer) is kept while the society exists. Deleting your account deletes
   your claims and any remaining files.
 
-## Open questions for approval
+## Decisions (24 Oct 2026)
 
-1. Is 30 days after the decision the right retention, or should rejected
-   claims' files go sooner (for example 7 days)? It's one setting:
-   `CLAIM_FILE_RETENTION_DAYS` in the functions' environment.
-2. Should a property manager's claim also need a letter from the board, or
-   is the management agreement enough?
-3. Accept a passport card or military ID as photo ID?
+1. **Retention:** 30 days after the decision for both approved and rejected
+   claims, so a rejected applicant can ask what was wrong while the files
+   still exist. One setting, `CLAIM_FILE_RETENTION_DAYS`, if this changes.
+2. **Property managers:** the management agreement naming them and the
+   society is enough; no separate board letter.
+3. **Photo ID:** a passport card or military ID is accepted as well as a
+   driver's license, state ID or passport.

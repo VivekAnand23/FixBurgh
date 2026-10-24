@@ -202,7 +202,6 @@ class _CreateSocietyScreenState extends ConsumerState<CreateSocietyScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final isDev = ref.watch(flavorProvider).isDev;
     String? required(String? v) =>
         (v ?? '').trim().isEmpty ? l10n.requiredField : null;
     String? url(String? v) =>
@@ -323,12 +322,7 @@ class _CreateSocietyScreenState extends ConsumerState<CreateSocietyScreen> {
               validator: url,
             ),
             const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(child: _Section(l10n.sectionDocuments)),
-                if (isDev) const _DraftChip(),
-              ],
-            ),
+            _Section(l10n.sectionDocuments),
             InfoBox(text: l10n.verificationRequirements),
             const SizedBox(height: 12),
             _FileRow(
@@ -403,17 +397,6 @@ class _Section extends StatelessWidget {
         context,
       ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
     ),
-  );
-}
-
-/// Marks wording that still needs the owner's approval (dev builds only).
-class _DraftChip extends StatelessWidget {
-  const _DraftChip();
-
-  @override
-  Widget build(BuildContext context) => Chip(
-    visualDensity: VisualDensity.compact,
-    label: Text(AppLocalizations.of(context).draftWording),
   );
 }
 

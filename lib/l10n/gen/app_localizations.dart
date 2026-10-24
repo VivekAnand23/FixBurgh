@@ -2617,14 +2617,8 @@ abstract class AppLocalizations {
   /// No description provided for @verificationRequirements.
   ///
   /// In en, this message translates to:
-  /// **'We need two documents.\n1. A government photo ID: a driver\'s license, state ID or passport, with your name and photo easy to read.\n2. Proof of office that names you and the society: a board resolution, election minutes, or a management agreement.\nPhotos or PDFs, up to 5 MB each. The name on both must match.'**
+  /// **'We need two documents.\n1. A government photo ID: a driver\'s license, state ID, passport or passport card, or military ID, with your name and photo easy to read.\n2. Proof of office that names you and the society: a board resolution, election minutes, or a management agreement.\nPhotos or PDFs, up to 5 MB each. The name on both must match.'**
   String get verificationRequirements;
-
-  /// No description provided for @draftWording.
-  ///
-  /// In en, this message translates to:
-  /// **'Draft wording'**
-  String get draftWording;
 
   /// No description provided for @photoId.
   ///
@@ -2635,7 +2629,7 @@ abstract class AppLocalizations {
   /// No description provided for @photoIdHelp.
   ///
   /// In en, this message translates to:
-  /// **'Driver\'s license, state ID or passport'**
+  /// **'Driver\'s license, state ID, passport or military ID'**
   String get photoIdHelp;
 
   /// No description provided for @proofOfOffice.
