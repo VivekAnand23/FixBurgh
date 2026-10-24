@@ -74,7 +74,10 @@ async function seed(id, data) {
 
 before(async () => {
   env = await initializeTestEnvironment({
-    projectId: 'demo-fixburgh',
+    // A project of its own, so these writes don't fire the functions
+    // emulator's triggers (which only watch demo-fixburgh) and leave a
+    // backlog that slows the function tests that run after.
+    projectId: 'demo-fixburgh-rules',
     firestore: { rules: readFileSync('../firestore.rules', 'utf8') },
   });
 });
