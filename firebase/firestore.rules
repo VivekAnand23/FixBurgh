@@ -227,6 +227,7 @@ service cloud.firestore {
       allow read, delete: if signedIn() && request.auth.uid == uid;
       allow create, update: if signedIn() && request.auth.uid == uid
         && !request.resource.data.keys().hasAny(['role'])
+        && unchangedField('societyIds')
         && validNotifySettings(request.resource.data);
 
       // Push tokens, one per device (BRD FR-NTF-02).
@@ -259,9 +260,10 @@ service cloud.firestore {
     // Notification choices and quiet hours (BRD FR-NTF-05).
     function validNotifySettings(d) {
       return (!('notify' in d) || (d.notify is map
-          && d.notify.keys().hasOnly(['status', 'nearby'])
+          && d.notify.keys().hasOnly(['status', 'nearby', 'notices'])
           && d.notify.get('status', true) is bool
-          && d.notify.get('nearby', true) is bool))
+          && d.notify.get('nearby', true) is bool
+          && d.notify.get('notices', true) is bool))
         && (!('quietHours' in d) || (d.quietHours is map
           && d.quietHours.keys().hasOnly(['enabled', 'start', 'end'])
           && d.quietHours.enabled is bool
@@ -269,6 +271,14 @@ service cloud.firestore {
           && d.quietHours.end is int && d.quietHours.end >= 0 && d.quietHours.end < 1440))
         && (!('utcOffsetMinutes' in d) || (d.utcOffsetMinutes is int
           && d.utcOffsetMinutes >= -840 && d.utcOffsetMinutes <= 840));
+    }
+
+    // [field] is left as it was (absent stays absent). For fields only Cloud
+    // Functions write, like users.societyIds.
+    function unchangedField(field) {
+      return resource == null
+        ? !(field in request.resource.data)
+        : request.resource.data.get(field, null) == resource.data.get(field, null);
     }
 
     function validPlace(p) {
@@ -282,18 +292,132 @@ service cloud.firestore {
         && p.updatedAt == request.time;
     }
 
-    // Burghood collections (Phase 0 skeleton). Closed to everyone but
-    // platform admins, who can read them from the web console. Each phase
-    // opens what its features need, with tests. Writes go through Cloud
-    // Functions or the console until then.
-    match /societies/{societyId} {
-      allow read: if isPlatformAdmin();
+    // ---- Burghood societies (Phase 1) ----
+
+    function fullAccount() {
+      return signedIn() && request.auth.token.firebase.sign_in_provider != 'anonymous';
+    }
+
+    function memberPath(sid, uid) {
+      return /databases/$(database)/documents/societies/$(sid)/members/$(uid);
+    }
+
+    // The caller's approved membership of [sid] has one of [roles].
+    function hasRole(sid, roles) {
+      let path = memberPath(sid, request.auth.uid);
+      return signedIn() && exists(path)
+        && get(path).data.status == 'approved'
+        && get(path).data.role in roles;
+    }
+
+    function isMember(sid) {
+      return hasRole(sid, ['member', 'committee', 'admin']);
+    }
+
+    function isSocietyAdmin(sid) {
+      return hasRole(sid, ['admin']);
+    }
+
+    function canPostNotices(sid) {
+      return hasRole(sid, ['committee', 'admin']);
+    }
+
+    function httpsUrl(u) {
+      return u is string && u.size() <= 500 && (u == '' || u.matches('https://.+'));
+    }
+
+    // Created only by the decideClaim function once a platform admin has
+    // checked the claim. Active societies are listed in search for anyone
+    // with an account; everything inside one is for its members.
+    match /societies/{sid} {
+      allow read: if (fullAccount() && resource.data.status == 'active')
+        || isMember(sid) || isPlatformAdmin();
       allow write: if false;
 
       match /members/{uid} {
-        allow read: if isPlatformAdmin();
+        allow read: if (signedIn() && request.auth.uid == uid)
+          || isMember(sid) || isPlatformAdmin();
+
+        // Asking to join: pending, as an ordinary member.
+        allow create: if fullAccount() && request.auth.uid == uid
+          && get(/databases/$(database)/documents/societies/$(sid)).data.status == 'active'
+          && request.resource.data.keys().hasOnly(
+               ['uid', 'unit', 'displayName', 'role', 'status', 'requestedAt'])
+          && request.resource.data.uid == uid
+          && request.resource.data.unit is string
+          && request.resource.data.unit.size() > 0 && request.resource.data.unit.size() <= 20
+          && request.resource.data.get('displayName', '') is string
+          && request.resource.data.get('displayName', '').size() <= 60
+          && request.resource.data.role == 'member'
+          && request.resource.data.status == 'pending'
+          && request.resource.data.requestedAt == request.time;
+
+        // Admins decide requests, change roles and remove members, but
+        // not their own membership, so a society always keeps an admin.
+        allow update: if isSocietyAdmin(sid) && request.auth.uid != uid
+          && request.resource.data.diff(resource.data).affectedKeys()
+               .hasOnly(['status', 'role', 'decidedAt', 'decidedBy'])
+          && request.resource.data.status in ['pending', 'approved', 'declined', 'removed']
+          && request.resource.data.role in ['member', 'committee', 'admin']
+          && request.resource.data.decidedBy == request.auth.uid
+          && request.resource.data.decidedAt == request.time;
+
+        // Leaving, or withdrawing a request. Admins hand over first.
+        allow delete: if signedIn() && request.auth.uid == uid
+          && resource.data.role != 'admin';
+      }
+
+      match /notices/{noticeId} {
+        allow read: if isMember(sid) || isPlatformAdmin();
+        allow create: if canPostNotices(sid)
+          && validNotice(sid, noticeId, request.resource.data)
+          && request.resource.data.authorUid == request.auth.uid
+          && request.resource.data.createdAt == request.time;
+        allow update: if (isSocietyAdmin(sid)
+            || (canPostNotices(sid) && resource.data.authorUid == request.auth.uid))
+          && request.resource.data.diff(resource.data).affectedKeys()
+               .hasOnly(['title', 'body', 'pinned', 'expiresAt', 'attachment', 'updatedAt'])
+          && validNotice(sid, noticeId, request.resource.data)
+          && request.resource.data.updatedAt == request.time;
+        allow delete: if isSocietyAdmin(sid)
+          || (canPostNotices(sid) && resource.data.authorUid == request.auth.uid);
+      }
+
+      match /documents/{docId} {
+        allow read: if isMember(sid) || isPlatformAdmin();
+        allow create: if isSocietyAdmin(sid)
+          && request.resource.data.keys().hasOnly(
+               ['title', 'category', 'path', 'fileName', 'sizeBytes', 'uploadedBy', 'createdAt'])
+          && request.resource.data.title is string
+          && request.resource.data.title.size() > 0 && request.resource.data.title.size() <= 100
+          && request.resource.data.category in ['bylaws', 'minutes', 'budget', 'rules', 'other']
+          && request.resource.data.path == 'societies/' + sid + '/documents/' + docId + '.pdf'
+          && request.resource.data.fileName is string && request.resource.data.fileName.size() <= 200
+          && request.resource.data.sizeBytes is int
+          && request.resource.data.uploadedBy == request.auth.uid
+          && request.resource.data.createdAt == request.time;
+        allow delete: if isSocietyAdmin(sid);
+      }
+
+      // HOA management company and the one account-section link. Links
+      // only; no balances or payment details.
+      match /hoa/{docId} {
+        allow read: if isMember(sid) || isPlatformAdmin();
+        allow write: if isSocietyAdmin(sid) && docId == 'info'
+          && request.resource.data.keys().hasOnly(['company', 'website', 'accountUrl', 'updatedAt'])
+          && request.resource.data.company is string && request.resource.data.company.size() <= 100
+          && httpsUrl(request.resource.data.website)
+          && httpsUrl(request.resource.data.accountUrl)
+          && request.resource.data.updatedAt == request.time;
+      }
+
+      // The current invite code, set by the regenerateInviteCode function.
+      match /private/{docId} {
+        allow read: if isSocietyAdmin(sid);
         allow write: if false;
       }
+
+      // Phase 2: community channels. Closed until then.
       match /channels/{channelId} {
         allow read: if isPlatformAdmin();
         allow write: if false;
@@ -317,25 +441,82 @@ service cloud.firestore {
           }
         }
       }
-      match /notices/{noticeId} {
-        allow read: if isPlatformAdmin();
-        allow write: if false;
-      }
-      match /documents/{documentId} {
-        allow read: if isPlatformAdmin();
-        allow write: if false;
-      }
-      match /hoa/{docId} {
-        allow read: if isPlatformAdmin();
-        allow write: if false;
-      }
     }
 
+    // Lets people list their own memberships and requests across
+    // societies (a collection group query on members where uid == theirs).
+    match /{path=**}/members/{memberId} {
+      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+
+    function validNotice(sid, noticeId, d) {
+      return d.keys().hasOnly(['title', 'body', 'pinned', 'expiresAt', 'attachment',
+                               'authorUid', 'authorName', 'createdAt', 'updatedAt'])
+        && d.title is string && d.title.size() > 0 && d.title.size() <= 100
+        && d.body is string && d.body.size() <= 2000
+        && d.pinned is bool
+        && (d.get('expiresAt', null) == null || d.expiresAt is timestamp)
+        && d.get('authorName', '') is string && d.get('authorName', '').size() <= 60
+        && (d.get('attachment', null) == null || (d.attachment is map
+            && d.attachment.keys().hasOnly(['path', 'name', 'contentType'])
+            && d.attachment.path.matches('societies/' + sid + '/notices/' + noticeId + '/.+')
+            && d.attachment.name is string && d.attachment.name.size() <= 200
+            && d.attachment.contentType in ['application/pdf', 'image/jpeg']));
+    }
+
+    // A request to become a society's first admin. The applicant uploads
+    // a photo ID and proof of office, then creates the claim; a platform
+    // admin decides it with the decideClaim function, which also writes
+    // the audit trail.
     match /societyClaims/{claimId} {
-      allow read: if isPlatformAdmin();
-      allow write: if false;
+      allow read: if (signedIn() && resource.data.applicantUid == request.auth.uid)
+        || isPlatformAdmin();
+      allow create: if fullAccount() && validClaim(claimId, request.resource.data);
+      allow update, delete: if false;
+
+      match /audit/{eventId} {
+        allow read: if isPlatformAdmin();
+        allow write: if false;
+      }
     }
 
+    function validClaim(claimId, d) {
+      let prefix = 'societyClaims/' + request.auth.uid + '/' + claimId + '/';
+      return d.keys().hasOnly(['applicantUid', 'applicantName', 'applicantEmail', 'society',
+                               'position', 'hoa', 'files', 'status', 'previousClaimId', 'createdAt'])
+        && d.applicantUid == request.auth.uid
+        && d.get('applicantName', '') is string && d.get('applicantName', '').size() <= 100
+        && d.get('applicantEmail', '') == request.auth.token.get('email', '')
+        && d.status == 'pending'
+        && d.createdAt == request.time
+        && d.get('previousClaimId', '') is string
+        && d.position in ['president', 'secretary', 'board_member', 'manager']
+        && d.society is map
+        && d.society.keys().hasOnly(['name', 'address', 'lat', 'lng', 'geohash',
+                                     'municipalityId', 'municipalityName', 'units'])
+        && d.society.name is string && d.society.name.size() >= 2 && d.society.name.size() <= 100
+        && d.society.address is string && d.society.address.size() <= 200
+        && inCounty(d.society)
+        && d.society.geohash is string && d.society.geohash.size() == 9
+        && d.society.municipalityId is string && d.society.municipalityId.size() > 0
+        && d.society.municipalityName is string
+        && d.society.units is int && d.society.units >= 2 && d.society.units <= 5000
+        && d.hoa is map
+        && d.hoa.keys().hasOnly(['company', 'website', 'accountUrl'])
+        && d.hoa.company is string && d.hoa.company.size() <= 100
+        && httpsUrl(d.hoa.website) && httpsUrl(d.hoa.accountUrl)
+        && d.files is map
+        && d.files.keys().hasOnly(['id', 'proof'])
+        && d.files.id is string && d.files.id.matches(prefix + 'id[.](jpg|png|pdf)')
+        && d.files.proof is string && d.files.proof.matches(prefix + 'proof[.](jpg|png|pdf)');
+    }
+
+    // Invite code to society lookup, used only by the joinWithCode function.
+    match /inviteCodes/{code} {
+      allow read, write: if false;
+    }
+
+    // Phases 3 and 4: closed to all but platform admins until then.
     match /serviceRequests/{requestId} {
       allow read: if isPlatformAdmin();
       allow write: if false;

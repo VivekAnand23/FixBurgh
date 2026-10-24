@@ -10,10 +10,15 @@ import {
   initializeTestEnvironment,
 } from '@firebase/rules-unit-testing';
 import {
+  collection,
+  collectionGroup,
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
   increment,
+  query,
+  where,
   serverTimestamp,
   setDoc,
   updateDoc,
@@ -398,30 +403,20 @@ describe('notification settings', () => {
   });
 });
 
-describe('Burghood collections', () => {
+describe('Burghood closed collections', () => {
   const paths = [
-    'societies/s1',
-    'societies/s1/members/alice',
     'societies/s1/channels/general',
     'societies/s1/channels/general/posts/p1',
     'societies/s1/channels/general/posts/p1/comments/c1',
     'societies/s1/channels/general/posts/p1/reactions/alice',
     'societies/s1/channels/general/posts/p1/comments/c1/reactions/alice',
-    'societies/s1/notices/n1',
-    'societies/s1/documents/d1',
-    'societies/s1/hoa/info',
-    'societyClaims/c1',
     'serviceRequests/r1',
     'providers/pr1',
     'providers/pr1/reviews/v1',
     'sponsorships/sp1',
     'payments/pay1',
+    'inviteCodes/ABCD2345',
   ];
-
-  const signedIn = (uid, claims = {}) =>
-    env
-      .authenticatedContext(uid, { firebase: { sign_in_provider: 'google.com' }, ...claims })
-      .firestore();
 
   beforeEach(async () => {
     await env.withSecurityRulesDisabled(async (ctx) => {
@@ -431,23 +426,344 @@ describe('Burghood collections', () => {
 
   for (const p of paths) {
     it(`denies ${p} to guests, residents and the public`, async () => {
-      for (const d of [db('guest'), signedIn('alice'), env.unauthenticatedContext().firestore()]) {
+      for (const d of [db('guest'), account('alice'), env.unauthenticatedContext().firestore()]) {
         await assertFails(getDoc(doc(d, p)));
         await assertFails(setDoc(doc(d, p), { name: 'y' }));
         await assertFails(deleteDoc(doc(d, p)));
       }
     });
-
-    it(`lets platform admins read ${p} but not write it`, async () => {
-      const admin = signedIn('admin', { platformAdmin: true });
-      await assertSucceeds(getDoc(doc(admin, p)));
-      await assertFails(setDoc(doc(admin, p), { name: 'y' }));
-      await assertFails(deleteDoc(doc(admin, p)));
-    });
   }
 
+  it('lets platform admins read them but not write them', async () => {
+    const admin = account('admin', { platformAdmin: true });
+    for (const p of paths.filter((x) => !x.startsWith('inviteCodes'))) {
+      await assertSucceeds(getDoc(doc(admin, p)));
+      await assertFails(setDoc(doc(admin, p), { name: 'y' }));
+    }
+    await assertFails(getDoc(doc(admin, 'inviteCodes/ABCD2345')));
+  });
+
   it('ignores a platformAdmin claim that is not exactly true', async () => {
-    await assertFails(getDoc(doc(signedIn('eve', { platformAdmin: 'true' }), 'payments/pay1')));
-    await assertFails(getDoc(doc(signedIn('mod', { role: 'admin' }), 'societyClaims/c1')));
+    await assertFails(getDoc(doc(account('eve', { platformAdmin: 'true' }), 'payments/pay1')));
+    await assertFails(getDoc(doc(account('mod', { role: 'admin' }), 'payments/pay1')));
+  });
+});
+
+/** A signed-in (non-guest) account, with extra token claims. */
+function account(uid, claims = {}) {
+  return env
+    .authenticatedContext(uid, {
+      email: `${uid}@example.com`,
+      firebase: { sign_in_provider: 'google.com' },
+      ...claims,
+    })
+    .firestore();
+}
+
+const SID = 's1';
+
+/** An active society with admin "ann", committee "cal", member "meg",
+ * pending "pat" and removed "rex". */
+async function seedSociety() {
+  await env.withSecurityRulesDisabled(async (ctx) => {
+    const f = ctx.firestore();
+    await setDoc(doc(f, `societies/${SID}`), {
+      name: 'Maple Court HOA', nameLower: 'maple court hoa', status: 'active', verified: true,
+      lat: 40.4406, lng: -79.9959, geohash: 'dppn59kd3', units: 84,
+    });
+    await setDoc(doc(f, 'societies/gone'), { name: 'Old', status: 'suspended' });
+    const m = (uid, role, status) =>
+      setDoc(doc(f, `societies/${SID}/members/${uid}`), { uid, unit: '1A', role, status });
+    await m('ann', 'admin', 'approved');
+    await m('cal', 'committee', 'approved');
+    await m('meg', 'member', 'approved');
+    await m('pat', 'member', 'pending');
+    await m('rex', 'member', 'removed');
+    await setDoc(doc(f, `societies/${SID}/notices/n1`), { title: 'Pool closed', authorUid: 'cal' });
+    await setDoc(doc(f, `societies/${SID}/documents/d1`), { title: 'Bylaws' });
+    await setDoc(doc(f, `societies/${SID}/hoa/info`), { company: 'Acme', website: '', accountUrl: '' });
+    await setDoc(doc(f, `societies/${SID}/private/invite`), { code: 'ABCD2345' });
+  });
+}
+
+const joinRequest = (uid, extra = {}) => ({
+  uid,
+  unit: '4B',
+  displayName: 'Nia',
+  role: 'member',
+  status: 'pending',
+  requestedAt: serverTimestamp(),
+  ...extra,
+});
+
+const notice = (authorUid, extra = {}) => ({
+  title: 'Water off Tuesday',
+  body: 'From 9 to 12 for repairs.',
+  pinned: true,
+  expiresAt: null,
+  attachment: null,
+  authorUid,
+  authorName: 'Ann',
+  createdAt: serverTimestamp(),
+  ...extra,
+});
+
+describe('societies', () => {
+  beforeEach(seedSociety);
+
+  it('lists active societies to anyone with an account, not guests', async () => {
+    const q = (d) => getDocs(query(collection(d, 'societies'), where('status', '==', 'active')));
+    await assertSucceeds(q(account('nia')));
+    await assertSucceeds(getDoc(doc(account('nia'), `societies/${SID}`)));
+    await assertFails(q(db('guest')));
+    await assertFails(getDoc(doc(env.unauthenticatedContext().firestore(), `societies/${SID}`)));
+    await assertFails(getDoc(doc(account('nia'), 'societies/gone')));
+  });
+
+  it('can only be created or changed by Cloud Functions', async () => {
+    await assertFails(setDoc(doc(account('nia'), 'societies/new'), { name: 'Mine', status: 'active' }));
+    await assertFails(updateDoc(doc(account('ann'), `societies/${SID}`), { name: 'Renamed' }));
+  });
+
+  it('keeps notices, documents and HOA links for approved members', async () => {
+    for (const p of ['notices/n1', 'documents/d1', 'hoa/info']) {
+      for (const uid of ['ann', 'cal', 'meg']) {
+        await assertSucceeds(getDoc(doc(account(uid), `societies/${SID}/${p}`)));
+      }
+      for (const uid of ['pat', 'rex', 'nia']) {
+        await assertFails(getDoc(doc(account(uid), `societies/${SID}/${p}`)));
+      }
+      await assertSucceeds(getDoc(doc(account('admin', { platformAdmin: true }), `societies/${SID}/${p}`)));
+    }
+  });
+
+  it('shows the member list to members, and their own request to applicants', async () => {
+    await assertSucceeds(getDocs(collection(account('meg'), `societies/${SID}/members`)));
+    await assertFails(getDocs(collection(account('nia'), `societies/${SID}/members`)));
+    await assertSucceeds(getDoc(doc(account('pat'), `societies/${SID}/members/pat`)));
+    await assertFails(getDoc(doc(account('pat'), `societies/${SID}/members/meg`)));
+  });
+
+  it('lets people list their own memberships across societies', async () => {
+    const mine = (d, uid) => getDocs(query(collectionGroup(d, 'members'), where('uid', '==', uid)));
+    await assertSucceeds(mine(account('pat'), 'pat'));
+    await assertFails(mine(account('pat'), 'meg'));
+  });
+
+  it('shows the invite code only to admins', async () => {
+    await assertSucceeds(getDoc(doc(account('ann'), `societies/${SID}/private/invite`)));
+    await assertFails(getDoc(doc(account('cal'), `societies/${SID}/private/invite`)));
+    await assertFails(setDoc(doc(account('ann'), `societies/${SID}/private/invite`), { code: 'X' }));
+  });
+});
+
+describe('joining a society', () => {
+  beforeEach(seedSociety);
+  const path = (uid, sid = SID) => `societies/${sid}/members/${uid}`;
+
+  it('lets an account ask to join with a unit number', async () => {
+    await assertSucceeds(setDoc(doc(account('nia'), path('nia')), joinRequest('nia')));
+  });
+
+  it('refuses guests, other people, approved requests and admin roles', async () => {
+    await assertFails(setDoc(doc(db('guest'), path('guest')), joinRequest('guest')));
+    await assertFails(setDoc(doc(account('nia'), path('ned')), joinRequest('ned')));
+    await assertFails(setDoc(doc(account('nia'), path('nia')), joinRequest('nia', { status: 'approved' })));
+    await assertFails(setDoc(doc(account('nia'), path('nia')), joinRequest('nia', { role: 'admin' })));
+    await assertFails(setDoc(doc(account('nia'), path('nia')), joinRequest('nia', { unit: '' })));
+    await assertFails(setDoc(doc(account('nia'), path('nia', 'gone')), joinRequest('nia')));
+  });
+
+  it('lets a member who is already in not change their own role', async () => {
+    await assertFails(updateDoc(doc(account('meg'), path('meg')), { role: 'admin' }));
+  });
+
+  const decide = (by, uid, data) =>
+    updateDoc(doc(account(by), path(uid)), {
+      decidedBy: by,
+      decidedAt: serverTimestamp(),
+      ...data,
+    });
+
+  it('lets admins approve, decline, promote and remove members', async () => {
+    await assertSucceeds(decide('ann', 'pat', { status: 'approved' }));
+    await assertSucceeds(decide('ann', 'meg', { role: 'committee' }));
+    await assertSucceeds(decide('ann', 'cal', { role: 'admin' }));
+    await assertSucceeds(decide('ann', 'meg', { status: 'removed' }));
+  });
+
+  it('keeps everyone else out of member decisions', async () => {
+    await assertFails(decide('cal', 'pat', { status: 'approved' }));
+    await assertFails(decide('meg', 'pat', { status: 'approved' }));
+    await assertFails(decide('pat', 'pat', { status: 'approved' }));
+    // Admins can't demote or remove themselves, so one always remains.
+    await assertFails(decide('ann', 'ann', { role: 'member' }));
+    await assertFails(decide('ann', 'pat', { status: 'owner' }));
+    await assertFails(decide('ann', 'pat', { unit: '9Z' }));
+  });
+
+  it('lets people leave, except admins', async () => {
+    await assertSucceeds(deleteDoc(doc(account('meg'), path('meg'))));
+    await assertSucceeds(deleteDoc(doc(account('pat'), path('pat'))));
+    await assertFails(deleteDoc(doc(account('ann'), path('ann'))));
+    await assertFails(deleteDoc(doc(account('ann'), path('cal'))));
+  });
+});
+
+describe('society notices, documents and HOA links', () => {
+  beforeEach(seedSociety);
+  const n = (id) => `societies/${SID}/notices/${id}`;
+
+  it('lets admins and committee members post notices', async () => {
+    await assertSucceeds(setDoc(doc(account('ann'), n('a')), notice('ann')));
+    await assertSucceeds(setDoc(doc(account('cal'), n('b')), notice('cal', { pinned: false })));
+    await assertSucceeds(
+      setDoc(doc(account('cal'), n('c')), notice('cal', {
+        attachment: { path: `societies/${SID}/notices/c/agenda.pdf`, name: 'agenda.pdf', contentType: 'application/pdf' },
+      })),
+    );
+  });
+
+  it('refuses notices from members, outsiders and in a bad shape', async () => {
+    await assertFails(setDoc(doc(account('meg'), n('a')), notice('meg')));
+    await assertFails(setDoc(doc(account('pat'), n('a')), notice('pat')));
+    await assertFails(setDoc(doc(account('cal'), n('a')), notice('ann')));
+    await assertFails(setDoc(doc(account('ann'), n('a')), notice('ann', { title: '' })));
+    await assertFails(setDoc(doc(account('ann'), n('a')), notice('ann', { body: 'x'.repeat(2001) })));
+    await assertFails(
+      setDoc(doc(account('ann'), n('a')), notice('ann', {
+        attachment: { path: 'societies/other/notices/a/x.pdf', name: 'x.pdf', contentType: 'application/pdf' },
+      })),
+    );
+  });
+
+  it('lets the author or an admin edit and delete a notice', async () => {
+    const edit = { title: 'Pool open', updatedAt: serverTimestamp() };
+    await env.withSecurityRulesDisabled((ctx) => setDoc(doc(ctx.firestore(), n('x')), {
+      title: 'Pool closed', body: '', pinned: false, expiresAt: null, attachment: null, authorUid: 'cal',
+    }));
+    await assertSucceeds(updateDoc(doc(account('cal'), n('x')), edit));
+    await assertSucceeds(updateDoc(doc(account('ann'), n('x')), edit));
+    await assertFails(updateDoc(doc(account('meg'), n('x')), edit));
+    await assertFails(updateDoc(doc(account('cal'), n('x')), { authorUid: 'meg', updatedAt: serverTimestamp() }));
+    await assertFails(deleteDoc(doc(account('meg'), n('x'))));
+    await assertSucceeds(deleteDoc(doc(account('ann'), n('x'))));
+  });
+
+  const document = (extra = {}) => ({
+    title: 'Bylaws 2026',
+    category: 'bylaws',
+    path: `societies/${SID}/documents/d2.pdf`,
+    fileName: 'bylaws.pdf',
+    sizeBytes: 1234,
+    uploadedBy: 'ann',
+    createdAt: serverTimestamp(),
+    ...extra,
+  });
+
+  it('lets only admins add and remove documents', async () => {
+    const p = `societies/${SID}/documents/d2`;
+    await assertFails(setDoc(doc(account('cal'), p), document({ uploadedBy: 'cal' })));
+    await assertFails(setDoc(doc(account('ann'), p), document({ category: 'secret' })));
+    await assertFails(setDoc(doc(account('ann'), p), document({ path: 'elsewhere/d2.pdf' })));
+    await assertSucceeds(setDoc(doc(account('ann'), p), document()));
+    await assertFails(deleteDoc(doc(account('meg'), p)));
+    await assertSucceeds(deleteDoc(doc(account('ann'), p)));
+  });
+
+  it('lets only admins edit the HOA links, which must be https', async () => {
+    const p = `societies/${SID}/hoa/info`;
+    const hoa = (extra = {}) => ({
+      company: 'Acme Management',
+      website: 'https://acme.example.com',
+      accountUrl: 'https://acme.example.com/account',
+      updatedAt: serverTimestamp(),
+      ...extra,
+    });
+    await assertSucceeds(setDoc(doc(account('ann'), p), hoa()));
+    await assertFails(setDoc(doc(account('cal'), p), hoa()));
+    await assertFails(setDoc(doc(account('ann'), p), hoa({ accountUrl: 'javascript:alert(1)' })));
+    await assertFails(setDoc(doc(account('ann'), p), hoa({ balance: 120 })));
+    await assertFails(setDoc(doc(account('ann'), `societies/${SID}/hoa/other`), hoa()));
+  });
+});
+
+describe('society claims', () => {
+  const claim = (uid, id, extra = {}) => ({
+    applicantUid: uid,
+    applicantName: 'Ann Lee',
+    applicantEmail: `${uid}@example.com`,
+    society: {
+      name: 'Maple Court HOA',
+      address: '1200 Maple Ct, Pittsburgh, PA',
+      lat: 40.4406,
+      lng: -79.9959,
+      geohash: 'dppn59kd3',
+      municipalityId: '100',
+      municipalityName: 'City of Pittsburgh',
+      units: 84,
+    },
+    position: 'president',
+    hoa: { company: 'Acme', website: 'https://acme.example.com', accountUrl: '' },
+    files: {
+      id: `societyClaims/${uid}/${id}/id.jpg`,
+      proof: `societyClaims/${uid}/${id}/proof.pdf`,
+    },
+    status: 'pending',
+    createdAt: serverTimestamp(),
+    ...extra,
+  });
+  const at = (id) => `societyClaims/${id}`;
+
+  it('lets an account file a claim for a society in the county', async () => {
+    await assertSucceeds(setDoc(doc(account('ann'), at('c1')), claim('ann', 'c1')));
+  });
+
+  it('refuses claims from guests, for others, decided or outside the county', async () => {
+    await assertFails(setDoc(doc(db('guest'), at('c1')), claim('guest', 'c1', { applicantEmail: '' })));
+    await assertFails(setDoc(doc(account('ann'), at('c1')), claim('bob', 'c1')));
+    await assertFails(setDoc(doc(account('ann'), at('c1')), claim('ann', 'c1', { status: 'approved' })));
+    await assertFails(setDoc(doc(account('ann'), at('c1')), claim('ann', 'c1', { position: 'tenant' })));
+    await assertFails(setDoc(doc(account('ann'), at('c1')), claim('ann', 'c1', { applicantEmail: 'x@example.com' })));
+    const far = claim('ann', 'c1');
+    far.society = { ...far.society, lat: 39.95, lng: -75.16 }; // Philadelphia
+    await assertFails(setDoc(doc(account('ann'), at('c1')), far));
+    // Files must sit in the applicant's own folder for this claim.
+    await assertFails(
+      setDoc(doc(account('ann'), at('c1')), claim('ann', 'c1', {
+        files: { id: 'societyClaims/bob/c1/id.jpg', proof: 'societyClaims/ann/c1/proof.pdf' },
+      })),
+    );
+  });
+
+  it('shows a claim to its applicant and platform admins only', async () => {
+    await env.withSecurityRulesDisabled((ctx) => setDoc(doc(ctx.firestore(), at('c2')), claim('ann', 'c2')));
+    await assertSucceeds(getDoc(doc(account('ann'), at('c2'))));
+    await assertSucceeds(getDoc(doc(account('admin', { platformAdmin: true }), at('c2'))));
+    await assertFails(getDoc(doc(account('bob'), at('c2'))));
+    await assertSucceeds(getDocs(query(collection(account('ann'), 'societyClaims'), where('applicantUid', '==', 'ann'))));
+  });
+
+  it('lets nobody decide or edit a claim from the app', async () => {
+    await env.withSecurityRulesDisabled((ctx) => setDoc(doc(ctx.firestore(), at('c3')), claim('ann', 'c3')));
+    await assertFails(updateDoc(doc(account('ann'), at('c3')), { status: 'approved' }));
+    await assertFails(updateDoc(doc(account('admin', { platformAdmin: true }), at('c3')), { status: 'approved' }));
+    await assertFails(deleteDoc(doc(account('ann'), at('c3'))));
+    await assertFails(setDoc(doc(account('admin', { platformAdmin: true }), `${at('c3')}/audit/e1`), { action: 'x' }));
+    await assertSucceeds(getDocs(collection(account('admin', { platformAdmin: true }), `${at('c3')}/audit`)));
+    await assertFails(getDocs(collection(account('ann'), `${at('c3')}/audit`)));
+  });
+});
+
+describe('profile society list', () => {
+  it('is written only by Cloud Functions', async () => {
+    await assertFails(setDoc(doc(account('nia'), 'users/nia'), { societyIds: ['s1'] }));
+    await env.withSecurityRulesDisabled((ctx) =>
+      setDoc(doc(ctx.firestore(), 'users/nia'), { societyIds: ['s1'] }),
+    );
+    await assertSucceeds(
+      setDoc(doc(account('nia'), 'users/nia'), { notify: { status: true, notices: false } }, { merge: true }),
+    );
+    await assertFails(updateDoc(doc(account('nia'), 'users/nia'), { societyIds: ['s1', 's2'] }));
   });
 });
