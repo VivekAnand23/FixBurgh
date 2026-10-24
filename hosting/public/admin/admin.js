@@ -160,14 +160,11 @@ async function openClaim(id) {
   if (c.status === 'pending') {
     const reason = el('textarea', { id: 'reason', rows: 3, maxlength: 500, placeholder: 'Reason (required to reject; shown to the applicant)' });
     const error = el('p', { class: 'error', hidden: true });
+    const busy = el('p', { class: 'meta', hidden: true }, 'Saving…');
     const run = async (decision) => {
-      if (decision === 'reject' && !reason.value.trim()) {
-        error.textContent = 'Say why, so the applicant can fix it.';
-        error.hidden = false;
-        return;
-      }
-      if (decision === 'approve' && !confirm(`Approve ${s.name}? It goes live and ${c.applicantName || 'the applicant'} becomes its admin.`)) return;
       for (const b of decide.querySelectorAll('button')) b.disabled = true;
+      error.hidden = true;
+      busy.hidden = false;
       try {
         await httpsCallable(functions, 'decideClaim')({ claimId: id, decision, reason: reason.value });
         dialog.close();
@@ -175,20 +172,42 @@ async function openClaim(id) {
       } catch (e) {
         error.textContent = e.message;
         error.hidden = false;
+        busy.hidden = true;
         for (const b of decide.querySelectorAll('button')) b.disabled = false;
       }
     };
-    decide.append(
-      el('h3', {}, 'Decision'),
-      reason,
-      error,
-      el(
-        'div',
-        { class: 'actions' },
-        el('button', { type: 'button', class: 'primary', onclick: () => run('approve') }, 'Approve'),
-        el('button', { type: 'button', class: 'danger', onclick: () => run('reject') }, 'Reject'),
-      ),
-    );
+    // Confirms in the page, not with window.confirm(), which some browsers
+    // and in-app web views block without showing anything.
+    const actions = el('div', { class: 'actions' });
+    const choose = () =>
+      actions.replaceChildren(
+        el('button', { type: 'button', class: 'primary', onclick: () => ask('approve') }, 'Approve'),
+        el('button', { type: 'button', class: 'danger', onclick: () => ask('reject') }, 'Reject'),
+      );
+    const ask = (decision) => {
+      if (decision === 'reject' && !reason.value.trim()) {
+        error.textContent = 'Say why, so the applicant can fix it.';
+        error.hidden = false;
+        reason.focus();
+        return;
+      }
+      error.hidden = true;
+      const question =
+        decision === 'approve'
+          ? `Approve ${s.name}? It goes live and ${c.applicantName || 'the applicant'} becomes its admin.`
+          : `Reject ${s.name}? ${c.applicantName || 'The applicant'} sees your reason.`;
+      actions.replaceChildren(
+        el('p', { class: 'confirm' }, question),
+        el(
+          'button',
+          { type: 'button', class: decision === 'approve' ? 'primary' : 'danger', onclick: () => run(decision) },
+          decision === 'approve' ? 'Yes, approve' : 'Yes, reject',
+        ),
+        el('button', { type: 'button', onclick: choose }, 'Cancel'),
+      );
+    };
+    choose();
+    decide.append(el('h3', {}, 'Decision'), reason, error, actions, busy);
   } else {
     decide.append(
       ...[
