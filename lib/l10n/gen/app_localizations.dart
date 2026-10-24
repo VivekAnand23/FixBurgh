@@ -97,7 +97,7 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
-  /// **'FixBurgh'**
+  /// **'Burghood'**
   String get appTitle;
 
   /// No description provided for @navMap.
@@ -127,7 +127,7 @@ abstract class AppLocalizations {
   /// No description provided for @notForEmergencies.
   ///
   /// In en, this message translates to:
-  /// **'FixBurgh is not monitored for emergencies. Call 911.'**
+  /// **'Burghood is not monitored for emergencies. Call 911.'**
   String get notForEmergencies;
 
   /// No description provided for @comingSoon.
@@ -139,7 +139,7 @@ abstract class AppLocalizations {
   /// No description provided for @welcomeTitle.
   ///
   /// In en, this message translates to:
-  /// **'Spot it. Snap it. FixBurgh.'**
+  /// **'Spot it. Snap it. Get it fixed.'**
   String get welcomeTitle;
 
   /// No description provided for @welcomeBody.
@@ -193,7 +193,7 @@ abstract class AppLocalizations {
   /// No description provided for @ageBlockedTitle.
   ///
   /// In en, this message translates to:
-  /// **'Sorry, you can\'t use FixBurgh yet'**
+  /// **'Sorry, you can\'t use Burghood yet'**
   String get ageBlockedTitle;
 
   /// No description provided for @ageBlockedBody.
@@ -235,7 +235,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileGuest.
   ///
   /// In en, this message translates to:
-  /// **'You\'re using FixBurgh as a guest'**
+  /// **'You\'re using Burghood as a guest'**
   String get profileGuest;
 
   /// No description provided for @profileGuestBody.
@@ -529,7 +529,7 @@ abstract class AppLocalizations {
   /// No description provided for @emergencyBody.
   ///
   /// In en, this message translates to:
-  /// **'This needs emergency responders. FixBurgh reports are not monitored for emergencies. Stay back from wires and water.'**
+  /// **'This needs emergency responders. Burghood reports are not monitored for emergencies. Stay back from wires and water.'**
   String get emergencyBody;
 
   /// No description provided for @call911.
@@ -613,7 +613,7 @@ abstract class AppLocalizations {
   /// No description provided for @outsideCounty.
   ///
   /// In en, this message translates to:
-  /// **'This spot is outside Allegheny County. FixBurgh only covers Allegheny County for now.'**
+  /// **'This spot is outside Allegheny County. Burghood only covers Allegheny County for now.'**
   String get outsideCounty;
 
   /// No description provided for @useMyLocation.
@@ -1027,13 +1027,13 @@ abstract class AppLocalizations {
   /// No description provided for @summaryFooter.
   ///
   /// In en, this message translates to:
-  /// **'Reported with FixBurgh, a free community app for Allegheny County.'**
+  /// **'Reported with Burghood, a free community app for Allegheny County.'**
   String get summaryFooter;
 
   /// No description provided for @emailSubject.
   ///
   /// In en, this message translates to:
-  /// **'[FixBurgh] {category} ({severity}) at {place}'**
+  /// **'[Burghood] {category} ({severity}) at {place}'**
   String emailSubject(String category, String severity, String place);
 
   /// No description provided for @nowTellThem.
@@ -1699,7 +1699,7 @@ abstract class AppLocalizations {
   /// No description provided for @dataSourcesIntro.
   ///
   /// In en, this message translates to:
-  /// **'FixBurgh works out who fixes what from public open data, bundled in the app so it works offline.'**
+  /// **'Burghood works out who fixes what from public open data, bundled in the app so it works offline.'**
   String get dataSourcesIntro;
 
   /// No description provided for @dataSourcesDirectory.
@@ -1717,7 +1717,7 @@ abstract class AppLocalizations {
   /// No description provided for @dataSourcesDisclaimer.
   ///
   /// In en, this message translates to:
-  /// **'Road ownership data can be out of date. FixBurgh is not affiliated with Allegheny County, PennDOT or any municipality.'**
+  /// **'Road ownership data can be out of date. Burghood is not affiliated with Allegheny County, PennDOT or any municipality.'**
   String get dataSourcesDisclaimer;
 
   /// No description provided for @safetyCompact.
@@ -1819,7 +1819,7 @@ abstract class AppLocalizations {
   /// No description provided for @stillOffline.
   ///
   /// In en, this message translates to:
-  /// **'Still can\'t reach FixBurgh. We\'ll keep trying.'**
+  /// **'Still can\'t reach Burghood. We\'ll keep trying.'**
   String get stillOffline;
 
   /// No description provided for @cancelReport.
@@ -1885,7 +1885,7 @@ abstract class AppLocalizations {
   /// No description provided for @pushBlocked.
   ///
   /// In en, this message translates to:
-  /// **'Notifications are blocked. Turn them on for FixBurgh in your phone\'s settings.'**
+  /// **'Notifications are blocked. Turn them on for Burghood in your phone\'s settings.'**
   String get pushBlocked;
 
   /// No description provided for @notifyStatus.

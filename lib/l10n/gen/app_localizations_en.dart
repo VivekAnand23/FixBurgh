@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'FixBurgh';
+  String get appTitle => 'Burghood';
 
   @override
   String get navMap => 'Map';
@@ -25,13 +25,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notForEmergencies =>
-      'FixBurgh is not monitored for emergencies. Call 911.';
+      'Burghood is not monitored for emergencies. Call 911.';
 
   @override
   String get comingSoon => 'Coming soon';
 
   @override
-  String get welcomeTitle => 'Spot it. Snap it. FixBurgh.';
+  String get welcomeTitle => 'Spot it. Snap it. Get it fixed.';
 
   @override
   String get welcomeBody =>
@@ -60,7 +60,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ageContinue => 'Continue';
 
   @override
-  String get ageBlockedTitle => 'Sorry, you can\'t use FixBurgh yet';
+  String get ageBlockedTitle => 'Sorry, you can\'t use Burghood yet';
 
   @override
   String get ageBlockedBody =>
@@ -82,7 +82,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileTitle => 'Profile';
 
   @override
-  String get profileGuest => 'You\'re using FixBurgh as a guest';
+  String get profileGuest => 'You\'re using Burghood as a guest';
 
   @override
   String get profileGuestBody =>
@@ -247,7 +247,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get emergencyBody =>
-      'This needs emergency responders. FixBurgh reports are not monitored for emergencies. Stay back from wires and water.';
+      'This needs emergency responders. Burghood reports are not monitored for emergencies. Stay back from wires and water.';
 
   @override
   String get call911 => 'Call 911';
@@ -298,7 +298,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get outsideCounty =>
-      'This spot is outside Allegheny County. FixBurgh only covers Allegheny County for now.';
+      'This spot is outside Allegheny County. Burghood only covers Allegheny County for now.';
 
   @override
   String get useMyLocation => 'Use my location';
@@ -534,11 +534,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get summaryFooter =>
-      'Reported with FixBurgh, a free community app for Allegheny County.';
+      'Reported with Burghood, a free community app for Allegheny County.';
 
   @override
   String emailSubject(String category, String severity, String place) {
-    return '[FixBurgh] $category ($severity) at $place';
+    return '[Burghood] $category ($severity) at $place';
   }
 
   @override
@@ -965,7 +965,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dataSourcesIntro =>
-      'FixBurgh works out who fixes what from public open data, bundled in the app so it works offline.';
+      'Burghood works out who fixes what from public open data, bundled in the app so it works offline.';
 
   @override
   String get dataSourcesDirectory =>
@@ -977,7 +977,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dataSourcesDisclaimer =>
-      'Road ownership data can be out of date. FixBurgh is not affiliated with Allegheny County, PennDOT or any municipality.';
+      'Road ownership data can be out of date. Burghood is not affiliated with Allegheny County, PennDOT or any municipality.';
 
   @override
   String get safetyCompact => 'Is anyone in danger right now?';
@@ -1038,7 +1038,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get retryNow => 'Try again now';
 
   @override
-  String get stillOffline => 'Still can\'t reach FixBurgh. We\'ll keep trying.';
+  String get stillOffline => 'Still can\'t reach Burghood. We\'ll keep trying.';
 
   @override
   String get cancelReport => 'Cancel report';
@@ -1083,7 +1083,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pushBlocked =>
-      'Notifications are blocked. Turn them on for FixBurgh in your phone\'s settings.';
+      'Notifications are blocked. Turn them on for Burghood in your phone\'s settings.';
 
   @override
   String get notifyStatus => 'Updates on my reports';

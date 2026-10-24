@@ -1,3 +1,6 @@
+# TODO(burghood): swap in the Burghood logo once it is ready, then run
+#   dart run flutter_launcher_icons
+# The FixBurgh icon stays until then.
 flutter_launcher_icons:
   image_path: "Images/AppIcon.png"
   android: true

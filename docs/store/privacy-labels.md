@@ -7,7 +7,7 @@ SDKs are included.
 
 ## Apple App Privacy ("nutrition label")
 
-**Tracking:** No. FixBurgh does not track users across other companies' apps
+**Tracking:** No. Burghood does not track users across other companies' apps
 or websites.
 
 | Data type | Collected | Linked to the user | Used for tracking | Purpose |
@@ -46,7 +46,7 @@ Delete my account) and at https://fixburgh-prod.web.app/delete-account.
 | App activity | App interactions | Yes | No | No | Analytics |
 | App info and performance | Crash logs, Diagnostics | Yes | No | No | App functionality |
 
-**Shared:** none. Firebase (Google) processes data on FixBurgh's behalf as a
+**Shared:** none. Firebase (Google) processes data on Burghood's behalf as a
 service provider, which Play does not count as sharing. Reports are visible
 to everyone in the app on purpose; describe this in the privacy policy, as we
 do.

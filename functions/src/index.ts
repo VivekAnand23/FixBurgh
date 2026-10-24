@@ -287,7 +287,7 @@ export const sendTestNotification = onCall(async (request) => {
   if (!uid) throw new HttpsError('unauthenticated', 'Sign in first.');
   const sent = await notifyUsers([uid], {
     kind: 'test',
-    title: 'FixBurgh notifications work',
+    title: 'Burghood notifications work',
     body: "You'll hear from us when reports you follow change.",
   }, `test_${Date.now()}`);
   return { sent: sent.length };

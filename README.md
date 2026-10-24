@@ -1,16 +1,20 @@
-<p align="center"><img src="Images/Logo.jpeg" alt="FixBurgh logo" width="120"/></p>
+<p align="center"><img src="Images/Logo.jpeg" alt="Burghood logo" width="120"/></p>
 
-# FixBurgh
+# Burghood
+
+_Formerly FixBurgh. The bundle IDs (`com.fixburgh.app`, `com.fixburgh.app.dev`),
+Firebase projects and Dart package name keep the old name so existing installs
+update in place._
 
 Snap, pin and route local infrastructure problems anywhere in Allegheny County,
-Pennsylvania. FixBurgh tells residents exactly which office fixes a pothole,
+Pennsylvania. Burghood tells residents exactly which office fixes a pothole,
 landslide, dark streetlight or blocked drain: PennDOT, Allegheny County or one
 of the county's 130 municipalities.
 
 - Business requirements: [BRD/FixBurgh_BRD.md](BRD/FixBurgh_BRD.md)
 - Data sources: [docs/data-sources.md](docs/data-sources.md)
 
-**FixBurgh is not an emergency service. Call 911 for emergencies.**
+**Burghood is not an emergency service. Call 911 for emergencies.**
 
 ## Stack
 
