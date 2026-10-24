@@ -112,6 +112,16 @@ npm --prefix functions run seed:agencies -- --project fixburgh-dev
 Edits to any `agencies` document (including in the console) bump
 `config/directory.version`, and apps refetch on their next launch.
 
+### Platform admins
+
+Burghood staff get the `platformAdmin` custom claim, which opens the admin
+console at `/admin` on the Hosting site and lets the rules show them the
+Burghood collections. Existing claims are kept; `--revoke` removes it.
+
+```bash
+npm --prefix functions run set:platform-admin -- --project fixburgh-dev --email you@example.com
+```
+
 ## Updating GIS data
 
 ```bash
