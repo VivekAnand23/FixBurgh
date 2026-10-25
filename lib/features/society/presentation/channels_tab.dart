@@ -90,6 +90,7 @@ class ChannelRow extends ConsumerWidget {
                     me.lastRead[channel.id] ??
                     channel.lastPostAt?.subtract(const Duration(days: 1)),
                 uid: me.uid,
+                lastPostAt: channel.lastPostAt,
               )),
             )
             .value ??

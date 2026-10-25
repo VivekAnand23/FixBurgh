@@ -70,7 +70,18 @@ final myReactionProvider = StreamProvider.autoDispose.family<String?, String>((
 /// of them @mention them.
 typedef Unread = ({int posts, int mentions});
 
-typedef UnreadKey = ({String sid, String cid, DateTime? since, String uid});
+typedef UnreadKey = ({
+  String sid,
+  String cid,
+  DateTime? since,
+  String uid,
+  DateTime? lastPostAt,
+});
+
+/// Whether a channel can have unread posts: only if its last post is newer
+/// than [since]. Saves two count queries per quiet channel.
+bool mayHaveUnread(DateTime? lastPostAt, DateTime? since) =>
+    lastPostAt != null && (since == null || lastPostAt.isAfter(since));
 
 // ignore: specify_nonobvious_property_types, family type isn't exported.
 final unreadProvider = FutureProvider.autoDispose.family<Unread, UnreadKey>(
@@ -97,6 +108,7 @@ final societyUnreadProvider = FutureProvider.autoDispose.family<int, String>((
         cid: c.id,
         since: me.lastRead[c.id] ?? _neverRead(c),
         uid: me.uid,
+        lastPostAt: c.lastPostAt,
       )).future,
     );
     total += u.posts;
@@ -180,6 +192,7 @@ class ChannelRepository {
 
   Future<Unread> unread(UnreadKey k) async {
     final since = k.since;
+    if (!mayHaveUnread(k.lastPostAt, since)) return (posts: 0, mentions: 0);
     Query<Map<String, dynamic>> q = _posts(k.sid, k.cid);
     if (since != null) {
       q = q.where('createdAt', isGreaterThan: Timestamp.fromDate(since));

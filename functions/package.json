@@ -9,6 +9,7 @@
     "build": "tsc",
     "deploy": "firebase deploy --only functions",
     "seed:agencies": "node scripts/seed-agencies.js",
+    "reads:per-user": "node scripts/reads-per-user.js",
     "set:platform-admin": "node scripts/set-platform-admin.js"
   },
   "dependencies": {
