@@ -27,6 +27,7 @@ export {
   monetisationDailyNow,
   onPaymentCreated,
   onSponsorshipWritten,
+  requestListingFee,
 } from './monetisation';
 import { deleteSocietyData } from './society';
 export {

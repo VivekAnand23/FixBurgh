@@ -16,14 +16,24 @@ import {
   where,
 } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
 
-import { buildReport, COLUMNS, toCsv, usd } from './report.js?v=4';
+import { buildReport, COLUMNS, toCsv, usd } from './report.js?v=5';
 
 const $ = (id) => document.getElementById(id);
 let db;
 let el;
 let me;
 
-const DEFAULTS = { listingFeeUsd: 150, listingMonths: 12, sponsorshipWeeklyUsd: 25, maxSponsored: 2, reminderDays: 14 };
+const DEFAULTS = {
+  listingFeeUsd: 150,
+  listingMonths: 12,
+  sponsorshipWeeklyUsd: 25,
+  maxSponsored: 2,
+  reminderDays: 14,
+  paymentInstructions:
+    'Pay by check to FixBurgh, or by bank transfer. Put your business name in the memo. ' +
+    'Your profile goes live as soon as we record the payment.',
+  payLink: '',
+};
 let settings = { ...DEFAULTS };
 let providers = [];
 
@@ -72,6 +82,8 @@ function renderSettings() {
     sponsorshipWeeklyUsd: input({ type: 'number', min: 0, step: '0.01', value: settings.sponsorshipWeeklyUsd }),
     maxSponsored: input({ type: 'number', min: 0, max: 2, step: 1, value: settings.maxSponsored }),
     reminderDays: input({ type: 'number', min: 0, max: 60, step: 1, value: settings.reminderDays }),
+    paymentInstructions: el('textarea', { rows: 3, maxlength: 1000 }, settings.paymentInstructions),
+    payLink: input({ type: 'url', maxlength: 500, placeholder: 'https://… (optional)', value: settings.payLink }),
   };
   const error = errorBox();
   const saved = el('span', { class: 'meta', hidden: true }, ' Saved.');
@@ -82,6 +94,8 @@ function renderSettings() {
     field('Sponsorship price per week (USD)', inputs.sponsorshipWeeklyUsd),
     field('Sponsored listings per search', inputs.maxSponsored, '(at most 2)'),
     field('Renewal reminder (days before)', inputs.reminderDays),
+    field('How providers pay', inputs.paymentInstructions, '(sent with each listing fee request)'),
+    field('Payment link', inputs.payLink, '(optional, https only, e.g. a hosted checkout page)'),
     error,
     el(
       'button',
@@ -89,12 +103,17 @@ function renderSettings() {
         type: 'button',
         onclick: async () => {
           error.hidden = true;
+          if (inputs.payLink.value.trim() && !/^https:\/\/\S+$/.test(inputs.payLink.value.trim())) {
+            return fail(error, 'The payment link must start with https://');
+          }
           const next = {
             listingFeeUsd: Number(inputs.listingFeeUsd.value),
             listingMonths: Math.round(Number(inputs.listingMonths.value)),
             sponsorshipWeeklyUsd: Number(inputs.sponsorshipWeeklyUsd.value),
             maxSponsored: Math.round(Number(inputs.maxSponsored.value)),
             reminderDays: Math.round(Number(inputs.reminderDays.value)),
+            paymentInstructions: inputs.paymentInstructions.value.trim(),
+            payLink: inputs.payLink.value.trim(),
           };
           try {
             const current = (await getDoc(doc(db, 'config', 'monetisation'))).data() ?? {};

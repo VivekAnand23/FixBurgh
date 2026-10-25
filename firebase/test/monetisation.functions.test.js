@@ -197,6 +197,12 @@ describe('listing fees', () => {
     const r = await call('decideProvider', admin, { providerId: pete.uid, decision: 'approve' });
     assert.equal(r.result?.status, 'awaiting_fee', JSON.stringify(r));
     await eventually(async () => assert.ok((await notes(pete)).some((n) => /is approved/.test(n.title))));
+    // Approval asks for the fee straight away, with the default settings.
+    const asked = (await read(`providers/${pete.uid}`)).paymentRequest;
+    assert.equal(asked.amountUsd, 150);
+    assert.equal(asked.periodMonths, 12);
+    assert.match(asked.instructions, /check/);
+    assert.equal(asked.dueDate, addDays(todayEt(), 14));
 
     const today = todayEt();
     const fee = await pay(admin, { kind: 'listing_fee', amountCents: 15000, date: today, providerId: pete.uid, periodMonths: 12 });
@@ -206,6 +212,7 @@ describe('listing fees', () => {
       return p;
     });
     assert.equal(live.listing.paidThrough, listingPaidThrough([{ date: today, periodMonths: 12 }]));
+    assert.equal(live.paymentRequest, undefined, 'paid: the request is cleared');
     await eventually(async () => assert.ok((await notes(pete)).some((n) => /is live/.test(n.title))));
 
     // Reversing the fee takes the listing down again.
@@ -214,6 +221,32 @@ describe('listing fees', () => {
       periodMonths: 12, reversalOf: fee, reason: 'Check bounced',
     });
     await eventually(async () => assert.equal((await read(`providers/${pete.uid}`)).status, 'awaiting_fee'));
+  });
+
+  it('lets admins ask a provider for the fee, with how to pay', async () => {
+    const [admin, pete, other] = await Promise.all([platformAdmin(), account('pete'), account('other')]);
+    await putProvider(pete.uid, { status: 'awaiting_fee' });
+    const ask = (user, extra = {}) => call('requestListingFee', user, {
+      providerId: pete.uid, amountUsd: 99.5, periodMonths: 6, instructions: 'Zelle to pay@fixburgh.example',
+      payLink: 'https://pay.example.com/burghood', dueDate: '2026-12-01', ...extra,
+    });
+    assert.equal((await ask(other)).status, 403);
+    assert.equal((await ask(admin, { payLink: 'http://pay.example.com' })).status, 400);
+    assert.equal((await ask(admin, { amountUsd: 0 })).status, 400);
+    const r = await ask(admin);
+    assert.equal(r.status, 200, JSON.stringify(r));
+    const req = (await read(`providers/${pete.uid}`)).paymentRequest;
+    assert.equal(req.amountUsd, 99.5);
+    assert.equal(req.periodMonths, 6);
+    assert.equal(req.payLink, 'https://pay.example.com/burghood');
+    assert.equal(req.dueDate, '2026-12-01');
+    await eventually(async () => assert.ok((await notes(pete)).some((n) => /Listing fee for/.test(n.title))));
+    const audit = await list(`providers/${pete.uid}/audit`);
+    assert.ok(audit.some((a) => a.action === 'payment_requested'));
+
+    const applied = tag('applied');
+    await putProvider(applied, { status: 'applied' });
+    assert.equal((await ask(admin, { providerId: applied })).error?.status, 'FAILED_PRECONDITION');
   });
 
   it('reminds before a listing ends, and takes it down after', async () => {

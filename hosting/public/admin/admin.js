@@ -29,7 +29,7 @@ import {
   httpsCallable,
 } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js';
 
-import { initMoney } from './money.js?v=4';
+import { initMoney } from './money.js?v=5';
 
 const $ = (id) => document.getElementById(id);
 const local = ['localhost', '127.0.0.1'].includes(location.hostname);
@@ -271,6 +271,13 @@ const DOCUMENTS = {
   insurance: 'Insurance',
   background: 'Background check',
 };
+const PROVIDER_STATUS = {
+  applied: 'Applied',
+  awaiting_fee: 'Waiting for fee',
+  approved: 'Live',
+  rejected: 'Rejected',
+  suspended: 'Paused',
+};
 const PERSONAL_CARE = ['babysitting', 'nanny', 'elder_care_and_companionship', 'pet_sitting', 'dog_walking', 'pet_grooming', 'tutoring'];
 const CHILD_CARE = ['babysitting', 'nanny', 'tutoring'];
 
@@ -282,7 +289,7 @@ async function loadProviders() {
       query(collection(db, 'providers'), where('status', '==', 'applied'), orderBy('createdAt', 'desc')),
     );
     const live = await getDocs(
-      query(collection(db, 'providers'), where('status', 'in', ['approved', 'suspended']), limit(100)),
+      query(collection(db, 'providers'), where('status', 'in', ['awaiting_fee', 'approved', 'suspended']), limit(100)),
     );
     $('providers-count').textContent = pending.size ? ` (${pending.size} waiting)` : '';
     $('providers-pending').replaceChildren(
@@ -305,7 +312,7 @@ function providerRow(snap) {
     el('strong', {}, p.businessName ?? '(no name)'),
     el('span', { class: 'meta' }, ` · ${(p.categories ?? []).join(', ')}`),
     el('br'),
-    el('span', { class: `pill ${p.status}` }, p.status),
+    el('span', { class: `pill ${p.status}` }, PROVIDER_STATUS[p.status] ?? p.status),
     el('span', { class: 'meta' }, ` ${p.serviceArea?.label ?? ''} · applied ${when(p.createdAt)}${check ? ` · check ${check}` : ''}`),
   );
 }
@@ -380,6 +387,65 @@ async function openProvider(id) {
     );
   }
 
+  // Ask for the listing fee (or a renewal) once approved.
+  const feeSection = el('section', {});
+  if (['awaiting_fee', 'approved'].includes(p.status)) {
+    const fees = (await getDoc(doc(db, 'config', 'monetisation'))).data() ?? {};
+    const r = p.paymentRequest;
+    const due = new Date(Date.now() + 14 * 86_400_000).toISOString().slice(0, 10);
+    const amount = el('input', { type: 'number', min: '0.01', step: '0.01', value: r?.amountUsd ?? fees.listingFeeUsd ?? 150 });
+    const months = el('input', { type: 'number', min: 1, max: 36, step: 1, value: r?.periodMonths ?? fees.listingMonths ?? 12 });
+    const how = el('textarea', { rows: 3, maxlength: 1000 }, r?.instructions ?? fees.paymentInstructions ?? 'Pay by check to FixBurgh.');
+    const link = el('input', { type: 'url', maxlength: 500, placeholder: 'https://… (optional)', value: r?.payLink ?? fees.payLink ?? '' });
+    const dueDate = el('input', { type: 'date', value: r?.dueDate ?? due });
+    const error = el('p', { class: 'error', hidden: true });
+    feeSection.append(
+      el('h3', {}, 'Listing fee'),
+      el('p', { class: 'meta' }, r
+        ? `Asked for $${Number(r.amountUsd).toFixed(2)} for ${r.periodMonths} months${r.dueDate ? `, due ${r.dueDate}` : ''} on ${when(r.requestedAt)}.`
+        : p.status === 'approved' && p.listing?.paidThrough
+          ? `Listed until ${p.listing.paidThrough}. Ask here for a renewal.`
+          : 'Not asked yet.'),
+      el('label', {}, 'Amount (USD) ', amount),
+      el('label', {}, 'Months ', months),
+      el('label', {}, 'How to pay ', how),
+      el('label', {}, 'Payment link ', link),
+      el('label', {}, 'Due ', dueDate),
+      error,
+      el('div', { class: 'actions' },
+        el('button', {
+          type: 'button',
+          class: 'primary',
+          onclick: async (e) => {
+            error.hidden = true;
+            if (link.value.trim() && !/^https:\/\/\S+$/.test(link.value.trim())) {
+              error.textContent = 'The payment link must start with https://';
+              error.hidden = false;
+              return;
+            }
+            e.target.disabled = true;
+            try {
+              await httpsCallable(functions, 'requestListingFee')({
+                providerId: id,
+                amountUsd: Number(amount.value),
+                periodMonths: Math.round(Number(months.value)),
+                instructions: how.value,
+                payLink: link.value.trim(),
+                dueDate: dueDate.value || null,
+              });
+              await refresh();
+            } catch (err) {
+              error.textContent = err.message;
+              error.hidden = false;
+              e.target.disabled = false;
+            }
+          },
+        }, r ? 'Send again' : 'Ask for the fee'),
+      ),
+      el('p', { class: 'meta' }, 'The provider gets a push and sees this in the app. When the payment arrives, record it under Payments (kind: Listing fee) and the profile goes live.'),
+    );
+  }
+
   // Approve, reject, suspend or reinstate.
   const decide = el('section', {});
   const choices = {
@@ -435,7 +501,7 @@ async function openProvider(id) {
     el(
       'dl',
       {},
-      el('dt', {}, 'Status'), el('dd', {}, el('span', { class: `pill ${p.status}` }, p.status), p.rejectReason ? ` (${p.rejectReason})` : ''),
+      el('dt', {}, 'Status'), el('dd', {}, el('span', { class: `pill ${p.status}` }, PROVIDER_STATUS[p.status] ?? p.status), p.rejectReason ? ` (${p.rejectReason})` : ''),
       el('dt', {}, 'Services'), el('dd', {}, cats.join(', ')),
       el('dt', {}, 'Area'), el('dd', {}, `${p.serviceArea?.label ?? ''}, within ${p.serviceArea?.radiusMiles ?? '?'} mi (${p.serviceArea?.lat}, ${p.serviceArea?.lng})`),
       el('dt', {}, 'Phone'), el('dd', {}, p.phone || '(none)'),
@@ -456,6 +522,7 @@ async function openProvider(id) {
       : el('p', { class: 'meta' }, 'None uploaded.'),
     el('p', { class: 'meta' }, 'Files open here only and are never saved as links. Each view is recorded below.'),
     checkSection,
+    feeSection,
     decide,
     el('h3', {}, 'Audit trail'),
     audit.empty

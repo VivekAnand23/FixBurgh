@@ -123,6 +123,10 @@ class _Status extends ConsumerWidget {
             ],
           ),
         ),
+        if (p.paymentRequest case final req?) ...[
+          const SizedBox(height: 16),
+          PaymentRequestCard(request: req),
+        ],
         const SizedBox(height: 16),
         ListTile(
           contentPadding: EdgeInsets.zero,
@@ -455,5 +459,62 @@ class _ApplicationFormState extends ConsumerState<_ApplicationForm> {
     } finally {
       if (mounted) setState(() => _sending = false);
     }
+  }
+}
+
+/// The listing fee the Burghood team asked for, with how to pay.
+class PaymentRequestCard extends StatelessWidget {
+  const PaymentRequestCard({required this.request, super.key});
+
+  final PaymentRequest request;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final r = request;
+    final amount = NumberFormat.simpleCurrency(name: 'USD').format(r.amountUsd);
+    return SocietyCard(
+      key: const Key('payment-request'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Semantics(
+            header: true,
+            child: Text(
+              l10n.listingFeeDue,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            [
+              l10n.feeForMonths(amount, r.periodMonths),
+              if (r.dueDate != null)
+                l10n.dueOn(DateFormat.yMMMd().format(r.dueDate!)),
+            ].join(' · '),
+            style: theme.textTheme.bodyLarge,
+          ),
+          if (r.instructions.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(l10n.howToPay, style: theme.textTheme.labelLarge),
+            Text(r.instructions),
+          ],
+          if (r.payLink != null) ...[
+            const SizedBox(height: 12),
+            FilledButton.icon(
+              key: const Key('pay-now'),
+              icon: const Icon(Icons.open_in_new),
+              label: Text(l10n.payNow(amount)),
+              onPressed: () => unawaited(openLink(context, r.payLink!)),
+            ),
+          ],
+          const SizedBox(height: 8),
+          Text(l10n.goesLiveWhenRecorded, style: theme.textTheme.bodySmall),
+        ],
+      ),
+    );
   }
 }

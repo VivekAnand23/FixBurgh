@@ -4527,6 +4527,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Google Maps'**
   String get openInGoogleMaps;
+
+  /// No description provided for @listingFeeDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Listing fee'**
+  String get listingFeeDue;
+
+  /// No description provided for @feeForMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} for {months} months'**
+  String feeForMonths(String amount, int months);
+
+  /// No description provided for @dueOn.
+  ///
+  /// In en, this message translates to:
+  /// **'due {date}'**
+  String dueOn(String date);
+
+  /// No description provided for @howToPay.
+  ///
+  /// In en, this message translates to:
+  /// **'How to pay'**
+  String get howToPay;
+
+  /// No description provided for @payNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay {amount} now'**
+  String payNow(String amount);
+
+  /// No description provided for @goesLiveWhenRecorded.
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile goes live as soon as the Burghood team records your payment.'**
+  String get goesLiveWhenRecorded;
+
+  /// No description provided for @forProviders.
+  ///
+  /// In en, this message translates to:
+  /// **'For service providers'**
+  String get forProviders;
 }
 
 class _AppLocalizationsDelegate

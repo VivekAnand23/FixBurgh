@@ -1428,5 +1428,36 @@
     }
   },
   "call": "Call",
-  "openInGoogleMaps": "Google Maps"
+  "openInGoogleMaps": "Google Maps",
+  "listingFeeDue": "Listing fee",
+  "feeForMonths": "{amount} for {months} months",
+  "@feeForMonths": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "dueOn": "due {date}",
+  "@dueOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "howToPay": "How to pay",
+  "payNow": "Pay {amount} now",
+  "@payNow": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "goesLiveWhenRecorded": "Your profile goes live as soon as the Burghood team records your payment.",
+  "forProviders": "For service providers"
 }

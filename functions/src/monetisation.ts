@@ -12,7 +12,7 @@
  */
 import './options';
 
-import { getFirestore } from 'firebase-admin/firestore';
+import { FieldValue, getFirestore } from 'firebase-admin/firestore';
 import { getRemoteConfig } from 'firebase-admin/remote-config';
 import { logger } from 'firebase-functions/v2';
 import { onDocumentCreated, onDocumentWritten } from 'firebase-functions/v2/firestore';
@@ -32,16 +32,52 @@ export const DEFAULT_SETTINGS = {
   sponsorshipWeeklyUsd: 25,
   maxSponsored: 2,
   reminderDays: 14,
+  /** How to pay, shown to providers with each payment request. */
+  paymentInstructions:
+    'Pay by check to FixBurgh, or by bank transfer. Put your business name in the memo. ' +
+    'Your profile goes live as soon as we record the payment.',
+  /** An optional https payment link (e.g. a hosted checkout page). */
+  payLink: '',
 };
 export type Settings = typeof DEFAULT_SETTINGS;
 
 export async function settings(): Promise<Settings> {
   const d = (await db().collection('config').doc('monetisation').get()).data() ?? {};
-  const out = { ...DEFAULT_SETTINGS };
+  const out: Settings = { ...DEFAULT_SETTINGS };
   for (const k of Object.keys(out) as (keyof Settings)[]) {
-    if (typeof d[k] === 'number' && Number.isFinite(d[k])) out[k] = d[k];
+    const v = d[k];
+    if (typeof out[k] === 'number' && typeof v === 'number' && Number.isFinite(v)) (out as Record<string, unknown>)[k] = v;
+    if (typeof out[k] === 'string' && typeof v === 'string') (out as Record<string, unknown>)[k] = v;
   }
+  if (out.payLink && !isPayLink(out.payLink)) out.payLink = '';
   return out;
+}
+
+/** Payment links must be https. */
+export const isPayLink = (v: unknown): v is string =>
+  typeof v === 'string' && v.length <= 500 && /^https:\/\/[^\s]+$/.test(v);
+
+/** A request to a provider for their listing fee, shown in the app. */
+export type PaymentRequest = {
+  amountUsd: number;
+  periodMonths: number;
+  instructions: string;
+  payLink: string;
+  dueDate: string | null;
+  requestedAt: Date;
+};
+
+/** The default request, from the console's settings. */
+export async function defaultPaymentRequest(today = todayEt()): Promise<PaymentRequest> {
+  const s = await settings();
+  return {
+    amountUsd: s.listingFeeUsd,
+    periodMonths: s.listingMonths,
+    instructions: s.paymentInstructions,
+    payLink: s.payLink,
+    dueDate: addDays(today, 14),
+    requestedAt: new Date(),
+  };
 }
 
 let flagCache: { on: boolean; at: number } | undefined;
@@ -102,6 +138,9 @@ export async function refreshListing(providerId: string, today = todayEt()) {
     status: next,
     listing: { ...listing, paidThrough: through },
     ...(next === 'approved' && !p.get('liveAt') ? { liveAt: new Date() } : {}),
+    // Paid: the request is done. Lapsed: ask again for the renewal.
+    ...(paid ? { paymentRequest: FieldValue.delete() } : {}),
+    ...(next === 'awaiting_fee' && status !== next ? { paymentRequest: await defaultPaymentRequest(today) } : {}),
   });
   const name = p.get('businessName') as string;
   if (next !== status) {
@@ -196,6 +235,55 @@ function requirePlatformAdmin(request: CallableRequest) {
     throw new HttpsError('permission-denied', 'Platform admins only.');
   }
 }
+
+/**
+ * requestListingFee: a platform admin asks a provider for their listing fee
+ * (or a renewal): amount, period, how to pay, an optional https payment link
+ * and a due date. The provider sees it in the app and gets a push. Recording
+ * the payment in the ledger clears it.
+ */
+export const requestListingFee = onCall(async (request) => {
+  requirePlatformAdmin(request);
+  const { providerId, amountUsd, periodMonths, instructions, payLink, dueDate } = request.data ?? {};
+  if (
+    typeof providerId !== 'string'
+    || typeof amountUsd !== 'number' || !(amountUsd > 0) || amountUsd > 100_000
+    || !Number.isInteger(periodMonths) || periodMonths < 1 || periodMonths > 36
+    || typeof instructions !== 'string' || !instructions.trim() || instructions.length > 1000
+    || !(payLink === '' || payLink == null || isPayLink(payLink))
+    || !(dueDate == null || (typeof dueDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dueDate)))
+  ) {
+    throw new HttpsError('invalid-argument', 'An amount, a period of 1 to 36 months, how to pay, and an https link if any.');
+  }
+  const ref = db().collection('providers').doc(providerId);
+  const p = await ref.get();
+  if (!p.exists) throw new HttpsError('not-found', 'No such provider.');
+  if (!['awaiting_fee', 'approved'].includes(p.get('status'))) {
+    throw new HttpsError('failed-precondition', 'Approve the provider first.');
+  }
+  const req: PaymentRequest = {
+    amountUsd: Math.round(amountUsd * 100) / 100,
+    periodMonths,
+    instructions: instructions.trim(),
+    payLink: payLink ?? '',
+    dueDate: dueDate ?? null,
+    requestedAt: new Date(),
+  };
+  await ref.update({ paymentRequest: req });
+  await ref.collection('audit').add({
+    action: 'payment_requested',
+    reason: `$${req.amountUsd.toFixed(2)} for ${periodMonths} months${req.dueDate ? `, due ${req.dueDate}` : ''}`,
+    by: request.auth!.uid,
+    byEmail: (request.auth!.token.email as string | undefined) ?? '',
+    at: new Date(),
+  });
+  await notifyUsers([p.get('ownerUid')], {
+    kind: 'service',
+    title: `Listing fee for ${p.get('businessName')}`,
+    body: `$${req.amountUsd.toFixed(2)} for ${periodMonths} months${req.dueDate ? `, due ${req.dueDate}` : ''}. Open Burghood to see how to pay.`,
+  }, `fee_request_${providerId}_${Date.now()}`);
+  return { ok: true };
+});
 
 /** monetisationDailyNow: the daily pass on demand for platform admins. The
  * emulator also takes a `today` (YYYY-MM-DD) for tests. */

@@ -50,6 +50,7 @@ class ServiceProvider {
     this.rejectReason = '',
     this.documents = const {},
     this.listingPaidThrough,
+    this.paymentRequest,
   });
 
   factory ServiceProvider.fromDoc(String id, Map<String, dynamic> d) {
@@ -91,6 +92,7 @@ class ServiceProvider {
       listingPaidThrough: DateTime.tryParse(
         (d['listing'] as Map?)?['paidThrough'] as String? ?? '',
       ),
+      paymentRequest: parsePaymentRequest(d['paymentRequest']),
     );
   }
 
@@ -117,6 +119,9 @@ class ServiceProvider {
 
   /// The last day of the paid listing, when fees apply (Phase 4).
   final DateTime? listingPaidThrough;
+
+  /// The listing fee the Burghood team asked for, until it's recorded.
+  final PaymentRequest? paymentRequest;
 
   bool get offersPersonalCare =>
       categories.any((c) => _personalCare.contains(c));
@@ -282,3 +287,28 @@ List<Sponsorship> pickSponsored(
 /// A sponsored search result: shown above the others with a Sponsored
 /// badge and an orange border.
 typedef SponsoredResult = ({String sponsorshipId, ServiceProvider provider});
+
+/// A listing fee the Burghood team asked a provider for: how much, for how
+/// long, how to pay (and an optional https payment link) and by when.
+typedef PaymentRequest = ({
+  double amountUsd,
+  int periodMonths,
+  String instructions,
+  String? payLink,
+  DateTime? dueDate,
+});
+
+PaymentRequest? parsePaymentRequest(Object? v) {
+  if (v is! Map) return null;
+  final amount = (v['amountUsd'] as num?)?.toDouble();
+  if (amount == null || amount <= 0) return null;
+  final link = v['payLink'] as String? ?? '';
+  return (
+    amountUsd: amount,
+    periodMonths: (v['periodMonths'] as num?)?.toInt() ?? 12,
+    instructions: v['instructions'] as String? ?? '',
+    // Only https links open from the app.
+    payLink: link.startsWith('https://') ? link : null,
+    dueDate: DateTime.tryParse(v['dueDate'] as String? ?? ''),
+  );
+}

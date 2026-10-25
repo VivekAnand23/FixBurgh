@@ -16,7 +16,7 @@ import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { CallableRequest, HttpsError, onCall } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 
-import { approvedStatus, deleteSponsorships, settings } from './monetisation';
+import { approvedStatus, defaultPaymentRequest, deleteSponsorships, settings } from './monetisation';
 import { notifyUsers } from './notify';
 import { BACKGROUND_CHECK_GROUP, CHILD_CARE_CATEGORIES, categoryById } from './serviceCategories';
 
@@ -101,6 +101,8 @@ export const decideProvider = onCall(async (request) => {
   }
   const ref = db().collection('providers').doc(providerId);
   const approved = decision === 'approve' || decision === 'reinstate' ? await approvedStatus(providerId) : 'approved';
+  // Waiting for the fee: ask for it straight away, with the console's defaults.
+  const feeRequest = approved === 'awaiting_fee' ? await defaultPaymentRequest() : null;
   const result = await db().runTransaction(async (tx) => {
     const p = await tx.get(ref);
     if (!p.exists) throw new HttpsError('not-found', 'No such provider.');
@@ -127,6 +129,7 @@ export const decideProvider = onCall(async (request) => {
       decidedBy: admin.uid,
       decidedAt: FieldValue.serverTimestamp(),
       ...(next === 'approved' && !p.get('liveAt') ? { liveAt: FieldValue.serverTimestamp() } : {}),
+      ...(next === 'awaiting_fee' && feeRequest ? { paymentRequest: feeRequest } : {}),
     });
     tx.create(audit(providerId).doc(), {
       action: decision,
@@ -143,7 +146,7 @@ export const decideProvider = onCall(async (request) => {
     suspended: { title: `${result.name} is paused`, body: reason },
     awaiting_fee: {
       title: `${result.name} is approved`,
-      body: `It goes live once the $${(await settings()).listingFeeUsd} listing fee is recorded.`,
+      body: `It goes live once the $${(await settings()).listingFeeUsd} listing fee is paid. Open Burghood to see how to pay.`,
     },
   }[result.status as 'approved'];
   if (notice) {
