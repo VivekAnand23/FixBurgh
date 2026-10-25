@@ -229,4 +229,60 @@ void main() {
     expect(await box.load(), isEmpty);
     expect(Directory('${dir.path}/service_outbox/r1').existsSync(), isFalse);
   });
+
+  group('listing fees and sponsorships', () {
+    test('providers waiting for the fee read their stored status', () {
+      final p = ServiceProvider.fromDoc('p', const {
+        'businessName': 'Pete',
+        'categories': ['plumbing'],
+        'status': 'awaiting_fee',
+        'listing': {'paidThrough': '2027-10-23'},
+      });
+      expect(p.status, ProviderStatus.awaitingFee);
+      expect(ProviderStatus.awaitingFee.id, 'awaiting_fee');
+      expect(p.listingPaidThrough, DateTime(2027, 10, 23));
+    });
+
+    test('settings fall back to placeholders and cap sponsored at 2', () {
+      expect(parseMonetisation(null), defaultMonetisation);
+      final s = parseMonetisation({'listingFeeUsd': 99, 'maxSponsored': 5});
+      expect(s.listingFeeUsd, 99);
+      expect(s.maxSponsored, 2);
+      expect(s.listingMonths, 12);
+    });
+
+    test('at most 2 sponsorships, for the category and the area', () {
+      Sponsorship s(String id, List<String> cats, {double lat = 40.44}) =>
+          Sponsorship(
+            id: id,
+            providerId: 'p$id',
+            categories: cats,
+            center: GeoPoint(lat, -79.99),
+            radiusMiles: 10,
+          );
+      final all = [
+        s('c', ['plumbing']),
+        s('a', ['plumbing', 'handyman']),
+        s('far', ['plumbing'], lat: 41.2), // About 50 mi north.
+        s('b', ['plumbing']),
+        s('paint', ['painting']),
+      ];
+      final picked = pickSponsored(
+        all,
+        categories: ['plumbing'],
+        near: const GeoPoint(40.45, -79.98),
+        max: 2,
+      );
+      expect(picked.map((x) => x.id), ['a', 'b']);
+      expect(
+        pickSponsored(
+          all,
+          categories: ['painting'],
+          near: null,
+          max: 2,
+        ).map((x) => x.id),
+        ['paint'],
+      );
+    });
+  });
 }

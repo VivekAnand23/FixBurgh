@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex">
 <title>Burghood admin</title>
 <link rel="stylesheet" href="/style.css">
-<link rel="stylesheet" href="/admin/admin.css?v=3">
+<link rel="stylesheet" href="/admin/admin.css?v=4">
 </head>
 <body>
 <main>
@@ -29,7 +29,7 @@
 
 <section id="console" hidden>
 <nav aria-label="Sections">
-<a href="#claims">Claims</a> · <a href="#providers">Providers</a> · <a href="#payments">Payments</a> · <a href="#sponsors">Sponsors</a>
+<a href="#claims">Claims</a> · <a href="#providers">Providers</a> · <a href="#payments">Payments</a> · <a href="#sponsors">Sponsors</a> · <a href="#report">Audit report</a>
 </nav>
 <section id="claims" class="panel">
 <header class="bar"><h2>Claims<span id="claims-count"></span></h2><button id="claims-refresh" type="button">Refresh</button></header>
@@ -48,12 +48,26 @@
 <div id="providers-live" class="rows"></div>
 </section>
 <section id="payments" class="panel">
-<h2>Payments</h2>
-<p class="meta">The payment ledger and audit report appear here (Phase 4).</p>
+<header class="bar"><h2>Payments</h2><button id="payments-refresh" type="button">Refresh</button></header>
+<p class="meta">Payments happen outside the app; record each one here. Entries can't be edited or deleted. To correct one, reverse it and record it again.</p>
+<details><summary>Fees and settings</summary><div id="money-settings" class="form"></div></details>
+<h3>Record a payment</h3>
+<div id="record-payment" class="form"></div>
+<h3>Ledger (latest 100)</h3>
+<div id="ledger"></div>
 </section>
 <section id="sponsors" class="panel">
 <h2>Sponsors</h2>
-<p class="meta">Sponsored listings appear here (Phase 4).</p>
+<h3>Schedule a sponsorship</h3>
+<div id="sponsorship-form" class="form"></div>
+<h3>Sponsorships</h3>
+<div id="sponsorship-list"></div>
+</section>
+<section id="report" class="panel">
+<h2>Audit report</h2>
+<p class="meta">Income and expenses for a date range, with totals. Reversals count on their own date.</p>
+<div class="actions no-print"><label>From <input id="report-from" type="date"></label> <label>To <input id="report-to" type="date"></label> <button id="report-run" type="button" class="primary">Run report</button></div>
+<div id="report-body"></div>
 </section>
 </section>
 </main>
@@ -69,6 +83,6 @@
 <button id="file-close" type="button" class="close" aria-label="Close">×</button>
 <div id="file-body"></div>
 </dialog>
-<script type="module" src="/admin/admin.js?v=3"></script>
+<script type="module" src="/admin/admin.js?v=4"></script>
 </body>
 </html>

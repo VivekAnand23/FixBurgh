@@ -4443,6 +4443,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Updates on requests you made and jobs sent to you'**
   String get notifyServicesBody;
+
+  /// No description provided for @listingExpiresOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Neighbors can find you and send you requests. Your listing runs until {date}.'**
+  String listingExpiresOn(String date);
+
+  /// No description provided for @providerAwaitingFeeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved, waiting for the listing fee'**
+  String get providerAwaitingFeeTitle;
+
+  /// No description provided for @providerAwaitingFee.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll appear in search once the {fee} listing fee for {months} months is paid. The Burghood team will be in touch about payment.'**
+  String providerAwaitingFee(String fee, int months);
+
+  /// No description provided for @providerAwaitingFeeShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved. You\'ll be listed once the listing fee is paid.'**
+  String get providerAwaitingFeeShort;
+
+  /// No description provided for @sponsored.
+  ///
+  /// In en, this message translates to:
+  /// **'Sponsored'**
+  String get sponsored;
+
+  /// No description provided for @allProviders.
+  ///
+  /// In en, this message translates to:
+  /// **'All providers'**
+  String get allProviders;
 }
 
 class _AppLocalizationsDelegate

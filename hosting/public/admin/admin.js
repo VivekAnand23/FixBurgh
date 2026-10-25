@@ -29,6 +29,8 @@ import {
   httpsCallable,
 } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-functions.js';
 
+import { initMoney } from './money.js?v=4';
+
 const $ = (id) => document.getElementById(id);
 const local = ['localhost', '127.0.0.1'].includes(location.hostname);
 let db;
@@ -94,7 +96,7 @@ async function start() {
     const { claims } = await user.getIdTokenResult(true);
     if (claims.platformAdmin !== true) return show('denied');
     show('console');
-    await Promise.all([loadClaims(), loadProviders()]);
+    await Promise.all([loadClaims(), loadProviders(), initMoney({ db, el, user: () => auth.currentUser })]);
   });
 }
 

@@ -1,3 +1,4 @@
+import 'package:fixburgh/features/report/domain/report.dart' show distanceM;
 import 'package:fixburgh/features/routing/domain/municipality_locator.dart';
 import 'package:fixburgh/features/services/domain/service_category.dart';
 import 'package:flutter/foundation.dart';
@@ -5,11 +6,18 @@ import 'package:flutter/foundation.dart';
 enum ProviderStatus {
   applied,
   approved,
+
+  /// Approved, but listed only once the listing fee is recorded (Phase 4,
+  /// while `feature_monetisation` is on), or after the listing ran out.
+  awaitingFee,
   rejected,
   suspended;
 
+  /// As stored, e.g. `awaiting_fee`.
+  String get id => this == awaitingFee ? 'awaiting_fee' : name;
+
   static ProviderStatus parse(Object? v) =>
-      values.firstWhere((s) => s.name == v, orElse: () => applied);
+      values.firstWhere((s) => s.id == v, orElse: () => applied);
 }
 
 /// Bayesian prior, as functions/src/services.ts: a new provider counts as
@@ -41,6 +49,7 @@ class ServiceProvider {
     this.portfolio = const [],
     this.rejectReason = '',
     this.documents = const {},
+    this.listingPaidThrough,
   });
 
   factory ServiceProvider.fromDoc(String id, Map<String, dynamic> d) {
@@ -79,6 +88,9 @@ class ServiceProvider {
             in ((d['documents'] as Map<Object?, Object?>?) ?? const {}).entries)
           if ((key, value) case (final String k, final String v)) k: v,
       },
+      listingPaidThrough: DateTime.tryParse(
+        (d['listing'] as Map?)?['paidThrough'] as String? ?? '',
+      ),
     );
   }
 
@@ -102,6 +114,9 @@ class ServiceProvider {
 
   /// Uploaded licence, insurance and background-check paths.
   final Map<String, String> documents;
+
+  /// The last day of the paid listing, when fees apply (Phase 4).
+  final DateTime? listingPaidThrough;
 
   bool get offersPersonalCare =>
       categories.any((c) => _personalCare.contains(c));
@@ -181,3 +196,89 @@ List<ProviderResult> sortResults(List<ProviderResult> results) =>
 
 /// The distance filter options, in miles.
 const distanceOptions = [2, 5, 10, 25];
+
+/// Fees and sponsorship settings (`config/monetisation`), placeholders until
+/// the amounts are decided. Platform admins change them in the console.
+typedef MonetisationSettings = ({
+  double listingFeeUsd,
+  int listingMonths,
+  int maxSponsored,
+});
+
+const MonetisationSettings defaultMonetisation = (
+  listingFeeUsd: 150,
+  listingMonths: 12,
+  maxSponsored: 2,
+);
+
+MonetisationSettings parseMonetisation(Map<String, dynamic>? d) => (
+  listingFeeUsd:
+      (d?['listingFeeUsd'] as num?)?.toDouble() ??
+      defaultMonetisation.listingFeeUsd,
+  listingMonths:
+      (d?['listingMonths'] as num?)?.toInt() ??
+      defaultMonetisation.listingMonths,
+  maxSponsored:
+      ((d?['maxSponsored'] as num?)?.toInt() ??
+              defaultMonetisation.maxSponsored)
+          .clamp(0, 2),
+);
+
+/// A sponsored listing that is paid for and showing now (Phase 4).
+@immutable
+class Sponsorship {
+  const Sponsorship({
+    required this.id,
+    required this.providerId,
+    required this.categories,
+    required this.center,
+    required this.radiusMiles,
+  });
+
+  factory Sponsorship.fromDoc(String id, Map<String, dynamic> d) {
+    final a = (d['area'] as Map?)?.cast<String, dynamic>() ?? const {};
+    return Sponsorship(
+      id: id,
+      providerId: d['providerId'] as String? ?? '',
+      categories: [
+        ...(d['categories'] as List? ?? const []).whereType<String>(),
+      ],
+      center: GeoPoint(
+        (a['lat'] as num?)?.toDouble() ?? 0,
+        (a['lng'] as num?)?.toDouble() ?? 0,
+      ),
+      radiusMiles: (a['radiusMiles'] as num?)?.toDouble() ?? 10,
+    );
+  }
+
+  final String id;
+  final String providerId;
+  final List<String> categories;
+  final GeoPoint center;
+  final double radiusMiles;
+}
+
+const _metresPerMile = 1609.344;
+
+/// Up to [max] sponsorships for a search: those for one of [categories]
+/// whose area takes in [near] (any area when it's unknown), in a stable
+/// order so they don't jump around between searches.
+List<Sponsorship> pickSponsored(
+  List<Sponsorship> all, {
+  required List<String> categories,
+  required GeoPoint? near,
+  required int max,
+}) {
+  final matching = [
+    for (final s in all)
+      if (s.categories.any(categories.contains) &&
+          (near == null ||
+              distanceM(near, s.center) / _metresPerMile <= s.radiusMiles))
+        s,
+  ]..sort((a, b) => a.id.compareTo(b.id));
+  return matching.take(max).toList();
+}
+
+/// A sponsored search result: shown above the others with a Sponsored
+/// badge and an orange border.
+typedef SponsoredResult = ({String sponsorshipId, ServiceProvider provider});

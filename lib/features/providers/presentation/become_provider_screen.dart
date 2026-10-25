@@ -17,6 +17,7 @@ import 'package:fixburgh/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 /// Become a provider: business details, services, area and the documents
 /// the services need. Documents go to private Storage only platform admins
@@ -56,17 +57,20 @@ class _BecomeProviderScreenState extends ConsumerState<BecomeProviderScreen> {
   }
 }
 
-class _Status extends StatelessWidget {
+class _Status extends ConsumerWidget {
   const _Status({required this.provider, required this.onEdit});
 
   final ServiceProvider provider;
   final VoidCallback onEdit;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final p = provider;
+    final fees =
+        ref.watch(monetisationSettingsProvider).value ?? defaultMonetisation;
+    final through = p.listingPaidThrough;
     final (icon, title, body) = switch (p.status) {
       ProviderStatus.applied => (
         Icons.hourglass_top,
@@ -76,7 +80,17 @@ class _Status extends StatelessWidget {
       ProviderStatus.approved => (
         Icons.check_circle_outline,
         l10n.providerLiveTitle,
-        l10n.providerLive,
+        through == null
+            ? l10n.providerLive
+            : l10n.listingExpiresOn(DateFormat.yMMMd().format(through)),
+      ),
+      ProviderStatus.awaitingFee => (
+        Icons.payments_outlined,
+        l10n.providerAwaitingFeeTitle,
+        l10n.providerAwaitingFee(
+          NumberFormat.simpleCurrency(name: 'USD').format(fees.listingFeeUsd),
+          fees.listingMonths,
+        ),
       ),
       ProviderStatus.suspended => (
         Icons.pause_circle_outline,
