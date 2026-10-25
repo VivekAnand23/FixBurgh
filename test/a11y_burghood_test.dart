@@ -416,6 +416,9 @@ void main() {
   testWidgets('the Services tab works at 200% text', (tester) async {
     final handle = tester.ensureSemantics();
     await pump(tester, const SocietyHome(societyId: 's1'), dark: false);
+    // At 200% text the tab bar scrolls, so bring the tab into view first.
+    await tester.ensureVisible(find.text('Services'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Services'));
     await tester.pumpAndSettle();
     await tester.enterText(
@@ -424,6 +427,16 @@ void main() {
     );
     await tester.pump(const Duration(milliseconds: 400));
     await tester.pumpAndSettle();
+    // At 200% text the search controls fill the screen; scroll to results.
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('sponsored-sp1')),
+      200,
+      scrollable: find
+          .byWidgetPredicate(
+            (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+          )
+          .last,
+    );
     expect(find.text('Sponsored'), findsWidgets);
     await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
     await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));

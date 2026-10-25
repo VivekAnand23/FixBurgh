@@ -357,11 +357,13 @@ class PostCard extends ConsumerWidget {
                 _Photos(photos: post.photos),
               ],
               const SizedBox(height: 8),
-              Row(
+              // A Wrap, not a Row: at large text sizes the comment button
+              // drops to its own line instead of squeezing the reactions.
+              Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
-                  Expanded(
-                    child: ReactionBar(path: path, counts: post.reactionCounts),
-                  ),
+                  ReactionBar(path: path, counts: post.reactionCounts),
                   TextButton.icon(
                     icon: const Icon(Icons.mode_comment_outlined, size: 18),
                     label: Text(
