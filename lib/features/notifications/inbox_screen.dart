@@ -104,6 +104,7 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
     'interaction' => Icons.forum_outlined,
     'notice' => Icons.campaign_outlined,
     'society' => Icons.apartment,
+    'service' => Icons.handyman_outlined,
     'nearby' => Icons.warning_amber_rounded,
     _ => Icons.update,
   };
@@ -121,6 +122,11 @@ void openNotification(
     _ => null,
   };
   final report = id('reportId');
+  final request = id('requestId');
+  if (request != null) {
+    unawaited(context.push(Routes.serviceRequest(request)));
+    return;
+  }
   final society = id('societyId');
   final claim = id('claimId');
   if (report != null) {

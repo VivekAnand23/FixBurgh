@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex">
 <title>Burghood admin</title>
 <link rel="stylesheet" href="/style.css">
-<link rel="stylesheet" href="/admin/admin.css?v=2">
+<link rel="stylesheet" href="/admin/admin.css?v=3">
 </head>
 <body>
 <main>
@@ -40,8 +40,12 @@
 <div id="claims-decided" class="rows"></div>
 </section>
 <section id="providers" class="panel">
-<h2>Providers</h2>
-<p class="meta">Provider applications and background checks appear here (Phase 3).</p>
+<header class="bar"><h2>Providers<span id="providers-count"></span></h2><button id="providers-refresh" type="button">Refresh</button></header>
+<p class="meta">Check the documents match the business and the services. Personal care needs a passed background check, and child care also needs the Pennsylvania child abuse clearances, before you can approve. Target: decide within 2 working days.</p>
+<h3>Waiting for review</h3>
+<div id="providers-pending" class="rows"></div>
+<h3>Live and paused</h3>
+<div id="providers-live" class="rows"></div>
 </section>
 <section id="payments" class="panel">
 <h2>Payments</h2>
@@ -57,10 +61,14 @@
 <button id="claim-close" type="button" class="close" aria-label="Close">×</button>
 <div id="claim-body"></div>
 </dialog>
+<dialog id="provider-dialog" aria-label="Provider">
+<button id="provider-close" type="button" class="close" aria-label="Close">×</button>
+<div id="provider-body"></div>
+</dialog>
 <dialog id="file-dialog" aria-label="Document">
 <button id="file-close" type="button" class="close" aria-label="Close">×</button>
 <div id="file-body"></div>
 </dialog>
-<script type="module" src="/admin/admin.js?v=2"></script>
+<script type="module" src="/admin/admin.js?v=3"></script>
 </body>
 </html>

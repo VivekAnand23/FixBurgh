@@ -703,6 +703,12 @@ service cloud.firestore {
           && request.resource.data.replyAt == request.time;
         allow delete: if false;
       }
+
+      // Decisions, checks and document views, written by Cloud Functions.
+      match /audit/{entryId} {
+        allow read: if isPlatformAdmin();
+        allow write: if false;
+      }
     }
 
     function validProvider(uid, d) {

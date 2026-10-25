@@ -1110,5 +1110,275 @@
       }
     }
   },
-  "done": "Done"
+  "done": "Done",
+  "whereIsProblem": "Where is the problem?",
+  "forkStreet": "On the street",
+  "forkStreetBody": "Potholes, streetlights, trash. We send it to the city.",
+  "forkHome": "In my home",
+  "forkHomeBody": "A leak, a broken appliance, or help you need. Find a local provider.",
+  "forkCommon": "In my society's common areas",
+  "forkCommonBody": "Lobby, hallways, grounds. Your society admin picks the provider.",
+  "tabServices": "Services",
+  "requestService": "Request a service",
+  "commonRequests": "Common areas",
+  "commonRequestsEmpty": "No common-area requests yet.",
+  "servicesSearchHint": "What do you need? e.g. kitchen tap leaking",
+  "clear": "Clear",
+  "lookingFor": "Looking for:",
+  "distanceFilter": "Distance",
+  "withinMiles": "Within {miles} mi",
+  "@withinMiles": {
+    "placeholders": {
+      "miles": {
+        "type": "int"
+      }
+    }
+  },
+  "milesAway": "{miles} mi away",
+  "@milesAway": {
+    "placeholders": {
+      "miles": {
+        "type": "String"
+      }
+    }
+  },
+  "noProvidersFound": "No providers found yet. Try a wider distance or other words.",
+  "becomeProvider": "Offer your services",
+  "becomeProviderBody": "Neighbors can find you and send you requests.",
+  "yourProviderProfile": "Your provider profile",
+  "providerAppliedTitle": "Application sent",
+  "providerApplied": "We're checking your details and documents. We aim to decide within 2 working days.",
+  "providerLiveTitle": "You're live",
+  "providerLive": "Neighbors can find you and send you requests.",
+  "providerRejected": "We couldn't approve your application",
+  "providerSuspendedTitle": "Your profile is paused",
+  "providerSuspended": "Neighbors can't find you right now. Contact support to find out more.",
+  "rejectedBecause": "We couldn't approve it: {reason}. Fix this and send it again.",
+  "@rejectedBecause": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "becomeProviderIntro": "Tell neighbors what you do. We check every provider before they appear, and the documents you add are seen only by the Burghood team.",
+  "businessName": "Business or your name",
+  "aboutYourWork": "About your work",
+  "phoneLabel": "Phone",
+  "phoneHelper": "Shown to a neighbor once you accept their request.",
+  "phoneInvalid": "Enter a phone number",
+  "serviceAreaLabel": "Where you're based",
+  "serviceAreaHint": "Neighborhood, town or ZIP code",
+  "travelDistance": "How far you travel",
+  "documentsNeeded": "Documents",
+  "documentsPrivate": "Only the Burghood team can see these.",
+  "docLicense": "Pennsylvania contractor registration (HIC)",
+  "docInsurance": "Proof of insurance",
+  "docBackground": "Background check, plus child abuse clearances if you care for children",
+  "docFormats": "PDF, JPG or PNG, up to 5 MB",
+  "alreadyUploaded": "Already uploaded",
+  "providerAgree": "I'll follow the provider rules, and my details and documents are true.",
+  "pickAService": "Pick at least one service.",
+  "documentsMissing": "Add the documents these services need.",
+  "agreeFirst": "Please confirm the provider rules first.",
+  "areaNotFound": "We couldn't find that place in Allegheny County.",
+  "viewPublicProfile": "View public profile",
+  "editDetails": "Edit details",
+  "providerNotFound": "This provider isn't available.",
+  "requestThisProvider": "Request this provider",
+  "recommendToSociety": "Recommend to your society",
+  "recommendToSocietyBody": "Shows a \"Recommended by your society\" tag to members.",
+  "recommendedBySociety": "Recommended by your society",
+  "backgroundChecked": "Background checked",
+  "providerServices": "Services",
+  "serviceArea": "Service area",
+  "serviceAreaLine": "{area}, within {miles} mi",
+  "@serviceAreaLine": {
+    "placeholders": {
+      "area": {
+        "type": "String"
+      },
+      "miles": {
+        "type": "String"
+      }
+    }
+  },
+  "portfolio": "Past work",
+  "noPortfolio": "No photos yet.",
+  "portfolioPhoto": "Past work photo {n}",
+  "@portfolioPhoto": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "addPortfolioPhoto": "Add a photo of past work",
+  "reviewsCount": "{count, plural, =0{Reviews} =1{1 review} other{{count} reviews}}",
+  "@reviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noReviewsYet": "No reviews yet",
+  "ratingSummary": "Rated {avg} out of 5 from {count, plural, =1{1 review} other{{count} reviews}}",
+  "@ratingSummary": {
+    "placeholders": {
+      "avg": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "providerReply": "Reply from the provider",
+  "replyToReview": "Reply",
+  "starsLabel": "{count, plural, =1{1 star} other{{count} stars}}",
+  "@starsLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ok": "OK",
+  "newRequestTitle": "New request",
+  "commonRequestTitle": "Common-area request",
+  "commonRequestNote": "Your society admin will choose the provider and you'll get updates here.",
+  "sendingTo": "Sending to {name}",
+  "@sendingTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "requestTitleLabel": "What's the problem?",
+  "requestTitleHint": "e.g. Kitchen tap leaking",
+  "requestDescriptionLabel": "Details",
+  "requestDescriptionHint": "Where it is, when it started, anything the provider should know",
+  "categoryLabel": "Category",
+  "chooseCategory": "Choose a category",
+  "pickCategoryFirst": "Pick a category first.",
+  "photosCount": "Photos ({count} of {max})",
+  "@photosCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "sendRequest": "Send request",
+  "requestQueued": "You're offline. Your request is saved and will send when you're back online.",
+  "requestWaiting": "Waiting to send. It goes when you're back online.",
+  "requestFailed": "Couldn't send this request. Try again, or cancel it.",
+  "tryAgain": "Try again",
+  "detailUrgency": "How urgent?",
+  "detailAccess": "Access",
+  "detailAccessHint": "e.g. Key with the front desk",
+  "detailTimeWindow": "Best time",
+  "detailDate": "Date",
+  "detailHours": "Hours needed",
+  "detailChildrenAges": "Children's ages",
+  "detailChildrenAgesHint": "e.g. 3 and 6",
+  "detailPetType": "Pet",
+  "detailPetSize": "Size",
+  "detailBudget": "Budget",
+  "detailBudgetHint": "e.g. $50 to $100",
+  "urgencyEmergency": "Emergency, today",
+  "urgencySoon": "This week",
+  "urgencyFlexible": "Flexible",
+  "windowMorning": "Morning",
+  "windowAfternoon": "Afternoon",
+  "windowEvening": "Evening",
+  "windowAny": "Any time",
+  "petDog": "Dog",
+  "petCat": "Cat",
+  "petOther": "Other",
+  "sizeSmall": "Small",
+  "sizeMedium": "Medium",
+  "sizeLarge": "Large",
+  "requestTitle": "Service request",
+  "requestNotFound": "This request isn't available.",
+  "commonArea": "Common area",
+  "provider": "Provider",
+  "declinedBecause": "The provider declined: {reason}",
+  "@declinedBecause": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "notFixedBecause": "Not fixed: {note}",
+  "@notFixedBecause": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "completionHeading": "Work done",
+  "watchVideo": "Watch video",
+  "timeline": "Timeline",
+  "timelineEmpty": "Updates appear here.",
+  "chooseProvider": "Choose a provider",
+  "waitingForAdmin": "Waiting for your society admin to choose a provider.",
+  "waitingForProvider": "Waiting for the provider to accept.",
+  "cancelRequest": "Cancel request",
+  "confirmDone": "Confirm it's done",
+  "notFixed": "Not fixed",
+  "notFixedTitle": "What's still wrong?",
+  "notFixedHint": "The provider sees this and can come back to it.",
+  "rateProvider": "How did it go?",
+  "reviewHint": "Tell neighbors about the work (optional)",
+  "sendReview": "Send review",
+  "acceptJob": "Accept job",
+  "declineJob": "Decline",
+  "declineHint": "Reason (optional), e.g. fully booked this week",
+  "startJob": "Start job",
+  "completeJob": "Mark as done",
+  "completionNote": "What you did",
+  "addVideo": "Add short video",
+  "videoAdded": "Video",
+  "videoTooLarge": "That video is too large. The limit is 30 MB.",
+  "markDone": "Send to neighbor",
+  "srPosted": "Posted",
+  "srAssigned": "Sent to provider",
+  "srAccepted": "Accepted",
+  "srDeclined": "Declined",
+  "srInProgress": "In progress",
+  "srCompleted": "Done, please check",
+  "srNotFixed": "Not fixed",
+  "srConfirmed": "Confirmed",
+  "srClosed": "Closed",
+  "srCancelled": "Cancelled",
+  "activityServiceRequests": "Requests",
+  "activityJobs": "Jobs",
+  "serviceRequestsEmpty": "Requests you make for your home or society show up here.",
+  "jobsEmpty": "Requests neighbors send you show up here.",
+  "openCount": "Open ({count})",
+  "@openCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "doneCount": "Done ({count})",
+  "@doneCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notifyServices": "Service requests and jobs",
+  "notifyServicesBody": "Updates on requests you made and jobs sent to you"
 }

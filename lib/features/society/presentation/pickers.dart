@@ -29,3 +29,14 @@ final pickFileProvider = Provider<Future<File?> Function(List<String>)>(
     return path == null ? null : File(path);
   },
 );
+
+/// Picks a short video from the library. Overridden in tests.
+final pickVideoProvider = Provider<Future<File?> Function()>(
+  (ref) => () async {
+    final clip = await ImagePicker().pickVideo(
+      source: ImageSource.gallery,
+      maxDuration: const Duration(seconds: 60),
+    );
+    return clip == null ? null : File(clip.path);
+  },
+);

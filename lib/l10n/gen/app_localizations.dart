@@ -3465,6 +3465,984 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Done'**
   String get done;
+
+  /// No description provided for @whereIsProblem.
+  ///
+  /// In en, this message translates to:
+  /// **'Where is the problem?'**
+  String get whereIsProblem;
+
+  /// No description provided for @forkStreet.
+  ///
+  /// In en, this message translates to:
+  /// **'On the street'**
+  String get forkStreet;
+
+  /// No description provided for @forkStreetBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Potholes, streetlights, trash. We send it to the city.'**
+  String get forkStreetBody;
+
+  /// No description provided for @forkHome.
+  ///
+  /// In en, this message translates to:
+  /// **'In my home'**
+  String get forkHome;
+
+  /// No description provided for @forkHomeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A leak, a broken appliance, or help you need. Find a local provider.'**
+  String get forkHomeBody;
+
+  /// No description provided for @forkCommon.
+  ///
+  /// In en, this message translates to:
+  /// **'In my society\'s common areas'**
+  String get forkCommon;
+
+  /// No description provided for @forkCommonBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Lobby, hallways, grounds. Your society admin picks the provider.'**
+  String get forkCommonBody;
+
+  /// No description provided for @tabServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Services'**
+  String get tabServices;
+
+  /// No description provided for @requestService.
+  ///
+  /// In en, this message translates to:
+  /// **'Request a service'**
+  String get requestService;
+
+  /// No description provided for @commonRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Common areas'**
+  String get commonRequests;
+
+  /// No description provided for @commonRequestsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No common-area requests yet.'**
+  String get commonRequestsEmpty;
+
+  /// No description provided for @servicesSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you need? e.g. kitchen tap leaking'**
+  String get servicesSearchHint;
+
+  /// No description provided for @clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
+  /// No description provided for @lookingFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking for:'**
+  String get lookingFor;
+
+  /// No description provided for @distanceFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get distanceFilter;
+
+  /// No description provided for @withinMiles.
+  ///
+  /// In en, this message translates to:
+  /// **'Within {miles} mi'**
+  String withinMiles(int miles);
+
+  /// No description provided for @milesAway.
+  ///
+  /// In en, this message translates to:
+  /// **'{miles} mi away'**
+  String milesAway(String miles);
+
+  /// No description provided for @noProvidersFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No providers found yet. Try a wider distance or other words.'**
+  String get noProvidersFound;
+
+  /// No description provided for @becomeProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer your services'**
+  String get becomeProvider;
+
+  /// No description provided for @becomeProviderBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Neighbors can find you and send you requests.'**
+  String get becomeProviderBody;
+
+  /// No description provided for @yourProviderProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Your provider profile'**
+  String get yourProviderProfile;
+
+  /// No description provided for @providerAppliedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Application sent'**
+  String get providerAppliedTitle;
+
+  /// No description provided for @providerApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re checking your details and documents. We aim to decide within 2 working days.'**
+  String get providerApplied;
+
+  /// No description provided for @providerLiveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re live'**
+  String get providerLiveTitle;
+
+  /// No description provided for @providerLive.
+  ///
+  /// In en, this message translates to:
+  /// **'Neighbors can find you and send you requests.'**
+  String get providerLive;
+
+  /// No description provided for @providerRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t approve your application'**
+  String get providerRejected;
+
+  /// No description provided for @providerSuspendedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile is paused'**
+  String get providerSuspendedTitle;
+
+  /// No description provided for @providerSuspended.
+  ///
+  /// In en, this message translates to:
+  /// **'Neighbors can\'t find you right now. Contact support to find out more.'**
+  String get providerSuspended;
+
+  /// No description provided for @rejectedBecause.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t approve it: {reason}. Fix this and send it again.'**
+  String rejectedBecause(String reason);
+
+  /// No description provided for @becomeProviderIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell neighbors what you do. We check every provider before they appear, and the documents you add are seen only by the Burghood team.'**
+  String get becomeProviderIntro;
+
+  /// No description provided for @businessName.
+  ///
+  /// In en, this message translates to:
+  /// **'Business or your name'**
+  String get businessName;
+
+  /// No description provided for @aboutYourWork.
+  ///
+  /// In en, this message translates to:
+  /// **'About your work'**
+  String get aboutYourWork;
+
+  /// No description provided for @phoneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get phoneLabel;
+
+  /// No description provided for @phoneHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Shown to a neighbor once you accept their request.'**
+  String get phoneHelper;
+
+  /// No description provided for @phoneInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a phone number'**
+  String get phoneInvalid;
+
+  /// No description provided for @serviceAreaLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Where you\'re based'**
+  String get serviceAreaLabel;
+
+  /// No description provided for @serviceAreaHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Neighborhood, town or ZIP code'**
+  String get serviceAreaHint;
+
+  /// No description provided for @travelDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'How far you travel'**
+  String get travelDistance;
+
+  /// No description provided for @documentsNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents'**
+  String get documentsNeeded;
+
+  /// No description provided for @documentsPrivate.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the Burghood team can see these.'**
+  String get documentsPrivate;
+
+  /// No description provided for @docLicense.
+  ///
+  /// In en, this message translates to:
+  /// **'Pennsylvania contractor registration (HIC)'**
+  String get docLicense;
+
+  /// No description provided for @docInsurance.
+  ///
+  /// In en, this message translates to:
+  /// **'Proof of insurance'**
+  String get docInsurance;
+
+  /// No description provided for @docBackground.
+  ///
+  /// In en, this message translates to:
+  /// **'Background check, plus child abuse clearances if you care for children'**
+  String get docBackground;
+
+  /// No description provided for @docFormats.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF, JPG or PNG, up to 5 MB'**
+  String get docFormats;
+
+  /// No description provided for @alreadyUploaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Already uploaded'**
+  String get alreadyUploaded;
+
+  /// No description provided for @providerAgree.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ll follow the provider rules, and my details and documents are true.'**
+  String get providerAgree;
+
+  /// No description provided for @pickAService.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick at least one service.'**
+  String get pickAService;
+
+  /// No description provided for @documentsMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the documents these services need.'**
+  String get documentsMissing;
+
+  /// No description provided for @agreeFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm the provider rules first.'**
+  String get agreeFirst;
+
+  /// No description provided for @areaNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t find that place in Allegheny County.'**
+  String get areaNotFound;
+
+  /// No description provided for @viewPublicProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'View public profile'**
+  String get viewPublicProfile;
+
+  /// No description provided for @editDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit details'**
+  String get editDetails;
+
+  /// No description provided for @providerNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This provider isn\'t available.'**
+  String get providerNotFound;
+
+  /// No description provided for @requestThisProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'Request this provider'**
+  String get requestThisProvider;
+
+  /// No description provided for @recommendToSociety.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommend to your society'**
+  String get recommendToSociety;
+
+  /// No description provided for @recommendToSocietyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Shows a \"Recommended by your society\" tag to members.'**
+  String get recommendToSocietyBody;
+
+  /// No description provided for @recommendedBySociety.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended by your society'**
+  String get recommendedBySociety;
+
+  /// No description provided for @backgroundChecked.
+  ///
+  /// In en, this message translates to:
+  /// **'Background checked'**
+  String get backgroundChecked;
+
+  /// No description provided for @providerServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Services'**
+  String get providerServices;
+
+  /// No description provided for @serviceArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Service area'**
+  String get serviceArea;
+
+  /// No description provided for @serviceAreaLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{area}, within {miles} mi'**
+  String serviceAreaLine(String area, String miles);
+
+  /// No description provided for @portfolio.
+  ///
+  /// In en, this message translates to:
+  /// **'Past work'**
+  String get portfolio;
+
+  /// No description provided for @noPortfolio.
+  ///
+  /// In en, this message translates to:
+  /// **'No photos yet.'**
+  String get noPortfolio;
+
+  /// No description provided for @portfolioPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Past work photo {n}'**
+  String portfolioPhoto(int n);
+
+  /// No description provided for @addPortfolioPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a photo of past work'**
+  String get addPortfolioPhoto;
+
+  /// No description provided for @reviewsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Reviews} =1{1 review} other{{count} reviews}}'**
+  String reviewsCount(int count);
+
+  /// No description provided for @noReviewsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No reviews yet'**
+  String get noReviewsYet;
+
+  /// No description provided for @ratingSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Rated {avg} out of 5 from {count, plural, =1{1 review} other{{count} reviews}}'**
+  String ratingSummary(String avg, int count);
+
+  /// No description provided for @providerReply.
+  ///
+  /// In en, this message translates to:
+  /// **'Reply from the provider'**
+  String get providerReply;
+
+  /// No description provided for @replyToReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Reply'**
+  String get replyToReview;
+
+  /// No description provided for @starsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 star} other{{count} stars}}'**
+  String starsLabel(int count);
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @newRequestTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New request'**
+  String get newRequestTitle;
+
+  /// No description provided for @commonRequestTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Common-area request'**
+  String get commonRequestTitle;
+
+  /// No description provided for @commonRequestNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your society admin will choose the provider and you\'ll get updates here.'**
+  String get commonRequestNote;
+
+  /// No description provided for @sendingTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending to {name}'**
+  String sendingTo(String name);
+
+  /// No description provided for @requestTitleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s the problem?'**
+  String get requestTitleLabel;
+
+  /// No description provided for @requestTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Kitchen tap leaking'**
+  String get requestTitleHint;
+
+  /// No description provided for @requestDescriptionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get requestDescriptionLabel;
+
+  /// No description provided for @requestDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Where it is, when it started, anything the provider should know'**
+  String get requestDescriptionHint;
+
+  /// No description provided for @categoryLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get categoryLabel;
+
+  /// No description provided for @chooseCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a category'**
+  String get chooseCategory;
+
+  /// No description provided for @pickCategoryFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a category first.'**
+  String get pickCategoryFirst;
+
+  /// No description provided for @photosCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos ({count} of {max})'**
+  String photosCount(int count, int max);
+
+  /// No description provided for @sendRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Send request'**
+  String get sendRequest;
+
+  /// No description provided for @requestQueued.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re offline. Your request is saved and will send when you\'re back online.'**
+  String get requestQueued;
+
+  /// No description provided for @requestWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting to send. It goes when you\'re back online.'**
+  String get requestWaiting;
+
+  /// No description provided for @requestFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t send this request. Try again, or cancel it.'**
+  String get requestFailed;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get tryAgain;
+
+  /// No description provided for @detailUrgency.
+  ///
+  /// In en, this message translates to:
+  /// **'How urgent?'**
+  String get detailUrgency;
+
+  /// No description provided for @detailAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Access'**
+  String get detailAccess;
+
+  /// No description provided for @detailAccessHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Key with the front desk'**
+  String get detailAccessHint;
+
+  /// No description provided for @detailTimeWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'Best time'**
+  String get detailTimeWindow;
+
+  /// No description provided for @detailDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get detailDate;
+
+  /// No description provided for @detailHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours needed'**
+  String get detailHours;
+
+  /// No description provided for @detailChildrenAges.
+  ///
+  /// In en, this message translates to:
+  /// **'Children\'s ages'**
+  String get detailChildrenAges;
+
+  /// No description provided for @detailChildrenAgesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 3 and 6'**
+  String get detailChildrenAgesHint;
+
+  /// No description provided for @detailPetType.
+  ///
+  /// In en, this message translates to:
+  /// **'Pet'**
+  String get detailPetType;
+
+  /// No description provided for @detailPetSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get detailPetSize;
+
+  /// No description provided for @detailBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget'**
+  String get detailBudget;
+
+  /// No description provided for @detailBudgetHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. \$50 to \$100'**
+  String get detailBudgetHint;
+
+  /// No description provided for @urgencyEmergency.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency, today'**
+  String get urgencyEmergency;
+
+  /// No description provided for @urgencySoon.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get urgencySoon;
+
+  /// No description provided for @urgencyFlexible.
+  ///
+  /// In en, this message translates to:
+  /// **'Flexible'**
+  String get urgencyFlexible;
+
+  /// No description provided for @windowMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning'**
+  String get windowMorning;
+
+  /// No description provided for @windowAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Afternoon'**
+  String get windowAfternoon;
+
+  /// No description provided for @windowEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening'**
+  String get windowEvening;
+
+  /// No description provided for @windowAny.
+  ///
+  /// In en, this message translates to:
+  /// **'Any time'**
+  String get windowAny;
+
+  /// No description provided for @petDog.
+  ///
+  /// In en, this message translates to:
+  /// **'Dog'**
+  String get petDog;
+
+  /// No description provided for @petCat.
+  ///
+  /// In en, this message translates to:
+  /// **'Cat'**
+  String get petCat;
+
+  /// No description provided for @petOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get petOther;
+
+  /// No description provided for @sizeSmall.
+  ///
+  /// In en, this message translates to:
+  /// **'Small'**
+  String get sizeSmall;
+
+  /// No description provided for @sizeMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get sizeMedium;
+
+  /// No description provided for @sizeLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'Large'**
+  String get sizeLarge;
+
+  /// No description provided for @requestTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Service request'**
+  String get requestTitle;
+
+  /// No description provided for @requestNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This request isn\'t available.'**
+  String get requestNotFound;
+
+  /// No description provided for @commonArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Common area'**
+  String get commonArea;
+
+  /// No description provided for @provider.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider'**
+  String get provider;
+
+  /// No description provided for @declinedBecause.
+  ///
+  /// In en, this message translates to:
+  /// **'The provider declined: {reason}'**
+  String declinedBecause(String reason);
+
+  /// No description provided for @notFixedBecause.
+  ///
+  /// In en, this message translates to:
+  /// **'Not fixed: {note}'**
+  String notFixedBecause(String note);
+
+  /// No description provided for @completionHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Work done'**
+  String get completionHeading;
+
+  /// No description provided for @watchVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch video'**
+  String get watchVideo;
+
+  /// No description provided for @timeline.
+  ///
+  /// In en, this message translates to:
+  /// **'Timeline'**
+  String get timeline;
+
+  /// No description provided for @timelineEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Updates appear here.'**
+  String get timelineEmpty;
+
+  /// No description provided for @chooseProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a provider'**
+  String get chooseProvider;
+
+  /// No description provided for @waitingForAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for your society admin to choose a provider.'**
+  String get waitingForAdmin;
+
+  /// No description provided for @waitingForProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the provider to accept.'**
+  String get waitingForProvider;
+
+  /// No description provided for @cancelRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel request'**
+  String get cancelRequest;
+
+  /// No description provided for @confirmDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm it\'s done'**
+  String get confirmDone;
+
+  /// No description provided for @notFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Not fixed'**
+  String get notFixed;
+
+  /// No description provided for @notFixedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s still wrong?'**
+  String get notFixedTitle;
+
+  /// No description provided for @notFixedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The provider sees this and can come back to it.'**
+  String get notFixedHint;
+
+  /// No description provided for @rateProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'How did it go?'**
+  String get rateProvider;
+
+  /// No description provided for @reviewHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell neighbors about the work (optional)'**
+  String get reviewHint;
+
+  /// No description provided for @sendReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Send review'**
+  String get sendReview;
+
+  /// No description provided for @acceptJob.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept job'**
+  String get acceptJob;
+
+  /// No description provided for @declineJob.
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get declineJob;
+
+  /// No description provided for @declineHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason (optional), e.g. fully booked this week'**
+  String get declineHint;
+
+  /// No description provided for @startJob.
+  ///
+  /// In en, this message translates to:
+  /// **'Start job'**
+  String get startJob;
+
+  /// No description provided for @completeJob.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as done'**
+  String get completeJob;
+
+  /// No description provided for @completionNote.
+  ///
+  /// In en, this message translates to:
+  /// **'What you did'**
+  String get completionNote;
+
+  /// No description provided for @addVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Add short video'**
+  String get addVideo;
+
+  /// No description provided for @videoAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Video'**
+  String get videoAdded;
+
+  /// No description provided for @videoTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'That video is too large. The limit is 30 MB.'**
+  String get videoTooLarge;
+
+  /// No description provided for @markDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Send to neighbor'**
+  String get markDone;
+
+  /// No description provided for @srPosted.
+  ///
+  /// In en, this message translates to:
+  /// **'Posted'**
+  String get srPosted;
+
+  /// No description provided for @srAssigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to provider'**
+  String get srAssigned;
+
+  /// No description provided for @srAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted'**
+  String get srAccepted;
+
+  /// No description provided for @srDeclined.
+  ///
+  /// In en, this message translates to:
+  /// **'Declined'**
+  String get srDeclined;
+
+  /// No description provided for @srInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In progress'**
+  String get srInProgress;
+
+  /// No description provided for @srCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Done, please check'**
+  String get srCompleted;
+
+  /// No description provided for @srNotFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Not fixed'**
+  String get srNotFixed;
+
+  /// No description provided for @srConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get srConfirmed;
+
+  /// No description provided for @srClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get srClosed;
+
+  /// No description provided for @srCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get srCancelled;
+
+  /// No description provided for @activityServiceRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Requests'**
+  String get activityServiceRequests;
+
+  /// No description provided for @activityJobs.
+  ///
+  /// In en, this message translates to:
+  /// **'Jobs'**
+  String get activityJobs;
+
+  /// No description provided for @serviceRequestsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Requests you make for your home or society show up here.'**
+  String get serviceRequestsEmpty;
+
+  /// No description provided for @jobsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Requests neighbors send you show up here.'**
+  String get jobsEmpty;
+
+  /// No description provided for @openCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Open ({count})'**
+  String openCount(int count);
+
+  /// No description provided for @doneCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Done ({count})'**
+  String doneCount(int count);
+
+  /// No description provided for @notifyServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Service requests and jobs'**
+  String get notifyServices;
+
+  /// No description provided for @notifyServicesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Updates on requests you made and jobs sent to you'**
+  String get notifyServicesBody;
 }
 
 class _AppLocalizationsDelegate

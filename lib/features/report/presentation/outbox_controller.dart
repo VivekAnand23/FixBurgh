@@ -5,6 +5,7 @@ import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/report/data/outbox.dart';
 import 'package:fixburgh/features/report/data/report_repository.dart';
 import 'package:fixburgh/features/report/domain/report.dart';
+import 'package:fixburgh/features/services/data/request_outbox.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -163,16 +164,25 @@ class _OutboxRunnerState extends ConsumerState<OutboxRunner>
       // No connectivity plugin (tests).
     }
     _timer = Timer.periodic(const Duration(seconds: 30), (_) {
-      if (ref.read(outboxProvider).isNotEmpty) _send();
+      if (ref.read(outboxProvider).isNotEmpty ||
+          ref.read(requestOutboxProvider).isNotEmpty) {
+        _send();
+      }
     });
     _send();
   }
 
-  void _send() => unawaited(
-    ref.read(outboxProvider.notifier).sendNow().catchError((_) {
-      return null;
-    }),
-  );
+  void _send() {
+    unawaited(
+      ref.read(outboxProvider.notifier).sendNow().catchError((_) {
+        return null;
+      }),
+    );
+    // Service requests waiting to post (Burghood Phase 3).
+    unawaited(
+      ref.read(requestOutboxProvider.notifier).sendNow().catchError((_) => 0),
+    );
+  }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {

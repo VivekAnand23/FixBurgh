@@ -10,7 +10,13 @@ import 'package:fixburgh/features/onboarding/onboarding_controller.dart';
 import 'package:fixburgh/features/onboarding/welcome_screen.dart';
 import 'package:fixburgh/features/profile/data_sources_screen.dart';
 import 'package:fixburgh/features/profile/profile_screen.dart';
-import 'package:fixburgh/features/report/report_screen.dart';
+import 'package:fixburgh/features/providers/presentation/become_provider_screen.dart';
+import 'package:fixburgh/features/providers/presentation/provider_profile_screen.dart';
+import 'package:fixburgh/features/services/domain/service_request.dart';
+import 'package:fixburgh/features/services/presentation/report_fork.dart';
+import 'package:fixburgh/features/services/presentation/request_detail_screen.dart';
+import 'package:fixburgh/features/services/presentation/request_form_screen.dart';
+import 'package:fixburgh/features/services/presentation/service_requests_view.dart';
 import 'package:fixburgh/features/society/domain/society.dart';
 import 'package:fixburgh/features/society/presentation/channel_screen.dart';
 import 'package:fixburgh/features/society/presentation/claim_status.dart';
@@ -51,6 +57,15 @@ abstract final class Routes {
   static String post(String sid, String cid, String pid) =>
       '/society/$sid/channels/$cid/posts/$pid';
   static const inbox = '/inbox';
+
+  // Burghood services (Phase 3).
+  static const newServiceRequest = '/services/requests/new';
+  static String serviceRequest(String id) => '/services/requests/$id';
+  static String provider(String id, {String? societyId}) => societyId == null
+      ? '/services/providers/$id'
+      : '/services/providers/$id?sid=$societyId';
+  static const becomeProvider = '/services/provider';
+  static String commonRequests(String sid) => '/society/$sid/services/common';
 }
 
 /// Picks the onboarding screen the user must see, or null when done.
@@ -149,6 +164,35 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: Routes.inbox, builder: (_, _) => const InboxScreen()),
       GoRoute(
+        path: Routes.newServiceRequest,
+        builder: (_, s) => RequestFormScreen(
+          args:
+              s.extra as RequestFormArgs? ??
+              const RequestFormArgs(scope: RequestScope.home),
+        ),
+      ),
+      GoRoute(
+        path: '/services/requests/:id',
+        builder: (_, s) =>
+            RequestDetailScreen(requestId: s.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/services/providers/:id',
+        builder: (_, s) => ProviderProfileScreen(
+          providerId: s.pathParameters['id']!,
+          societyId: s.uri.queryParameters['sid'],
+        ),
+      ),
+      GoRoute(
+        path: Routes.becomeProvider,
+        builder: (_, _) => const BecomeProviderScreen(),
+      ),
+      GoRoute(
+        path: '/society/:sid/services/common',
+        builder: (_, s) =>
+            CommonRequestsScreen(societyId: s.pathParameters['sid']!),
+      ),
+      GoRoute(
         path: '/society/:sid/documents/new',
         builder: (_, s) =>
             UploadDocumentScreen(societyId: s.pathParameters['sid']!),
@@ -173,7 +217,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: Routes.report,
-                builder: (_, _) => const ReportScreen(),
+                builder: (_, _) => const ReportEntry(),
               ),
             ],
           ),

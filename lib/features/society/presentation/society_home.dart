@@ -5,6 +5,7 @@ import 'package:fixburgh/app/router.dart';
 import 'package:fixburgh/app/theme/app_colors.dart';
 import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/notifications/inbox_screen.dart';
+import 'package:fixburgh/features/services/presentation/services_tab.dart';
 import 'package:fixburgh/features/society/data/society_repository.dart';
 import 'package:fixburgh/features/society/domain/society.dart';
 import 'package:fixburgh/features/society/presentation/channels_tab.dart';
@@ -17,7 +18,7 @@ import 'package:intl/intl.dart';
 
 /// A member's view of their society (mock 3): the switcher, Manage for
 /// admins, the HOA account link, and Notices and Docs tabs (plus Members
-/// for admins). Channels and Services join in later phases.
+/// for admins), plus Channels and Services behind their flags.
 class SocietyHome extends ConsumerWidget {
   const SocietyHome({required this.societyId, super.key});
 
@@ -35,11 +36,13 @@ class SocietyHome extends ConsumerWidget {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     final channels = ref.watch(featureFlagsProvider).channels;
+    final services = ref.watch(featureFlagsProvider).services;
     final unseen = ref.watch(inboxUnseenProvider);
     final tabs = [
       if (channels) Tab(text: l10n.tabChannels),
       Tab(text: l10n.tabNotices),
       Tab(text: l10n.tabDocs),
+      if (services) Tab(text: l10n.tabServices),
       if (isAdmin) Tab(text: l10n.tabMembers),
     ];
     return DefaultTabController(
@@ -104,6 +107,7 @@ class SocietyHome extends ConsumerWidget {
                   if (channels) ChannelsTab(societyId: societyId, me: me),
                   _NoticesTab(societyId: societyId, me: me),
                   _DocsTab(societyId: societyId, me: me),
+                  if (services) ServicesTab(societyId: societyId, me: me),
                   if (isAdmin) MembersTab(societyId: societyId, me: me),
                 ],
               ),

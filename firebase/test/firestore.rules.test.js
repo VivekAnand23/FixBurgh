@@ -953,6 +953,15 @@ describe('service providers', () => {
     await assertSucceeds(getDoc(doc(account('admin', { platformAdmin: true }), at('wait'))));
   });
 
+  it('shows the audit trail to platform admins only', async () => {
+    await env.withSecurityRulesDisabled((ctx) =>
+      setDoc(doc(ctx.firestore(), `${at('pete')}/audit/a1`), { action: 'approve', at: new Date() }),
+    );
+    await assertSucceeds(getDoc(doc(account('admin', { platformAdmin: true }), `${at('pete')}/audit/a1`)));
+    await assertFails(getDoc(doc(account('pete'), `${at('pete')}/audit/a1`)));
+    await assertFails(setDoc(doc(account('admin', { platformAdmin: true }), `${at('pete')}/audit/a2`), { action: 'x' }));
+  });
+
   it('lets owners edit details but never their status, ratings or checks', async () => {
     await env.withSecurityRulesDisabled((ctx) =>
       setDoc(doc(ctx.firestore(), at('pete')), { ...provider('pete'), status: 'approved', ratingAvg: 4, createdAt: new Date(), updatedAt: new Date() }),

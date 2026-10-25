@@ -155,6 +155,14 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
               value: s.notices,
               onChanged: (v) => _save(s.copyWith(notices: v)),
             ),
+          if (flags.services)
+            SwitchListTile(
+              secondary: const Icon(Icons.handyman_outlined),
+              title: Text(l10n.notifyServices),
+              subtitle: Text(l10n.notifyServicesBody),
+              value: s.services,
+              onChanged: (v) => _save(s.copyWith(services: v)),
+            ),
           if (flags.society && flags.channels) const MutedChannelsList(),
           const Divider(),
           SwitchListTile(
