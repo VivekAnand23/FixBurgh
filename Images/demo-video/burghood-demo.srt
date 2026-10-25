@@ -1,0 +1,79 @@
+1
+00:00:00,350 --> 00:00:08,077
+Meet Burghood: one app to get your street fixed, look after your home, and stay close to your neighbors, here in Allegheny County.
+
+2
+00:00:09,127 --> 00:00:19,947
+It starts with the community map. Every pothole, broken streetlight and illegal dump your neighbors have reported, in one place. Filter by type, and see what has already been fixed.
+
+3
+00:00:20,997 --> 00:00:31,746
+Reporting takes under a minute. First, Burghood checks that no one is in danger. Downed power lines, a gas smell, or someone hurt? It points you to 911 straight away.
+
+4
+00:00:32,796 --> 00:00:39,270
+Drop a pin on the exact spot, or search for an address. Burghood works out which municipality it is in.
+
+5
+00:00:40,320 --> 00:00:44,952
+Pick what it is and how bad it is, add a photo and a short note, and you are done.
+
+6
+00:00:46,002 --> 00:00:58,948
+Then the part people love. Burghood tells you who actually fixes it. A state road goes to PennDOT, a local street to your city or borough, with the phone number and website. Neighbors can add a me too, and your name is never shown.
+
+7
+00:00:59,998 --> 00:01:17,072
+Burghood also brings your homeowners association or condo society into the app. Find your society by address, or join with an invite code. Every society is verified before it goes live, and members get notices, documents, the HOA account link, and a member list.
+
+8
+00:01:18,122 --> 00:01:30,220
+Channels are where neighbors talk: snow updates, lost and found, events. Post photos, comment, react, and mention people. Mute a busy channel, and unread counts keep you up to date.
+
+9
+00:01:31,270 --> 00:01:42,757
+When you report a problem, Burghood now asks where it is. On the street goes to the city, exactly as before. In your home, or in your society's common areas, becomes a service request.
+
+10
+00:01:43,807 --> 00:02:00,580
+Just describe it. Type kitchen tap leaking, and Burghood knows you need a plumber. Choose a distance from two to twenty five miles. Providers your society recommends come first, then the best rated, with a badge for those who passed a background check. Sponsored listings are clearly marked.
+
+11
+00:02:01,630 --> 00:02:15,190
+Every provider has a profile with their services, area, photos of past work, and reviews from real jobs, with the provider's replies. Ratings are weighted, so one five star review cannot outrank two hundred great ones.
+
+12
+00:02:16,240 --> 00:02:32,255
+Send a request with a title, details and up to six photos. The form asks what matters for that job: urgency and access for repairs, dates and ages for babysitting, pet size for dog walking. No signal? It saves the request and sends it when you are back online.
+
+13
+00:02:33,305 --> 00:02:41,795
+The provider gets a notification and can accept or decline. They start the job, then mark it done with a note, photos, or a short video.
+
+14
+00:02:42,845 --> 00:02:55,948
+You follow every step on the timeline. If it is fixed, confirm it and leave a star rating. If not, tap Not fixed, and the provider comes back to it. For common areas, your society admin picks the provider.
+
+15
+00:02:56,998 --> 00:03:03,888
+Searching for something no one lists yet? Burghood offers a one tap search on Google Maps, so you are never stuck.
+
+16
+00:03:04,938 --> 00:03:19,584
+Service providers sign up right in the app, from the Profile tab, even if they do not live in a society. They choose their services and area, and upload their license, insurance or background check. Those documents are seen only by the Burghood team.
+
+17
+00:03:20,634 --> 00:03:32,561
+The Burghood team reviews every application. Once approved, the provider gets a listing fee request with clear payment instructions and a pay link. As soon as the payment is recorded, their profile goes live.
+
+18
+00:03:33,611 --> 00:03:41,100
+Providers manage their work from the Jobs tab, while residents track their city reports and service requests side by side in Activity.
+
+19
+00:03:42,150 --> 00:03:55,856
+Behind the scenes, the admin console lets the Burghood team verify societies and providers, record background checks, request and record payments, schedule sponsored listings, and export an audit report for the accountant.
+
+20
+00:03:56,906 --> 00:04:07,792
+Burghood. Built for Allegheny County, readable at any text size, private by design, and free for residents. Fix your street, look after your home, and know your neighbors.

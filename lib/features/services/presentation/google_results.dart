@@ -100,13 +100,30 @@ class GooglePlaceCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 2),
-          Text(
-            [
-              if (p.rating != null)
-                l10n.googleRating(p.rating!.toStringAsFixed(1), p.ratingCount),
-              l10n.milesAway(p.distanceMiles.toStringAsFixed(1)),
-            ].join(' · '),
-            style: theme.textTheme.bodySmall,
+          Row(
+            children: [
+              if (p.rating != null) ...[
+                Icon(
+                  Icons.star_rounded,
+                  size: 16,
+                  color: Colors.amber.shade700,
+                ),
+                const SizedBox(width: 2),
+              ],
+              Flexible(
+                child: Text(
+                  [
+                    if (p.rating != null)
+                      l10n.googleRating(
+                        p.rating!.toStringAsFixed(1),
+                        p.ratingCount,
+                      ),
+                    l10n.milesAway(p.distanceMiles.toStringAsFixed(1)),
+                  ].join(' · '),
+                  style: theme.textTheme.bodySmall,
+                ),
+              ),
+            ],
           ),
           if (p.address.isNotEmpty)
             Text(

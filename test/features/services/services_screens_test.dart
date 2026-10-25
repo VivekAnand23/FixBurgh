@@ -546,7 +546,7 @@ void main() {
       expect(find.text('Not on Burghood yet'), findsOneWidget);
       expect(find.text('Allegheny Plumbing Co'), findsOneWidget);
       expect(
-        find.textContaining('★ 4.6 (88 reviews on Google)'),
+        find.textContaining('4.6 (88 reviews on Google)'),
         findsOneWidget,
       );
       expect(find.text('Results from Google Maps'), findsOneWidget);
