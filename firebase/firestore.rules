@@ -673,7 +673,8 @@ service cloud.firestore {
         && validProvider(providerId, request.resource.data)
         && request.resource.data.status == 'applied'
         && !request.resource.data.keys().hasAny(['keywords', 'ratingAvg', 'ratingCount',
-             'rankScore', 'backgroundCheck', 'decidedBy', 'decidedAt', 'rejectReason', 'liveAt'])
+             'rankScore', 'backgroundCheck', 'decidedBy', 'decidedAt', 'rejectReason', 'liveAt',
+             'listing'])
         && request.resource.data.createdAt == request.time
         && request.resource.data.updatedAt == request.time;
       // Details any time; a rejected application can be sent again.
@@ -718,7 +719,7 @@ service cloud.firestore {
                                'status', 'createdAt', 'updatedAt',
                                'keywords', 'ratingAvg', 'ratingCount', 'rankScore',
                                'backgroundCheck', 'decidedBy', 'decidedAt', 'rejectReason',
-                               'liveAt'])
+                               'liveAt', 'listing'])
         && d.ownerUid == uid
         && d.businessName is string && d.businessName.size() >= 2 && d.businessName.size() <= 80
         && d.description is string && d.description.size() <= 1000
@@ -736,7 +737,7 @@ service cloud.firestore {
         && (!('insurance' in d.documents) || d.documents.insurance.matches(docs + 'insurance[.](jpg|png|pdf)'))
         && (!('background' in d.documents) || d.documents.background.matches(docs + 'background[.](jpg|png|pdf)'))
         && d.get('portfolio', []) is list && d.get('portfolio', []).size() <= 12
-        && d.status in ['applied', 'approved', 'rejected', 'suspended'];
+        && d.status in ['applied', 'approved', 'awaiting_fee', 'rejected', 'suspended'];
     }
 
     function validReview(providerId, requestId) {
@@ -871,15 +872,107 @@ service cloud.firestore {
         && d.createdAt == request.time && d.updatedAt == request.time;
     }
 
+    // Sponsored listings (Phase 4). Platform admins schedule them; Cloud
+    // Functions set `paid` and `active` from the ledger and the date, and
+    // accounts see only active ones.
     match /sponsorships/{sponsorshipId} {
-      allow read: if isPlatformAdmin();
-      allow write: if false;
+      allow read: if isPlatformAdmin()
+        || (fullAccount() && resource.data.active == true);
+      allow create: if isPlatformAdmin() && validSponsorship(request.resource.data)
+        && !request.resource.data.keys().hasAny(['paid', 'active'])
+        && request.resource.data.createdBy == request.auth.uid
+        && request.resource.data.createdAt == request.time;
+      allow update: if isPlatformAdmin() && validSponsorship(request.resource.data)
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['categories', 'area', 'startDate', 'endDate', 'priceUsd', 'note']);
+      allow delete: if isPlatformAdmin() && resource.data.get('paid', false) == false;
+    }
+
+    function isDate(v) {
+      return v is string && v.matches('[0-9]{4}-[0-9]{2}-[0-9]{2}');
+    }
+
+    function validSponsorship(d) {
+      return d.keys().hasOnly(['providerId', 'businessName', 'categories', 'area', 'startDate',
+                               'endDate', 'priceUsd', 'note', 'createdBy', 'createdAt', 'paid', 'active'])
+        && d.providerId is string
+        && exists(/databases/$(database)/documents/providers/$(d.providerId))
+        && d.businessName is string && d.businessName.size() <= 80
+        && d.categories is list && d.categories.size() >= 1 && d.categories.size() <= 10
+        && d.area is map && d.area.keys().hasOnly(['lat', 'lng', 'radiusMiles', 'label'])
+        && d.area.lat is number && d.area.lng is number
+        && d.area.radiusMiles is number && d.area.radiusMiles >= 1 && d.area.radiusMiles <= 25
+        && isDate(d.startDate) && isDate(d.endDate) && d.startDate <= d.endDate
+        && d.get('priceUsd', 0) is number && d.get('priceUsd', 0) >= 0
+        && d.get('note', '') is string && d.get('note', '').size() <= 300;
+    }
+
+    // Settings for fees and sponsorships, until the amounts are decided.
+    match /config/monetisation {
+      allow read: if signedIn();
+      allow write: if isPlatformAdmin()
+        && request.resource.data.keys().hasOnly(['listingFeeUsd', 'listingMonths',
+             'sponsorshipWeeklyUsd', 'maxSponsored', 'reminderDays', 'updatedBy', 'updatedAt',
+             'emulatorFlag'])
+        // The emulator-only flag stays as tests set it.
+        && (resource == null
+            ? !('emulatorFlag' in request.resource.data)
+            : request.resource.data.get('emulatorFlag', null) == resource.data.get('emulatorFlag', null))
+        && request.resource.data.listingFeeUsd is number && request.resource.data.listingFeeUsd >= 0
+        && request.resource.data.listingMonths is int
+        && request.resource.data.listingMonths >= 1 && request.resource.data.listingMonths <= 36
+        && request.resource.data.sponsorshipWeeklyUsd is number && request.resource.data.sponsorshipWeeklyUsd >= 0
+        && request.resource.data.maxSponsored is int
+        && request.resource.data.maxSponsored >= 0 && request.resource.data.maxSponsored <= 2
+        && request.resource.data.reminderDays is int
+        && request.resource.data.reminderDays >= 0 && request.resource.data.reminderDays <= 60
+        && request.resource.data.updatedBy == request.auth.uid
+        && request.resource.data.updatedAt == request.time;
     }
 
     // Append-only ledger (Phase 4): even admins can't edit or delete.
+    // A reversing entry undoes one payment, once: its id is `rev_` plus the
+    // original's, and it repeats the original's type, kind, amount and links.
     match /payments/{paymentId} {
       allow read: if isPlatformAdmin();
-      allow write: if false;
+      allow create: if isPlatformAdmin() && validPayment(request.resource.data)
+        && (request.resource.data.get('reversalOf', null) == null
+            ? !paymentId.matches('rev_.*') && request.resource.data.get('reason', '') == ''
+            : validReversal(paymentId, request.resource.data));
+      allow update, delete: if false;
+    }
+
+    function validPayment(d) {
+      return d.keys().hasOnly(['type', 'kind', 'amountCents', 'currency', 'date', 'method',
+                               'reference', 'purpose', 'party', 'providerId', 'sponsorshipId',
+                               'periodMonths', 'recordedBy', 'recordedByEmail', 'recordedAt',
+                               'reversalOf', 'reason'])
+        && d.type in ['income', 'expense']
+        && d.kind in ['listing_fee', 'sponsorship', 'other']
+        && d.amountCents is int && d.amountCents > 0 && d.amountCents <= 10000000
+        && d.currency == 'USD'
+        && isDate(d.date)
+        && d.method in ['cash', 'check', 'bank_transfer', 'card', 'online', 'other']
+        && d.get('reference', '') is string && d.get('reference', '').size() <= 100
+        && d.purpose is string && d.purpose.size() >= 1 && d.purpose.size() <= 300
+        && d.party is string && d.party.size() >= 1 && d.party.size() <= 120
+        && (d.kind != 'listing_fee' || (d.type == 'income' && d.providerId is string
+              && d.periodMonths is int && d.periodMonths >= 1 && d.periodMonths <= 36))
+        && (d.kind != 'sponsorship' || (d.type == 'income' && d.sponsorshipId is string))
+        && d.recordedBy == request.auth.uid
+        && d.recordedByEmail == request.auth.token.get('email', '')
+        && d.recordedAt == request.time;
+    }
+
+    function validReversal(paymentId, d) {
+      let o = get(/databases/$(database)/documents/payments/$(d.reversalOf)).data;
+      return paymentId == 'rev_' + d.reversalOf
+        && o.get('reversalOf', null) == null
+        && d.type == o.type && d.kind == o.kind && d.amountCents == o.amountCents
+        && d.get('providerId', null) == o.get('providerId', null)
+        && d.get('sponsorshipId', null) == o.get('sponsorshipId', null)
+        && d.get('periodMonths', null) == o.get('periodMonths', null)
+        && d.reason is string && d.reason.size() >= 1 && d.reason.size() <= 300;
     }
   }
 }

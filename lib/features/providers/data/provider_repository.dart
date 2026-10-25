@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart' hide GeoPoint;
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fixburgh/app/remote_config.dart';
 import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/providers/domain/provider.dart';
 import 'package:fixburgh/features/report/domain/geohash.dart';
@@ -102,6 +103,30 @@ final providerSearchProvider = FutureProvider.autoDispose
       retry: (_, _) => null,
     );
 
+/// Fee and sponsorship settings, with placeholders until they're set.
+final StreamProvider<MonetisationSettings> monetisationSettingsProvider =
+    StreamProvider.autoDispose<MonetisationSettings>(
+      (ref) => ref.watch(providerRepositoryProvider).watchMonetisation(),
+    );
+
+/// Sponsored listings for a search: only with `feature_monetisation` on and
+/// a category to match.
+// ignore: specify_nonobvious_property_types, family type isn't exported.
+final sponsoredSearchProvider = FutureProvider.autoDispose
+    .family<List<SponsoredResult>, ProviderQuery>(
+      (ref, q) async {
+        if (!ref.watch(featureFlagsProvider).monetisation ||
+            q.categories.isEmpty) {
+          return const [];
+        }
+        final settings = await ref.watch(monetisationSettingsProvider.future);
+        return ref
+            .watch(providerRepositoryProvider)
+            .sponsored(q, max: settings.maxSponsored);
+      },
+      retry: (_, _) => null,
+    );
+
 /// Provider profiles, reviews and applications. Approval, ratings and
 /// keywords are handled by Cloud Functions (functions/src/services.ts).
 class ProviderRepository {
@@ -130,6 +155,44 @@ class ProviderRepository {
       .map(
         (s) => [for (final d in s.docs) Review.fromDoc(d.id, plain(d.data()))],
       );
+
+  Stream<MonetisationSettings> watchMonetisation() => _db
+      .collection('config')
+      .doc('monetisation')
+      .snapshots()
+      .map((d) => parseMonetisation(d.data()));
+
+  /// Paid sponsorships showing now for the search's categories and area,
+  /// with their providers (only those still live).
+  Future<List<SponsoredResult>> sponsored(
+    ProviderQuery q, {
+    required int max,
+  }) async {
+    if (max <= 0) return const [];
+    final snap = await _db
+        .collection('sponsorships')
+        .where('active', isEqualTo: true)
+        .where('categories', arrayContainsAny: q.categories.take(10).toList())
+        .limit(50)
+        .get();
+    final picked = pickSponsored(
+      [for (final d in snap.docs) Sponsorship.fromDoc(d.id, d.data())],
+      categories: q.categories,
+      near: q.near,
+      max: max,
+    );
+    final out = <SponsoredResult>[];
+    for (final s in picked) {
+      final p = await _providers.doc(s.providerId).get();
+      final data = p.data();
+      if (data == null) continue;
+      final provider = ServiceProvider.fromDoc(p.id, plain(data));
+      if (provider.status == ProviderStatus.approved) {
+        out.add((sponsorshipId: s.id, provider: provider));
+      }
+    }
+    return out;
+  }
 
   Stream<Set<String>> watchRecommended(String sid) => _db
       .collection('societies')

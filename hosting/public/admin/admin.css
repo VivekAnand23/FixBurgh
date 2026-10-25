@@ -29,3 +29,18 @@ dialog textarea { width: 100%; font: inherit; padding: 8px; border-radius: 8px; 
 .pill.suspended { color: #9C4221; border-color: #9C4221; }
 dialog fieldset { border: 1px solid var(--line); border-radius: 12px; margin: 8px 0; }
 dialog label { display: block; margin: 4px 0; }
+.form label { display: block; margin: 6px 0; }
+.form input, .form select { font: inherit; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+table.ledger { width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 16px; }
+table.ledger th, table.ledger td { text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.ledger td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+tr.reversed td { color: var(--muted); }
+dl.totals { display: grid; grid-template-columns: max-content max-content; gap: 2px 16px; }
+dl.totals dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+div.scroll { overflow-x: auto; }
+@media print {
+  div.scroll { overflow: visible; }
+  body.printing-report main > *:not(#console), body.printing-report #console > *:not(#report),
+  body.printing-report #report > *:not(#report-body), body.printing-report .no-print { display: none !important; }
+  body.printing-report .panel { border: 0; padding: 0; }
+}

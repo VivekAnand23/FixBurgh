@@ -1380,5 +1380,28 @@
     }
   },
   "notifyServices": "Service requests and jobs",
-  "notifyServicesBody": "Updates on requests you made and jobs sent to you"
+  "notifyServicesBody": "Updates on requests you made and jobs sent to you",
+  "listingExpiresOn": "Neighbors can find you and send you requests. Your listing runs until {date}.",
+  "@listingExpiresOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "providerAwaitingFeeTitle": "Approved, waiting for the listing fee",
+  "providerAwaitingFee": "You'll appear in search once the {fee} listing fee for {months} months is paid. The Burghood team will be in touch about payment.",
+  "@providerAwaitingFee": {
+    "placeholders": {
+      "fee": {
+        "type": "String"
+      },
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "providerAwaitingFeeShort": "Approved. You'll be listed once the listing fee is paid.",
+  "sponsored": "Sponsored",
+  "allProviders": "All providers"
 }

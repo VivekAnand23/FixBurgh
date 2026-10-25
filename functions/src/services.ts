@@ -16,6 +16,7 @@ import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { CallableRequest, HttpsError, onCall } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 
+import { approvedStatus, deleteSponsorships, settings } from './monetisation';
 import { notifyUsers } from './notify';
 import { BACKGROUND_CHECK_GROUP, CHILD_CARE_CATEGORIES, categoryById } from './serviceCategories';
 
@@ -85,7 +86,8 @@ const audit = (pid: string) => db().collection('providers').doc(pid).collection(
 /**
  * decideProvider: a platform admin approves, rejects (with a reason),
  * suspends or reinstates a provider. Approval is refused while a required
- * background check or clearance is missing. Providers list free in Phase 3.
+ * background check or clearance is missing. While listing fees apply
+ * (feature_monetisation), approval waits for the fee (`awaiting_fee`).
  */
 export const decideProvider = onCall(async (request) => {
   const admin = requirePlatformAdmin(request);
@@ -98,6 +100,7 @@ export const decideProvider = onCall(async (request) => {
     throw new HttpsError('invalid-argument', 'Say why.');
   }
   const ref = db().collection('providers').doc(providerId);
+  const approved = decision === 'approve' || decision === 'reinstate' ? await approvedStatus(providerId) : 'approved';
   const result = await db().runTransaction(async (tx) => {
     const p = await tx.get(ref);
     if (!p.exists) throw new HttpsError('not-found', 'No such provider.');
@@ -105,7 +108,7 @@ export const decideProvider = onCall(async (request) => {
     const allowed: Record<string, string[]> = {
       approve: ['applied', 'rejected'],
       reject: ['applied'],
-      suspend: ['approved'],
+      suspend: ['approved', 'awaiting_fee'],
       reinstate: ['suspended'],
     };
     if (!allowed[decision].includes(status)) {
@@ -115,7 +118,7 @@ export const decideProvider = onCall(async (request) => {
       const blocker = approvalBlocker(p.data()!);
       if (blocker) throw new HttpsError('failed-precondition', blocker);
     }
-    const next = { approve: 'approved', reject: 'rejected', suspend: 'suspended', reinstate: 'approved' }[
+    const next = { approve: approved, reject: 'rejected', suspend: 'suspended', reinstate: approved }[
       decision as 'approve'
     ];
     tx.update(ref, {
@@ -138,6 +141,10 @@ export const decideProvider = onCall(async (request) => {
     approved: { title: `${result.name} is live on Burghood`, body: 'Neighbors can now find you and send you requests.' },
     rejected: { title: `We couldn't approve ${result.name}`, body: reason },
     suspended: { title: `${result.name} is paused`, body: reason },
+    awaiting_fee: {
+      title: `${result.name} is approved`,
+      body: `It goes live once the $${(await settings()).listingFeeUsd} listing fee is recorded.`,
+    },
   }[result.status as 'approved'];
   if (notice) {
     await notifyUsers([result.owner], { kind: 'society', ...notice }, `provider_${providerId}_${Date.now()}`);
@@ -329,6 +336,7 @@ export async function deleteServiceData(uid: string) {
   const bucket = getStorage().bucket();
   const provider = db().collection('providers').doc(uid);
   if ((await provider.get()).exists) await db().recursiveDelete(provider);
+  await deleteSponsorships(uid);
   for (const prefix of [`providerDocs/${uid}/`, `providers/${uid}/`]) {
     await bucket.deleteFiles({ prefix }).catch((e) => logger.warn('provider file delete failed', { prefix, e }));
   }

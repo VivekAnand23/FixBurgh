@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fixburgh/app/router.dart';
+import 'package:fixburgh/app/theme/app_colors.dart';
 import 'package:fixburgh/features/providers/data/provider_repository.dart';
 import 'package:fixburgh/features/providers/domain/provider.dart';
 import 'package:fixburgh/features/services/data/service_request_repository.dart';
@@ -70,6 +71,9 @@ class _ServicesTabState extends ConsumerState<ServicesTab> {
       societyId: widget.societyId,
     );
     final results = ref.watch(providerSearchProvider(query));
+    final sponsored =
+        ref.watch(sponsoredSearchProvider(query)).value ??
+        const <SponsoredResult>[];
     final open = widget.me.isAdmin
         ? (ref.watch(commonRequestsProvider(widget.societyId)).value ??
                   const <ServiceRequest>[])
@@ -194,6 +198,27 @@ class _ServicesTabState extends ConsumerState<ServicesTab> {
           ),
         ),
         const SizedBox(height: 12),
+        if (sponsored.isNotEmpty) ...[
+          _SectionLabel(text: l10n.sponsored),
+          for (final s in sponsored)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: ProviderCard(
+                key: Key('sponsored-${s.sponsorshipId}'),
+                result: (
+                  provider: s.provider,
+                  distanceMiles: null,
+                  recommended: false,
+                ),
+                sponsored: true,
+                onTap: () => context.push(
+                  Routes.provider(s.provider.id, societyId: widget.societyId),
+                ),
+              ),
+            ),
+          const Divider(height: 24),
+          _SectionLabel(text: l10n.allProviders),
+        ],
         ...results.when(
           loading: () => [
             const Padding(
@@ -237,10 +262,18 @@ class _ServicesTabState extends ConsumerState<ServicesTab> {
 
 /// A search result row.
 class ProviderCard extends ConsumerWidget {
-  const ProviderCard({required this.result, required this.onTap, super.key});
+  const ProviderCard({
+    required this.result,
+    required this.onTap,
+    this.sponsored = false,
+    super.key,
+  });
 
   final ProviderResult result;
   final VoidCallback onTap;
+
+  /// A paid sponsorship: orange border and a Sponsored badge.
+  final bool sponsored;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -250,14 +283,22 @@ class ProviderCard extends ConsumerWidget {
     final p = result.provider;
     return SocietyCard(
       padding: EdgeInsets.zero,
+      borderColor: sponsored ? AppColors.orange : null,
+      color: sponsored && theme.brightness == Brightness.light
+          ? AppColors.orangeTint
+          : null,
       child: InkWell(
-        key: Key('provider-${p.id}'),
+        key: Key('${sponsored ? 'sponsored-card' : 'provider'}-${p.id}'),
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (sponsored) ...[
+                const SponsoredBadge(),
+                const SizedBox(height: 6),
+              ],
               Row(
                 children: [
                   Expanded(
@@ -306,6 +347,7 @@ class BecomeProviderLink extends ConsumerWidget {
       null => l10n.becomeProviderBody,
       ProviderStatus.applied => l10n.providerApplied,
       ProviderStatus.approved => l10n.providerLive,
+      ProviderStatus.awaitingFee => l10n.providerAwaitingFeeShort,
       ProviderStatus.rejected => l10n.providerRejected,
       ProviderStatus.suspended => l10n.providerSuspended,
     };
@@ -320,6 +362,47 @@ class BecomeProviderLink extends ConsumerWidget {
         subtitle: Text(subtitle),
         trailing: const Icon(Icons.chevron_right),
         onTap: () => context.push(Routes.becomeProvider),
+      ),
+    );
+  }
+}
+
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Semantics(
+      header: true,
+      child: Text(text, style: Theme.of(context).textTheme.titleSmall),
+    ),
+  );
+}
+
+/// The "Sponsored" label on a paid listing.
+class SponsoredBadge extends StatelessWidget {
+  const SponsoredBadge({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final color = dark ? AppColors.orange : AppColors.orange700;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        border: Border.all(color: color),
+        borderRadius: const BorderRadius.all(Radius.circular(999)),
+      ),
+      child: Text(
+        AppLocalizations.of(context).sponsored,
+        style: TextStyle(
+          color: color,
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+        ),
       ),
     );
   }

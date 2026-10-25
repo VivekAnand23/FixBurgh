@@ -2570,4 +2570,28 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get notifyServicesBody =>
       'Updates on requests you made and jobs sent to you';
+
+  @override
+  String listingExpiresOn(String date) {
+    return 'Neighbors can find you and send you requests. Your listing runs until $date.';
+  }
+
+  @override
+  String get providerAwaitingFeeTitle =>
+      'Approved, waiting for the listing fee';
+
+  @override
+  String providerAwaitingFee(String fee, int months) {
+    return 'You\'ll appear in search once the $fee listing fee for $months months is paid. The Burghood team will be in touch about payment.';
+  }
+
+  @override
+  String get providerAwaitingFeeShort =>
+      'Approved. You\'ll be listed once the listing fee is paid.';
+
+  @override
+  String get sponsored => 'Sponsored';
+
+  @override
+  String get allProviders => 'All providers';
 }

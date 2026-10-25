@@ -18,5 +18,13 @@ uses them in every feature.
 Platform admins approve, reject, suspend and record background checks in the
 admin console (`hosting/public/admin`), through callable functions.
 
+Phase 4 (behind `feature_monetisation`, off by default): approval leads to
+`awaiting_fee` until a listing fee is recorded in the `payments` ledger;
+listings run for the configured period and lapse back to `awaiting_fee`
+(with a reminder push first). Paid `sponsorships` show up to 2 providers
+above matching searches with a Sponsored badge. Fees, period and pricing
+are placeholders in `config/monetisation`, set in the console. Server side:
+`functions/src/monetisation.ts`; console: `money.js` and `report.js`.
+
 Firestore: `providers/{id}` with its `reviews` and `audit` subcollections,
 `societies/{sid}/recommended/{id}`, and later `sponsorships`.

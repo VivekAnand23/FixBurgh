@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fixburgh/app/providers.dart';
 import 'package:fixburgh/app/remote_config.dart';
+import 'package:fixburgh/app/theme/app_colors.dart';
 import 'package:fixburgh/app/theme/app_theme.dart';
 import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/providers/data/provider_repository.dart';
@@ -17,6 +18,7 @@ import 'package:fixburgh/features/services/presentation/request_form_screen.dart
 import 'package:fixburgh/features/services/presentation/services_tab.dart';
 import 'package:fixburgh/features/society/data/society_repository.dart';
 import 'package:fixburgh/features/society/domain/society.dart';
+import 'package:fixburgh/features/society/presentation/society_widgets.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -83,6 +85,12 @@ void main() {
   late _Providers providers;
   final queries = <ProviderQuery>[];
 
+  setUpAll(
+    () => registerFallbackValue(
+      const ProviderQuery(text: '', categories: [], miles: 10),
+    ),
+  );
+
   setUp(() {
     requests = _Requests();
     providers = _Providers();
@@ -110,6 +118,9 @@ void main() {
     Membership? me,
     ServiceRequest? request,
     List<ProviderResult> results = const [],
+    bool monetisation = false,
+    List<SponsoredResult>? sponsored,
+    ServiceProvider? mine,
   }) async {
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
@@ -121,7 +132,20 @@ void main() {
       ProviderScope(
         overrides: [
           sharedPreferencesProvider.overrideWithValue(prefs),
-          featureFlagsProvider.overrideWithValue(_flags),
+          featureFlagsProvider.overrideWithValue((
+            offlineOutbox: _flags.offlineOutbox,
+            push: _flags.push,
+            savedPlaces: _flags.savedPlaces,
+            society: _flags.society,
+            channels: _flags.channels,
+            services: _flags.services,
+            monetisation: monetisation,
+          )),
+          monetisationSettingsProvider.overrideWith(
+            (ref) => Stream.value(defaultMonetisation),
+          ),
+          if (sponsored != null)
+            sponsoredSearchProvider.overrideWith((ref, q) async => sponsored),
           serviceCategoriesProvider.overrideWithValue(
             parseServiceCategories(serviceCategoriesDefault),
           ),
@@ -146,7 +170,7 @@ void main() {
           commonRequestsProvider.overrideWith(
             (ref, id) => Stream.value(const []),
           ),
-          myProviderProvider.overrideWith((ref) => Stream.value(null)),
+          myProviderProvider.overrideWith((ref) => Stream.value(mine)),
           requestOutboxProvider.overrideWith(_NoOutbox.new),
           providerSearchProvider.overrideWith((ref, q) async {
             queries.add(q);
@@ -321,6 +345,110 @@ void main() {
     await tester.pumpAndSettle();
     expect(
       find.byKey(const Key('doc-background'), skipOffstage: false),
+      findsOneWidget,
+    );
+  });
+
+  group('sponsored listings', () {
+    const member = Membership(
+      uid: 'poster',
+      role: MemberRole.member,
+      status: MemberStatus.approved,
+    );
+    final organic = [
+      (provider: _provider('a'), distanceMiles: 1.2, recommended: false),
+    ];
+
+    testWidgets('show above the others, badged and apart, once fees are on', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      await pump(
+        tester,
+        const Scaffold(
+          body: ServicesTab(societyId: 's1', me: member),
+        ),
+        results: organic,
+        monetisation: true,
+        sponsored: [(sponsorshipId: 'sp1', provider: _provider('z'))],
+      );
+      await tester.enterText(
+        find.byKey(const Key('services-search')),
+        'kitchen tap leaking',
+      );
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.pumpAndSettle();
+      expect(find.byType(SponsoredBadge), findsOneWidget);
+      expect(find.text('All providers'), findsOneWidget);
+      final ad = tester.getTopLeft(find.byKey(const Key('sponsored-card-z')));
+      final first = tester.getTopLeft(find.byKey(const Key('provider-a')));
+      expect(ad.dy, lessThan(first.dy));
+      final card = tester.widget<SocietyCard>(
+        find.ancestor(
+          of: find.byKey(const Key('sponsored-card-z')),
+          matching: find.byType(SocietyCard),
+        ),
+      );
+      expect(card.borderColor, AppColors.orange);
+      await expectLater(tester, meetsGuideline(textContrastGuideline));
+      handle.dispose();
+    });
+
+    testWidgets('never show while fees are off', (tester) async {
+      await pump(
+        tester,
+        const Scaffold(
+          body: ServicesTab(societyId: 's1', me: member),
+        ),
+        results: organic,
+      );
+      await tester.enterText(
+        find.byKey(const Key('services-search')),
+        'kitchen tap leaking',
+      );
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.pumpAndSettle();
+      expect(find.byType(SponsoredBadge), findsNothing);
+      verifyNever(
+        () => providers.sponsored(any(), max: any(named: 'max')),
+      );
+    });
+  });
+
+  testWidgets('an approved provider waiting for the fee is told what is next', (
+    tester,
+  ) async {
+    await pump(
+      tester,
+      const BecomeProviderScreen(),
+      mine: const ServiceProvider(
+        id: 'poster',
+        businessName: 'Pro poster',
+        categories: ['plumbing'],
+        status: ProviderStatus.awaitingFee,
+      ),
+    );
+    expect(find.text('Approved, waiting for the listing fee'), findsOneWidget);
+    expect(
+      find.textContaining(r'$150.00 listing fee for 12 months'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('a live provider sees when the listing runs out', (tester) async {
+    await pump(
+      tester,
+      const BecomeProviderScreen(),
+      mine: ServiceProvider(
+        id: 'poster',
+        businessName: 'Pro poster',
+        categories: const ['plumbing'],
+        status: ProviderStatus.approved,
+        listingPaidThrough: DateTime(2027, 10, 23),
+      ),
+    );
+    expect(
+      find.textContaining('Your listing runs until Oct 23, 2027'),
       findsOneWidget,
     );
   });
