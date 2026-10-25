@@ -4485,6 +4485,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All providers'**
   String get allProviders;
+
+  /// No description provided for @googleResultsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Not on Burghood yet'**
+  String get googleResultsTitle;
+
+  /// No description provided for @googleResultsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'These businesses come from Google Maps. Burghood hasn\'t checked them, and they can\'t take requests in the app.'**
+  String get googleResultsNote;
+
+  /// No description provided for @googleAttribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Results from Google Maps'**
+  String get googleAttribution;
+
+  /// No description provided for @googleRating.
+  ///
+  /// In en, this message translates to:
+  /// **'★ {rating} ({count, plural, =1{1 review} other{{count} reviews}} on Google)'**
+  String googleRating(String rating, int count);
+
+  /// No description provided for @searchGoogleMaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Search Google Maps for {query}'**
+  String searchGoogleMaps(String query);
+
+  /// No description provided for @call.
+  ///
+  /// In en, this message translates to:
+  /// **'Call'**
+  String get call;
+
+  /// No description provided for @openInGoogleMaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Maps'**
+  String get openInGoogleMaps;
 }
 
 class _AppLocalizationsDelegate

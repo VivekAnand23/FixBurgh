@@ -8,6 +8,7 @@ import 'package:fixburgh/features/providers/data/provider_repository.dart';
 import 'package:fixburgh/features/providers/domain/provider.dart';
 import 'package:fixburgh/features/providers/presentation/become_provider_screen.dart';
 import 'package:fixburgh/features/routing/domain/municipality_locator.dart';
+import 'package:fixburgh/features/services/data/google_places_repository.dart';
 import 'package:fixburgh/features/services/data/request_outbox.dart';
 import 'package:fixburgh/features/services/data/service_request_repository.dart';
 import 'package:fixburgh/features/services/domain/service_category.dart';
@@ -31,6 +32,8 @@ class _User extends Mock implements User {}
 class _Requests extends Mock implements ServiceRequestRepository {}
 
 class _Providers extends Mock implements ProviderRepository {}
+
+class _Google extends Mock implements GooglePlacesRepository {}
 
 const _maple = Society(
   id: 's1',
@@ -90,6 +93,11 @@ void main() {
       const ProviderQuery(text: '', categories: [], miles: 10),
     ),
   );
+  setUpAll(
+    () => registerFallbackValue(
+      const GoogleQuery(query: '', near: GeoPoint(0, 0), miles: 10),
+    ),
+  );
 
   setUp(() {
     requests = _Requests();
@@ -121,6 +129,8 @@ void main() {
     bool monetisation = false,
     List<SponsoredResult>? sponsored,
     ServiceProvider? mine,
+    bool googlePlaces = false,
+    GooglePlacesRepository? google,
   }) async {
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
@@ -141,6 +151,9 @@ void main() {
             services: _flags.services,
             monetisation: monetisation,
           )),
+          googlePlacesEnabledProvider.overrideWithValue(googlePlaces),
+          if (google != null)
+            googlePlacesRepositoryProvider.overrideWithValue(google),
           monetisationSettingsProvider.overrideWith(
             (ref) => Stream.value(defaultMonetisation),
           ),
@@ -451,6 +464,134 @@ void main() {
       find.textContaining('Your listing runs until Oct 23, 2027'),
       findsOneWidget,
     );
+  });
+
+  group('Google results when nothing is listed', () {
+    const member = Membership(
+      uid: 'poster',
+      role: MemberRole.member,
+      status: MemberStatus.approved,
+    );
+    const place = (
+      name: 'Allegheny Plumbing Co',
+      address: '12 Main St, Pittsburgh, PA',
+      rating: 4.6,
+      ratingCount: 88,
+      phone: '(412) 555-0100',
+      website: 'https://example.com',
+      mapsUrl: 'https://maps.google.com/?cid=1',
+      distanceMiles: 1.4,
+    );
+
+    Future<void> search(WidgetTester tester) async {
+      await tester.enterText(
+        find.byKey(const Key('services-search')),
+        'kitchen tap leaking',
+      );
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('shows Google Maps businesses, marked as not checked', (
+      tester,
+    ) async {
+      final google = _Google();
+      when(() => google.search(any())).thenAnswer(
+        (_) async => (
+          available: true,
+          limited: false,
+          results: [place],
+          mapsUrl: 'https://www.google.com/maps/search/Plumbing',
+        ),
+      );
+      final handle = tester.ensureSemantics();
+      await pump(
+        tester,
+        const Scaffold(
+          body: ServicesTab(societyId: 's1', me: member),
+        ),
+        googlePlaces: true,
+        google: google,
+      );
+      await search(tester);
+      expect(find.text('Not on Burghood yet'), findsOneWidget);
+      expect(find.text('Allegheny Plumbing Co'), findsOneWidget);
+      expect(
+        find.textContaining('★ 4.6 (88 reviews on Google)'),
+        findsOneWidget,
+      );
+      expect(find.text('Results from Google Maps'), findsOneWidget);
+      expect(find.byKey(const Key('search-google-maps')), findsOneWidget);
+      final q =
+          verify(() => google.search(captureAny())).captured.last
+              as GoogleQuery;
+      expect(q.query, 'Plumbing');
+      expect(q.near.lat, 40.44);
+      expect(q.miles, 10);
+      await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
+      await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
+      await expectLater(tester, meetsGuideline(textContrastGuideline));
+      handle.dispose();
+    });
+
+    testWidgets('with the flag off, only links to Google Maps', (
+      tester,
+    ) async {
+      final google = _Google();
+      await pump(
+        tester,
+        const Scaffold(
+          body: ServicesTab(societyId: 's1', me: member),
+        ),
+        google: google,
+      );
+      await search(tester);
+      expect(find.text('Not on Burghood yet'), findsNothing);
+      expect(find.text('Search Google Maps for Plumbing'), findsOneWidget);
+      verifyNever(() => google.search(any()));
+    });
+
+    testWidgets('never shows when listed providers match', (tester) async {
+      await pump(
+        tester,
+        const Scaffold(
+          body: ServicesTab(societyId: 's1', me: member),
+        ),
+        googlePlaces: true,
+        google: _Google(),
+        results: [
+          (provider: _provider('a'), distanceMiles: 1.2, recommended: false),
+        ],
+      );
+      await search(tester);
+      expect(find.byKey(const Key('google-results')), findsNothing);
+    });
+
+    test('links and replies read the same way as on the server', () {
+      const q = GoogleQuery(
+        query: 'Lawn and garden',
+        near: GeoPoint(40.4406, -79.9959),
+        miles: 10,
+      );
+      expect(
+        mapsSearchUrl(q.query, q.near),
+        'https://www.google.com/maps/search/Lawn%20and%20garden/@40.44060,-79.99590,13z',
+      );
+      final r = parseGoogleResults({
+        'available': true,
+        'results': [
+          {'name': 'A', 'rating': 4, 'ratingCount': 3, 'distanceMiles': 2},
+          {'address': 'no name'},
+        ],
+      }, q);
+      expect(r.available, isTrue);
+      expect(r.results.single.rating, 4.0);
+      expect(
+        r.results.single.mapsUrl,
+        startsWith('https://www.google.com/maps/search/A/'),
+      );
+      expect(r.mapsUrl, mapsSearchUrl(q.query, q.near));
+    });
   });
 
   group('request detail', () {

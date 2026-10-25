@@ -1404,5 +1404,29 @@
   },
   "providerAwaitingFeeShort": "Approved. You'll be listed once the listing fee is paid.",
   "sponsored": "Sponsored",
-  "allProviders": "All providers"
+  "allProviders": "All providers",
+  "googleResultsTitle": "Not on Burghood yet",
+  "googleResultsNote": "These businesses come from Google Maps. Burghood hasn't checked them, and they can't take requests in the app.",
+  "googleAttribution": "Results from Google Maps",
+  "googleRating": "★ {rating} ({count, plural, =1{1 review} other{{count} reviews}} on Google)",
+  "@googleRating": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchGoogleMaps": "Search Google Maps for {query}",
+  "@searchGoogleMaps": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "call": "Call",
+  "openInGoogleMaps": "Google Maps"
 }

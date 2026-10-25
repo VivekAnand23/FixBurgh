@@ -47,6 +47,13 @@ abstract class Analytics {
   });
   Future<void> serviceRequestStep(String status) =>
       log('service_request_step', {'status': status});
+  Future<void> googleResultsShown({
+    required bool available,
+    required int results,
+  }) => log('google_results_shown', {
+    'available': available ? 1 : 0,
+    'results': results,
+  });
   Future<void> reviewPosted({required int stars}) =>
       log('review_posted', {'stars': stars});
 

@@ -2597,4 +2597,36 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get allProviders => 'All providers';
+
+  @override
+  String get googleResultsTitle => 'Not on Burghood yet';
+
+  @override
+  String get googleResultsNote =>
+      'These businesses come from Google Maps. Burghood hasn\'t checked them, and they can\'t take requests in the app.';
+
+  @override
+  String get googleAttribution => 'Results from Google Maps';
+
+  @override
+  String googleRating(String rating, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count reviews',
+      one: '1 review',
+    );
+    return '★ $rating ($_temp0 on Google)';
+  }
+
+  @override
+  String searchGoogleMaps(String query) {
+    return 'Search Google Maps for $query';
+  }
+
+  @override
+  String get call => 'Call';
+
+  @override
+  String get openInGoogleMaps => 'Google Maps';
 }

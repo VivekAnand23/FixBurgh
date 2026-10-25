@@ -62,6 +62,13 @@
       },
       "description": "Service category groups and categories for Burghood services (Phase 3). JSON list of {id, label, approvalCheck, categories: [{id, label, synonyms}]}; synonyms map everyday words in a request to its category.",
       "valueType": "JSON"
+    },
+    "feature_google_places": {
+      "defaultValue": {
+        "value": "false"
+      },
+      "description": "Show Google Maps results in Services when no listed provider matches (Places API, billed per search). When off, a free link to Google Maps shows instead.",
+      "valueType": "BOOLEAN"
     }
   }
 }
