@@ -7,6 +7,7 @@ import 'package:fixburgh/features/providers/domain/provider.dart';
 import 'package:fixburgh/features/services/data/service_request_repository.dart';
 import 'package:fixburgh/features/services/domain/service_category.dart';
 import 'package:fixburgh/features/services/domain/service_request.dart';
+import 'package:fixburgh/features/services/presentation/google_results.dart';
 import 'package:fixburgh/features/services/presentation/request_form_screen.dart';
 import 'package:fixburgh/features/services/presentation/service_widgets.dart';
 import 'package:fixburgh/features/society/data/society_repository.dart';
@@ -71,6 +72,15 @@ class _ServicesTabState extends ConsumerState<ServicesTab> {
       societyId: widget.societyId,
     );
     final results = ref.watch(providerSearchProvider(query));
+    // What to look up on Google when nothing listed matches: the category
+    // picked or detected, else the words typed.
+    final googleQuery = _category != null
+        ? groups.category(_category!)?.label
+        : detected.isNotEmpty
+        ? detected.first.label
+        : _text.isEmpty
+        ? null
+        : _text;
     final sponsored =
         ref.watch(sponsoredSearchProvider(query)).value ??
         const <SponsoredResult>[];
@@ -236,6 +246,12 @@ class _ServicesTabState extends ConsumerState<ServicesTab> {
                       textAlign: TextAlign.center,
                     ),
                   ),
+                  if (googleQuery != null && society != null)
+                    GoogleResults(
+                      query: googleQuery,
+                      near: society.location,
+                      miles: _miles,
+                    ),
                 ]
               : [
                   for (final r in list)

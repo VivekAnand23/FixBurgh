@@ -21,6 +21,7 @@ import { HttpsError, onCall } from 'firebase-functions/v2/https';
 
 import { categoryLabel, notifyUsers, placeOwnersNear } from './notify';
 import { deleteServiceData } from './services';
+export { searchGooglePlaces } from './googlePlaces';
 export {
   monetisationDaily,
   monetisationDailyNow,

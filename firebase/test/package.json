@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "test": "node --test firestore.rules.test.js",
-    "test:functions": "node --test --test-concurrency=1 functions.test.js society.functions.test.js services.functions.test.js monetisation.functions.test.js",
+    "test:functions": "node --test --test-concurrency=1 functions.test.js society.functions.test.js services.functions.test.js monetisation.functions.test.js places.functions.test.js",
     "test:storage": "node --test storage.rules.test.js",
     "test:report": "node --test report.test.js"
   },

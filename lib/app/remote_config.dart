@@ -14,6 +14,7 @@ const remoteConfigDefaults = <String, Object>{
   'feature_channels': false,
   'feature_services': false,
   'feature_monetisation': false,
+  'feature_google_places': false,
   'service_categories': serviceCategoriesDefault,
 };
 
