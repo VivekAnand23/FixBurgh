@@ -139,10 +139,15 @@ export const onPaymentCreated = onDocumentCreated('payments/{id}', async (event)
   if (d.kind === 'sponsorship' && typeof d.sponsorshipId === 'string') await refreshSponsorship(d.sponsorshipId);
 });
 
-/** onSponsorshipWritten: a new or changed sponsorship shows from today if
- * it is paid and in its dates. */
+/** onSponsorshipWritten: a new sponsorship, or one whose dates changed,
+ * shows from today if it is paid and in its dates. Its own paid/active
+ * updates are skipped, so they don't re-run with a different today. */
 export const onSponsorshipWritten = onDocumentWritten('sponsorships/{id}', async (event) => {
-  if (!event.data?.after?.exists) return;
+  const before = event.data?.before;
+  const after = event.data?.after;
+  if (!after?.exists) return;
+  if (before?.exists && before.get('startDate') === after.get('startDate')
+      && before.get('endDate') === after.get('endDate')) return;
   await refreshSponsorship(event.params.id);
 });
 
