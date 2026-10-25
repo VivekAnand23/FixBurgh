@@ -22,8 +22,8 @@ account, or a decision; the rest are done in the repo.
       confirm the provider rules match it.
 - [ ] **(you)** Fees: listing fee and period, sponsorship price, sponsored
       slots per search, audit report columns, emailed receipts or not.
-- [ ] Deploy the latest main to fixburgh-dev and run the cost check after a
-      week of pilot use.
+- [x] Deploy the latest main to fixburgh-dev.
+- [ ] Run the cost check after a week of pilot use.
 
 ## Pilot (2 weeks)
 
@@ -41,12 +41,14 @@ account, or a decision; the rest are done in the repo.
 ## Store and legal
 
 - [ ] **(you)** New logo and app icon; USPTO check on the Burghood name.
-- [ ] Store screenshots from the mock screens (`burghood-mocks/`) and real
-      pilot data with permission.
-- [ ] Update `docs/store/listing.md` text for societies, channels and
-      services.
-- [ ] Update the store privacy answers (`docs/store/privacy-labels.md`):
-      the Burghood additions are listed there.
+- [x] Store screenshots of the Burghood screens
+      (`Images/store-screenshots/burghood/`); swap in real pilot ones with
+      permission.
+- [x] `docs/store/listing.md` text for societies, channels and services.
+- [ ] Fold the Burghood additions into the store privacy answers
+      (`docs/store/privacy-labels.md`) once the policy is final.
+- [ ] Review account and "App Review HOA" test society on prod
+      (`docs/store/listing.md`, App Review notes).
 - [ ] Publish the final policy pages to fixburgh-prod hosting.
 
 ## Launch

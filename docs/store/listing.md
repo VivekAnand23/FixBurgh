@@ -6,54 +6,57 @@ Draft copy. Character limits are noted; counts include spaces.
 
 | Field | Text | Limit |
 |---|---|---|
-| App name | Burghood: Report Road Problems | 30 |
-| iOS subtitle | Find who fixes it. Tell them. | 30 |
-| Play short description | Snap a pothole or landslide anywhere in Allegheny County and reach who fixes it | 80 |
-| iOS promotional text | Know exactly who fixes it: PennDOT, Allegheny County or your borough. Snap, pin, send. | 170 |
-| iOS keywords | pothole,Pittsburgh,311,PennDOT,streetlight,landslide,road,report,borough,township,Allegheny | 100 |
+| App name | Burghood: Neighbors & Services | 30 |
+| iOS subtitle | Your building, block and city | 30 |
+| Play short description | Talk with your HOA, find trusted local help and report road problems | 80 |
+| iOS promotional text | Channels for your HOA or building, local pros your neighbors recommend, and one-tap road reports to whoever fixes them. | 170 |
+| iOS keywords | HOA,condo,neighbors,handyman,plumber,babysitter,pothole,Pittsburgh,311,Allegheny,community | 100 |
+
+Counts: name 30, subtitle 29, short description 68, promotional text 119,
+keywords 90.
 
 ## Full description (both stores, ≤ 4000)
 
-See a pothole, a dark streetlight or a landslide creeping onto the road? Burghood tells you exactly who fixes it and helps you tell them in under a minute.
+Burghood brings your neighborhood into one app: talk with your HOA, condo or apartment community, find local help your neighbors trust, and report road problems to the office that fixes them.
 
-Allegheny County has 130 municipalities, and a single street can belong to PennDOT, the County or your borough. Burghood works it out for you.
+YOUR SOCIETY, IN ONE PLACE
+• Join your HOA, condo association or apartment community with an invite code, or ask to join and an admin approves you.
+• Channels for everything: general chat, parking and snow, lost and found, events. Post photos, reply, react and @mention neighbors.
+• Notices from your board, pinned so nobody misses them, and the documents you keep looking for: bylaws, minutes, forms.
+• Admins manage members, channels and requests for the common areas, like a lobby light that's out.
 
-HOW IT WORKS
-• Snap a photo and drop a pin. Burghood uses precise GPS, with satellite view and address search to place the pin.
-• Pick what it is: pothole, landslide, flooding or blocked drain, streetlight, illegal dumping, fallen tree, sidewalk damage, or something else.
-• Burghood shows the responsible office and explains why. For example: "Saw Mill Run Blvd is a state road, so PennDOT maintains it."
-• Call, email or open the office's web form with one tap. Burghood copies the details for you.
+LOCAL HELP YOUR NEIGHBORS TRUST
+• Describe the problem in your own words ("kitchen tap leaking") and Burghood finds plumbers, handymen, cleaners, pet sitters, babysitters, tutors and more within the distance you choose.
+• See ratings from real jobs, providers your society recommends, and a Background checked badge where the provider's check has passed.
+• Send a request with photos, follow it from accepted to done, confirm the fix, then rate the work.
+• Offer your own services: apply with your licence and insurance, and neighbors can find you once you're approved.
 
-BETTER TOGETHER
-• See reports near you on the community map.
-• Tap "Me too" instead of filing a duplicate, so the problems that matter most stand out.
-• Tap "Looks fixed" when a repair is done. Three neighbors close the report.
+REPORT ROAD PROBLEMS
+• Snap a pothole, a dark streetlight or a landslide anywhere in Allegheny County and drop a pin.
+• Burghood works out who maintains the road (PennDOT, Allegheny County or your borough) and explains why.
+• Call, email or open the office's form with one tap. Tap "Me too" on reports near you so the problems that matter most stand out.
 
 SAFETY FIRST
 Burghood asks whether anyone is in danger before every report. Downed wires, gas smells, crashes and deep water go straight to 911. Burghood is not monitored for emergencies.
 
 PRIVATE BY DESIGN
-• No ads, and we never sell your data.
-• Your name is never shown on the map.
-• Hidden photo data is removed before upload, and phone numbers and emails typed into descriptions are masked.
-• Report as a guest, or sign in with Google or email to keep your history.
+• We never sell your data, and we show no third-party ads. Some provider listings are paid placements, clearly marked "Sponsored"; they use nothing about you.
+• Your society's channels are visible only to its members.
+• Your name is never shown on the road-report map, and hidden photo data is removed before upload.
 
-WORKS OFFLINE FOR ROUTING
-Burghood carries public data from Allegheny County and PennDOT, so it can tell you who maintains a road even with a weak signal.
-
-Burghood is an independent community project. It is not affiliated with PennDOT, Allegheny County, the City of Pittsburgh or any municipality.
+Burghood is an independent Pittsburgh project. It is not affiliated with PennDOT, Allegheny County, the City of Pittsburgh, any municipality, or any HOA or management company. Providers are independent businesses; agree the price and scope with them directly.
 
 ## Categories and ratings
 
 | Field | Value |
 |---|---|
-| iOS primary category | Utilities |
-| iOS secondary category | Navigation |
-| Play category | Maps & Navigation |
-| iOS age rating | 12+ (user-generated content with moderation, reporting and blocking). Answer "Infrequent/Mild" for user-generated content questions. |
+| iOS primary category | Lifestyle |
+| iOS secondary category | Social Networking |
+| Play category | House & Home |
+| iOS age rating | 13+ under Apple's age rating questions: user-generated content and messaging with moderation, reporting and blocking. Answer "Infrequent/Mild" for user-generated content. Providers must be 18 or over (provider rules). |
 | Play target audience | 13 and over (not designed for children) |
-| Play content rating (IARC) | Users can interact and share content; no violence, no purchases |
-| Price | Free, no in-app purchases, no ads |
+| Play content rating (IARC) | Users can interact and share content; shares location (the report pin); no violence, no in-app purchases |
+| Price | Free, no in-app purchases, no third-party ads. Listing fees and sponsorships are paid outside the app, so they need no in-app purchase. |
 
 ## URLs (need the support email first)
 
@@ -76,8 +79,47 @@ Burghood is an independent community project. It is not affiliated with PennDOT,
 > any report's detail sheet ("Report a problem with this") and people can be
 > hidden ("Hide reports from this person"). The app never contacts 911 or
 > agencies itself; it only opens the phone dialer, mail app or browser.
+>
+> Societies, channels and services: sign in with the review account
+> (email and password in the review notes field, never in this file). It
+> is a member of the "App Review HOA" test society, so the Channels,
+> Notices, Docs and Services tabs have sample content. Posts and comments
+> can be reported from their ⋯ menu, and people blocked from the same
+> menu; society admins and staff review reports. Providers are
+> independent businesses; listing fees and sponsorships are invoiced and
+> paid outside the app, so there is no in-app purchase.
+
+Before submitting, create the review account and the "App Review HOA" test
+society on prod with a few channels, posts, a notice and two approved test
+providers, and put the account's sign-in in each store's review form.
 
 ## Screenshots
+
+### Burghood screens
+
+`Images/store-screenshots/burghood/` has five screens at the App Store's
+6.9-inch size (1320 × 2868) with sample data: society channels, a channel,
+services search, a provider profile and a request's timeline. Google Play
+accepts the same files. Regenerate them after UI changes:
+
+```bash
+flutter test tool/store_screenshots --update-goldens \
+  --dart-define=FEATURES=society,channels,services,monetisation
+```
+
+They are drawn by Flutter's test renderer with sample data, so check them
+against a real build on a phone before submitting, and swap in pilot
+screenshots (with the society's permission) once there are some.
+
+Suggested captions, one per screenshot:
+
+1. Your HOA, condo or building, all in one place
+2. Channels for parking, events, lost and found and more
+3. Describe the problem, find local help nearby
+4. Ratings from real jobs and your society's picks
+5. Follow every request from booked to fixed
+
+### Road reporting screens
 
 `Images/store-screenshots/` has five captures from the iPhone 17 Pro simulator
 (6.3-inch, 1206 × 2622): community map, safety check, precise location, details

@@ -77,6 +77,12 @@ and re-check them against the final privacy policy.
 | Provider licence, insurance, background-check and clearance documents | Other data types; Sensitive info (criminal record checks) | Personal info > Other info | Yes | Yes (providers only) | App functionality, Fraud prevention |
 | Journey analytics (step names, counts) | Product interaction | App activity > App interactions | No | No | Analytics |
 
+Google results in Services (`feature_google_places`, PR #13): when no
+Burghood provider matches, the server sends the search words and the
+society's location to the Google Places API and returns businesses. Nothing
+identifying the person is sent, and results aren't stored, so this adds no
+row to the forms; the privacy policy should name Google Maps as the source.
+
 Not collected in the app: payment card or bank details. Listing fees and
 sponsorships are paid outside the app and recorded by staff, so they don't
 belong on the store forms; the privacy policy covers them.
