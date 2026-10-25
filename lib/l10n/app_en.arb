@@ -1178,6 +1178,7 @@
   "docFormats": "PDF, JPG or PNG, up to 5 MB",
   "alreadyUploaded": "Already uploaded",
   "providerAgree": "I'll follow the provider rules, and my details and documents are true.",
+  "readProviderRules": "Read the provider rules",
   "pickAService": "Pick at least one service.",
   "documentsMissing": "Add the documents these services need.",
   "agreeFirst": "Please confirm the provider rules first.",

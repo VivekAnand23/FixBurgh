@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:fixburgh/app/links.dart';
+import 'package:fixburgh/app/providers.dart';
 import 'package:fixburgh/app/router.dart';
 import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/providers/data/provider_repository.dart';
@@ -331,6 +333,17 @@ class _ApplicationFormState extends ConsumerState<_ApplicationForm> {
               value: _agreed,
               onChanged: (v) => setState(() => _agreed = v ?? false),
               title: Text(l10n.providerAgree),
+            ),
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: TextButton(
+                key: const Key('provider-rules'),
+                onPressed: () => openLink(
+                  context,
+                  AppLinks(ref.read(flavorProvider)).providerRules,
+                ),
+                child: Text(l10n.readProviderRules),
+              ),
             ),
           ],
           const SizedBox(height: 16),

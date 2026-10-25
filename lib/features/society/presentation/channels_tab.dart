@@ -90,6 +90,7 @@ class ChannelRow extends ConsumerWidget {
                     me.lastRead[channel.id] ??
                     channel.lastPostAt?.subtract(const Duration(days: 1)),
                 uid: me.uid,
+                lastPostAt: channel.lastPostAt,
               )),
             )
             .value ??
@@ -108,45 +109,51 @@ class ChannelRow extends ConsumerWidget {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
         ),
       ),
-      title: Text(
-        channel.name,
-        style: const TextStyle(fontWeight: FontWeight.w700),
-      ),
-      subtitle: Text(preview, maxLines: 1, overflow: TextOverflow.ellipsis),
-      trailing: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
+      // Time beside the name and counts beside the preview, rather than a
+      // trailing column, so the tile keeps its shape at large text sizes.
+      title: Row(
         children: [
-          if (channel.lastPostAt != null)
+          Expanded(
+            child: Text(
+              channel.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
+          ),
+          if (channel.lastPostAt != null) ...[
+            const SizedBox(width: 8),
             Text(
               timeAgo(l10n, channel.lastPostAt!),
               style: theme.textTheme.bodySmall,
             ),
-          const SizedBox(height: 4),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (muted)
-                Icon(
-                  Icons.notifications_off_outlined,
-                  size: 16,
-                  semanticLabel: l10n.muted,
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              if (unread.mentions > 0)
-                _Count(
-                  label: '@ ${unread.mentions}',
-                  color: AppColors.orange700,
-                  semantics: l10n.mentionsCount(unread.mentions),
-                ),
-              if (unread.posts > 0)
-                _Count(
-                  label: '${unread.posts}',
-                  color: muted ? theme.colorScheme.outline : AppColors.navy,
-                  semantics: l10n.unreadCount(unread.posts),
-                ),
-            ],
+          ],
+        ],
+      ),
+      subtitle: Row(
+        children: [
+          Expanded(
+            child: Text(preview, maxLines: 1, overflow: TextOverflow.ellipsis),
           ),
+          if (muted)
+            Icon(
+              Icons.notifications_off_outlined,
+              size: 16,
+              semanticLabel: l10n.muted,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          if (unread.mentions > 0)
+            _Count(
+              label: '@ ${unread.mentions}',
+              color: AppColors.orange700,
+              semantics: l10n.mentionsCount(unread.mentions),
+            ),
+          if (unread.posts > 0)
+            _Count(
+              label: '${unread.posts}',
+              color: muted ? theme.colorScheme.outline : AppColors.navy,
+              semantics: l10n.unreadCount(unread.posts),
+            ),
         ],
       ),
       onTap: () => context.push(Routes.channel(societyId, channel.id)),

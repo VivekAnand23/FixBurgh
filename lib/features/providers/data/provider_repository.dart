@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart' hide GeoPoint;
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fixburgh/app/analytics.dart';
 import 'package:fixburgh/app/remote_config.dart';
 import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/providers/domain/provider.dart';
@@ -18,8 +19,11 @@ import 'package:uuid/uuid.dart';
 const _metresPerMile = 1609.344;
 
 final providerRepositoryProvider = Provider<ProviderRepository>(
-  (ref) =>
-      ProviderRepository(FirebaseFirestore.instance, FirebaseStorage.instance),
+  (ref) => ProviderRepository(
+    FirebaseFirestore.instance,
+    FirebaseStorage.instance,
+    analytics: ref.watch(analyticsProvider),
+  ),
 );
 
 // ignore: specify_nonobvious_property_types, family type isn't exported.
@@ -95,9 +99,17 @@ final providerSearchProvider = FutureProvider.autoDispose
         final recommended = q.societyId == null
             ? const <String>{}
             : await ref.watch(recommendedProvider(q.societyId!).future);
-        return ref
+        final results = await ref
             .watch(providerRepositoryProvider)
             .search(q, recommended: recommended);
+        await ref
+            .read(analyticsProvider)
+            .providerSearch(
+              typed: q.text.trim().isNotEmpty,
+              miles: q.miles,
+              results: results.length,
+            );
+        return results;
       },
       // Show the error (e.g. a missing index) instead of retrying forever.
       retry: (_, _) => null,
@@ -130,10 +142,15 @@ final sponsoredSearchProvider = FutureProvider.autoDispose
 /// Provider profiles, reviews and applications. Approval, ratings and
 /// keywords are handled by Cloud Functions (functions/src/services.ts).
 class ProviderRepository {
-  ProviderRepository(this._db, this._storage);
+  ProviderRepository(
+    this._db,
+    this._storage, {
+    Analytics analytics = const NoAnalytics(),
+  }) : _analytics = analytics;
 
   final FirebaseFirestore _db;
   final FirebaseStorage _storage;
+  final Analytics _analytics;
 
   CollectionReference<Map<String, dynamic>> get _providers =>
       _db.collection('providers');
@@ -292,6 +309,7 @@ class ProviderRepository {
     } else {
       await ref.update(data);
     }
+    await _analytics.providerApplied(categories: categories.length);
   }
 
   /// Details a live provider can change any time.
@@ -337,14 +355,17 @@ class ProviderRepository {
     required int stars,
     required String comment,
     required String category,
-  }) => _providers.doc(providerId).collection('reviews').doc(requestId).set({
-    'stars': stars,
-    'comment': comment.trim(),
-    'authorUid': uid,
-    'authorName': authorName,
-    'category': category,
-    'createdAt': FieldValue.serverTimestamp(),
-  });
+  }) async {
+    await _providers.doc(providerId).collection('reviews').doc(requestId).set({
+      'stars': stars,
+      'comment': comment.trim(),
+      'authorUid': uid,
+      'authorName': authorName,
+      'category': category,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+    await _analytics.reviewPosted(stars: stars);
+  }
 
   Future<void> reply(String providerId, String reviewId, String reply) =>
       _providers.doc(providerId).collection('reviews').doc(reviewId).update({

@@ -6,7 +6,7 @@
  * map once FLAG_HIDE_THRESHOLD different people have flagged it
  * (BRD FR-MOD-02). Moderators restore or remove it in the console.
  */
-import './options';
+import { appCallable } from './options';
 
 import { getAuth } from 'firebase-admin/auth';
 import { DocumentData, FieldValue, getFirestore } from 'firebase-admin/firestore';
@@ -86,7 +86,7 @@ export const onFlagCreated = onDocumentCreated('flags/{flagId}', async (event) =
  * The app sends the guest's ID token, captured just before switching
  * accounts, which proves the caller controlled the guest session.
  */
-export const claimGuestReports = onCall(async (request) => {
+export const claimGuestReports = onCall(appCallable, async (request) => {
   const uid = request.auth?.uid;
   if (!uid) throw new HttpsError('unauthenticated', 'Sign in first.');
   const token = request.data?.guestIdToken;
@@ -158,7 +158,7 @@ async function deleteFiles(paths: string[]): Promise<void> {
  * last five minutes; otherwise this fails with `failed-precondition` and the
  * app asks them to sign in again.
  */
-export const deleteAccount = onCall({ timeoutSeconds: 60 }, async (request) => {
+export const deleteAccount = onCall({ ...appCallable, timeoutSeconds: 60 }, async (request) => {
   const uid = request.auth?.uid;
   if (!uid) throw new HttpsError('unauthenticated', 'Sign in first.');
   const mode = request.data?.reports;
@@ -322,7 +322,7 @@ async function notifyStatusChange(key: string, report: Snapshot, type: string) {
  * sendTestNotification: sends a test notification to the caller's own
  * devices, from Profile > Notifications. Counts toward the daily limit.
  */
-export const sendTestNotification = onCall(async (request) => {
+export const sendTestNotification = onCall(appCallable, async (request) => {
   const uid = request.auth?.uid;
   if (!uid) throw new HttpsError('unauthenticated', 'Sign in first.');
   const sent = await notifyUsers([uid], {

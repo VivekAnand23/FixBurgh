@@ -38,47 +38,48 @@ class _ActivityScreenState extends ConsumerState<ActivityScreen> {
         ? _segment
         : ActivitySegment.cityReports;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.activityTitle),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
-          child: Padding(
+      appBar: AppBar(title: Text(l10n.activityTitle)),
+      // The segments sit in the body, not a fixed-height app bar, and
+      // scroll sideways, so they fit at large text sizes.
+      body: Column(
+        children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-            child: SizedBox(
-              width: double.infinity,
-              child: SegmentedButton<ActivitySegment>(
-                showSelectedIcon: false,
-                segments: [
+            child: SegmentedButton<ActivitySegment>(
+              showSelectedIcon: false,
+              segments: [
+                ButtonSegment(
+                  value: ActivitySegment.cityReports,
+                  icon: const Icon(Icons.location_city),
+                  label: Text(l10n.activityCityReports),
+                ),
+                if (services)
                   ButtonSegment(
-                    value: ActivitySegment.cityReports,
-                    icon: const Icon(Icons.location_city),
-                    label: Text(l10n.activityCityReports),
+                    value: ActivitySegment.serviceRequests,
+                    icon: const Icon(Icons.handyman_outlined),
+                    label: Text(l10n.activityServiceRequests),
                   ),
-                  if (services)
-                    ButtonSegment(
-                      value: ActivitySegment.serviceRequests,
-                      icon: const Icon(Icons.handyman_outlined),
-                      label: Text(l10n.activityServiceRequests),
-                    ),
-                  if (isProvider)
-                    ButtonSegment(
-                      value: ActivitySegment.jobs,
-                      icon: const Icon(Icons.work_outline),
-                      label: Text(l10n.activityJobs),
-                    ),
-                ],
-                selected: {segment},
-                onSelectionChanged: (s) => setState(() => _segment = s.first),
-              ),
+                if (isProvider)
+                  ButtonSegment(
+                    value: ActivitySegment.jobs,
+                    icon: const Icon(Icons.work_outline),
+                    label: Text(l10n.activityJobs),
+                  ),
+              ],
+              selected: {segment},
+              onSelectionChanged: (s) => setState(() => _segment = s.first),
             ),
           ),
-        ),
+          Expanded(
+            child: switch (segment) {
+              ActivitySegment.cityReports => const CityReportsView(),
+              ActivitySegment.serviceRequests => const ServiceRequestsView(),
+              ActivitySegment.jobs => const JobsView(),
+            },
+          ),
+        ],
       ),
-      body: switch (segment) {
-        ActivitySegment.cityReports => const CityReportsView(),
-        ActivitySegment.serviceRequests => const ServiceRequestsView(),
-        ActivitySegment.jobs => const JobsView(),
-      },
     );
   }
 }

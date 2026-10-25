@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart' hide GeoPoint;
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fixburgh/app/analytics.dart';
 import 'package:fixburgh/app/providers.dart';
 import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/moderation/text_filter.dart';
@@ -41,6 +42,7 @@ final societyRepositoryProvider = Provider<SocietyRepository>(
     FirebaseFirestore.instance,
     FirebaseStorage.instance,
     FirebaseFunctions.instanceFor(region: 'us-east1'),
+    analytics: ref.watch(analyticsProvider),
   ),
 );
 
@@ -137,11 +139,17 @@ final inviteCodeProvider = StreamProvider.autoDispose.family<String?, String>(
 /// Decisions that need the server (claims, invite codes) go through Cloud
 /// Functions in `functions/src/society.ts`.
 class SocietyRepository {
-  SocietyRepository(this._db, this._storage, this._functions);
+  SocietyRepository(
+    this._db,
+    this._storage,
+    this._functions, {
+    Analytics analytics = const NoAnalytics(),
+  }) : _analytics = analytics;
 
   final FirebaseFirestore _db;
   final FirebaseStorage _storage;
   final FirebaseFunctions _functions;
+  final Analytics _analytics;
 
   CollectionReference<Map<String, dynamic>> get _societies =>
       _db.collection('societies');
@@ -284,20 +292,27 @@ class SocietyRepository {
         ],
       );
 
+  /// Counts a society search for analytics (results only, not the text).
+  Future<void> logSearch(int results) =>
+      _analytics.societySearch(results: results);
+
   /// Asks to join; an admin approves or declines.
   Future<void> requestToJoin(
     String sid, {
     required String uid,
     required String unit,
     String displayName = '',
-  }) => _society(sid).collection('members').doc(uid).set({
-    'uid': uid,
-    'unit': unit.trim(),
-    'displayName': _take(displayName.trim(), 60),
-    'role': MemberRole.member.name,
-    'status': MemberStatus.pending.name,
-    'requestedAt': FieldValue.serverTimestamp(),
-  });
+  }) async {
+    await _society(sid).collection('members').doc(uid).set({
+      'uid': uid,
+      'unit': unit.trim(),
+      'displayName': _take(displayName.trim(), 60),
+      'role': MemberRole.member.name,
+      'status': MemberStatus.pending.name,
+      'requestedAt': FieldValue.serverTimestamp(),
+    });
+    await _analytics.societyJoinRequested();
+  }
 
   /// Leaves a society, or withdraws a request.
   Future<void> leave(String sid, String uid) =>
@@ -312,6 +327,7 @@ class SocietyRepository {
             'code': normalizeInviteCode(code),
             'unit': unit.trim(),
           });
+      await _analytics.societyJoinedWithCode();
       return res.data['societyId'] as String;
     } on FirebaseFunctionsException catch (e) {
       if (e.code == 'not-found' || e.code == 'invalid-argument') {
@@ -500,6 +516,7 @@ class SocietyRepository {
         'previousClaimId': draft.previousClaimId,
       'createdAt': FieldValue.serverTimestamp(),
     });
+    await _analytics.societyClaimSubmitted();
     return id;
   }
 }
