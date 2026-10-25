@@ -1145,6 +1145,7 @@
   "noProvidersFound": "No providers found yet. Try a wider distance or other words.",
   "becomeProvider": "Offer your services",
   "becomeProviderBody": "Neighbors can find you and send you requests.",
+  "becomeProviderSignIn": "Sign in to apply as a service provider.",
   "yourProviderProfile": "Your provider profile",
   "providerAppliedTitle": "Application sent",
   "providerApplied": "We're checking your details and documents. We aim to decide within 2 working days.",

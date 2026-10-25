@@ -2084,6 +2084,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Neighbors can find you and send you requests.';
 
   @override
+  String get becomeProviderSignIn => 'Sign in to apply as a service provider.';
+
+  @override
   String get yourProviderProfile => 'Your provider profile';
 
   @override

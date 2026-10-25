@@ -3586,6 +3586,12 @@ abstract class AppLocalizations {
   /// **'Neighbors can find you and send you requests.'**
   String get becomeProviderBody;
 
+  /// No description provided for @becomeProviderSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to apply as a service provider.'**
+  String get becomeProviderSignIn;
+
   /// No description provided for @yourProviderProfile.
   ///
   /// In en, this message translates to:

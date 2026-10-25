@@ -11,6 +11,7 @@ import 'package:fixburgh/features/profile/settings_controller.dart';
 import 'package:fixburgh/features/report/data/draft_store.dart';
 import 'package:fixburgh/features/report/data/report_repository.dart';
 import 'package:fixburgh/features/report/presentation/outbox_controller.dart';
+import 'package:fixburgh/features/services/presentation/services_tab.dart';
 import 'package:fixburgh/l10n/gen/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -230,6 +231,24 @@ class ProfileScreen extends ConsumerWidget {
               ),
             ),
           ),
+          // Providers can apply without belonging to a society.
+          if (ref.watch(featureFlagsProvider).services) ...[
+            const SizedBox(height: 16),
+            if (isGuest)
+              ListTile(
+                key: const Key('profile-become-provider'),
+                leading: const Icon(Icons.storefront_outlined),
+                title: Text(l10n.becomeProvider),
+                subtitle: Text(l10n.becomeProviderSignIn),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push('/sign-in'),
+              )
+            else
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: BecomeProviderLink(),
+              ),
+          ],
           const SizedBox(height: 16),
           _Heading(l10n.settingsTitle),
           ListTile(
