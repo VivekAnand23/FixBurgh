@@ -1132,3 +1132,147 @@ describe('service requests', () => {
     await assertFails(getDoc(doc(account('nia'), `societies/${SID}/recommended/pete`)));
   });
 });
+
+describe('payments ledger', () => {
+  const admin = () => account('admin', { platformAdmin: true });
+  const pay = (extra = {}) => ({
+    type: 'income',
+    kind: 'listing_fee',
+    amountCents: 15000,
+    currency: 'USD',
+    date: '2026-10-24',
+    method: 'check',
+    reference: 'Check 1042',
+    purpose: 'Listing fee, 12 months',
+    party: 'Steel City Plumbing',
+    providerId: 'pete',
+    periodMonths: 12,
+    recordedBy: 'admin',
+    recordedByEmail: 'admin@example.com',
+    recordedAt: serverTimestamp(),
+    ...extra,
+  });
+
+  it('lets platform admins record a payment', async () => {
+    await assertSucceeds(setDoc(doc(admin(), 'payments/p1'), pay()));
+    await assertSucceeds(setDoc(doc(admin(), 'payments/p2'), pay({
+      type: 'expense', kind: 'other', providerId: null, periodMonths: null, party: 'Printing Co', purpose: 'Flyers',
+    })));
+  });
+
+  it('refuses residents, providers and bad entries', async () => {
+    await assertFails(setDoc(doc(account('pete'), 'payments/p1'), pay({ recordedBy: 'pete', recordedByEmail: 'pete@example.com' })));
+    await assertFails(setDoc(doc(admin(), 'payments/p1'), pay({ amountCents: 0 })));
+    await assertFails(setDoc(doc(admin(), 'payments/p1'), pay({ amountCents: 150.5 })));
+    await assertFails(setDoc(doc(admin(), 'payments/p1'), pay({ currency: 'EUR' })));
+    await assertFails(setDoc(doc(admin(), 'payments/p1'), pay({ date: '24/10/2026' })));
+    await assertFails(setDoc(doc(admin(), 'payments/p1'), pay({ recordedBy: 'someone-else' })));
+    await assertFails(setDoc(doc(admin(), 'payments/p1'), pay({ periodMonths: null })));
+    await assertFails(setDoc(doc(admin(), 'payments/p1'), pay({ kind: 'sponsorship' })));
+    await assertFails(setDoc(doc(admin(), 'payments/rev_x'), pay()));
+  });
+
+  it('refuses any edit or delete of a recorded payment, even by admins', async () => {
+    await assertSucceeds(setDoc(doc(admin(), 'payments/p1'), pay()));
+    await assertFails(updateDoc(doc(admin(), 'payments/p1'), { amountCents: 100 }));
+    await assertFails(setDoc(doc(admin(), 'payments/p1'), pay({ amountCents: 100 })));
+    await assertFails(deleteDoc(doc(admin(), 'payments/p1')));
+  });
+
+  it('corrects a payment with one matching reversal and a reason', async () => {
+    await assertSucceeds(setDoc(doc(admin(), 'payments/p1'), pay()));
+    const reversal = (extra = {}) => pay({ reversalOf: 'p1', reason: 'Check bounced', purpose: 'Reversal of p1', ...extra });
+    await assertFails(setDoc(doc(admin(), 'payments/rev_p1'), reversal({ reason: '' })));
+    await assertFails(setDoc(doc(admin(), 'payments/rev_p1'), reversal({ amountCents: 100 })));
+    await assertFails(setDoc(doc(admin(), 'payments/other'), reversal()));
+    await assertSucceeds(setDoc(doc(admin(), 'payments/rev_p1'), reversal()));
+    await assertFails(setDoc(doc(admin(), 'payments/rev_p1'), reversal()));
+    await assertFails(setDoc(doc(admin(), 'payments/rev_rev_p1'), reversal({ reversalOf: 'rev_p1' })));
+  });
+
+  it('shows the ledger to platform admins only', async () => {
+    await assertSucceeds(setDoc(doc(admin(), 'payments/p1'), pay()));
+    await assertSucceeds(getDoc(doc(admin(), 'payments/p1')));
+    await assertFails(getDoc(doc(account('pete'), 'payments/p1')));
+  });
+});
+
+describe('sponsorships', () => {
+  const admin = () => account('admin', { platformAdmin: true });
+  const sponsorship = (extra = {}) => ({
+    providerId: 'pete',
+    businessName: 'Steel City Plumbing',
+    categories: ['plumbing'],
+    area: { lat: 40.44, lng: -79.99, radiusMiles: 10, label: 'Pittsburgh' },
+    startDate: '2026-11-01',
+    endDate: '2026-11-30',
+    priceUsd: 100,
+    note: '',
+    createdBy: 'admin',
+    createdAt: serverTimestamp(),
+    ...extra,
+  });
+
+  beforeEach(async () => {
+    await env.withSecurityRulesDisabled((ctx) => setDoc(doc(ctx.firestore(), 'providers/pete'), { status: 'approved' }));
+  });
+
+  it('lets platform admins schedule one, but not mark it paid or active', async () => {
+    await assertSucceeds(setDoc(doc(admin(), 'sponsorships/s1'), sponsorship()));
+    await assertFails(setDoc(doc(admin(), 'sponsorships/s2'), sponsorship({ active: true })));
+    await assertFails(setDoc(doc(admin(), 'sponsorships/s2'), sponsorship({ endDate: '2026-10-01' })));
+    await assertFails(setDoc(doc(admin(), 'sponsorships/s2'), sponsorship({ providerId: 'nobody' })));
+    await assertFails(setDoc(doc(account('pete'), 'sponsorships/s2'), sponsorship({ createdBy: 'pete' })));
+    await assertSucceeds(updateDoc(doc(admin(), 'sponsorships/s1'), { endDate: '2026-12-15' }));
+    await assertFails(updateDoc(doc(admin(), 'sponsorships/s1'), { active: true }));
+  });
+
+  it('shows active sponsorships to accounts, and the rest to admins only', async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'sponsorships/on'), { ...sponsorship(), createdAt: new Date(), paid: true, active: true });
+      await setDoc(doc(ctx.firestore(), 'sponsorships/off'), { ...sponsorship(), createdAt: new Date(), paid: true, active: false });
+    });
+    await assertSucceeds(getDoc(doc(account('nia'), 'sponsorships/on')));
+    await assertFails(getDoc(doc(account('nia'), 'sponsorships/off')));
+    await assertFails(getDoc(doc(db('guest'), 'sponsorships/on')));
+    await assertSucceeds(getDocs(query(collection(account('nia'), 'sponsorships'), where('active', '==', true))));
+    await assertSucceeds(getDoc(doc(admin(), 'sponsorships/off')));
+    await assertFails(deleteDoc(doc(admin(), 'sponsorships/on')));
+  });
+});
+
+describe('monetisation settings', () => {
+  const settings = (extra = {}) => ({
+    listingFeeUsd: 150, listingMonths: 12, sponsorshipWeeklyUsd: 25, maxSponsored: 2, reminderDays: 14,
+    updatedBy: 'admin', updatedAt: serverTimestamp(), ...extra,
+  });
+
+  it('lets platform admins change the fees, within limits, and everyone signed in read them', async () => {
+    const admin = account('admin', { platformAdmin: true });
+    await assertSucceeds(setDoc(doc(admin, 'config/monetisation'), settings()));
+    await assertFails(setDoc(doc(admin, 'config/monetisation'), settings({ maxSponsored: 3 })));
+    await assertFails(setDoc(doc(admin, 'config/monetisation'), settings({ listingMonths: 1.5 })));
+    await assertFails(setDoc(doc(admin, 'config/monetisation'), settings({ emulatorFlag: true })));
+    await assertFails(setDoc(doc(account('pete'), 'config/monetisation'), settings({ updatedBy: 'pete' })));
+    await assertSucceeds(getDoc(doc(account('pete'), 'config/monetisation')));
+  });
+});
+
+describe('listing fees', () => {
+  it('hides providers waiting for the fee, and only functions set the listing', async () => {
+    await env.withSecurityRulesDisabled((ctx) =>
+      setDoc(doc(ctx.firestore(), 'providers/wait'), {
+        ownerUid: 'wait', businessName: 'Waiting Co', description: '', phone: '', categories: ['plumbing'],
+        serviceArea: { lat: 40.44, lng: -79.99, geohash: 'dppn59kd3', radiusMiles: 10 },
+        documents: {}, portfolio: [], status: 'awaiting_fee', createdAt: new Date(), updatedAt: new Date(),
+      }),
+    );
+    await assertFails(getDoc(doc(account('nia'), 'providers/wait')));
+    await assertSucceeds(getDoc(doc(account('wait'), 'providers/wait')));
+    await assertFails(updateDoc(doc(account('wait'), 'providers/wait'), {
+      listing: { paidThrough: '2099-01-01' }, updatedAt: serverTimestamp(),
+    }));
+    await assertFails(updateDoc(doc(account('wait'), 'providers/wait'), { status: 'approved', updatedAt: serverTimestamp() }));
+    await assertSucceeds(updateDoc(doc(account('wait'), 'providers/wait'), { description: 'Still here', updatedAt: serverTimestamp() }));
+  });
+});
