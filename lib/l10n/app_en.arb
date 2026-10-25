@@ -1408,7 +1408,7 @@
   "googleResultsTitle": "Not on Burghood yet",
   "googleResultsNote": "These businesses come from Google Maps. Burghood hasn't checked them, and they can't take requests in the app.",
   "googleAttribution": "Results from Google Maps",
-  "googleRating": "★ {rating} ({count, plural, =1{1 review} other{{count} reviews}} on Google)",
+  "googleRating": "{rating} ({count, plural, =1{1 review} other{{count} reviews}} on Google)",
   "@googleRating": {
     "placeholders": {
       "rating": {

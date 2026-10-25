@@ -4507,7 +4507,7 @@ abstract class AppLocalizations {
   /// No description provided for @googleRating.
   ///
   /// In en, this message translates to:
-  /// **'★ {rating} ({count, plural, =1{1 review} other{{count} reviews}} on Google)'**
+  /// **'{rating} ({count, plural, =1{1 review} other{{count} reviews}} on Google)'**
   String googleRating(String rating, int count);
 
   /// No description provided for @searchGoogleMaps.

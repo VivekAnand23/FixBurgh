@@ -2616,7 +2616,7 @@ class AppLocalizationsEn extends AppLocalizations {
       other: '$count reviews',
       one: '1 review',
     );
-    return '★ $rating ($_temp0 on Google)';
+    return '$rating ($_temp0 on Google)';
   }
 
   @override

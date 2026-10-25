@@ -60,3 +60,6 @@ key.properties
 
 # Local Android keys
 /android/secrets.properties
+
+# Built by tool/demo_video/make_video.py; shared outside git.
+Images/demo-video/burghood-demo.mp4
