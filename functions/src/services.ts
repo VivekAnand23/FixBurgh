@@ -264,7 +264,9 @@ export const onServiceRequestWritten = onDocumentWritten('serviceRequests/{rid}'
   await after.ref.collection('events').doc(event.id).set({
     status: now,
     note: now === 'declined' ? after.get('declineReason') ?? '' : now === 'not_fixed' ? after.get('notFixedNote') ?? '' : '',
-    at: FieldValue.serverTimestamp(),
+    // When the step happened (the rules pin updatedAt to the write's time),
+    // not when this trigger ran: triggers can run late and out of order.
+    at: after.get('updatedAt') ?? FieldValue.serverTimestamp(),
   });
   const title = String(after.get('title') ?? '');
   const push = STATUS_PUSH[now];

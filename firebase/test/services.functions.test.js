@@ -249,7 +249,8 @@ describe('service request lifecycle', () => {
       { status: 'confirmed', confirmedAt: new Date() },
     ];
     for (const [i, s] of steps.entries()) {
-      await putDoc(`serviceRequests/${rid}`, { ...base, ...s });
+      // Each step has its own time, as the rules require (updatedAt == request.time).
+      await putDoc(`serviceRequests/${rid}`, { ...base, ...s, updatedAt: new Date() });
       await eventually(async () => assert.equal((await list(`serviceRequests/${rid}/events`)).length, i + 1));
     }
     const events = await list(`serviceRequests/${rid}/events`);
@@ -272,6 +273,32 @@ describe('service request lifecycle', () => {
       assert.equal((await read(`providers/${pete.uid}`)).ratingCount, 1);
       assert.equal((await read(`serviceRequests/${rid}`)).rated, true);
     });
+  });
+
+  it('dates each timeline step by when it happened, even when written quickly', async () => {
+    const nia = await account('nia');
+    const pete = await account('pete');
+    await putProvider(pete.uid);
+    const rid = tag('fast');
+    const t0 = Date.now() - 60_000;
+    const base = {
+      posterUid: nia.uid, posterName: 'Nia', scope: 'home', title: 'Fast job', description: '',
+      category: 'plumbing', group: 'home_repair', details: {}, photos: [], providerId: pete.uid, createdAt: new Date(t0),
+    };
+    const steps = ['assigned', 'accepted', 'in_progress'];
+    // No waiting between writes, as when someone taps through quickly.
+    for (const [i, status] of steps.entries()) {
+      await putDoc(`serviceRequests/${rid}`, { ...base, status, updatedAt: new Date(t0 + i * 1000) });
+    }
+    const events = await eventually(async () => {
+      const e = await list(`serviceRequests/${rid}/events`);
+      assert.equal(e.length, steps.length);
+      return e;
+    });
+    for (const [i, status] of steps.entries()) {
+      const e = events.find((x) => x.status === status);
+      assert.equal(new Date(e.at).getTime(), t0 + i * 1000, status);
+    }
   });
 
   it('tells society admins about new common-area requests', async () => {
