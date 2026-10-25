@@ -14,6 +14,8 @@ class AppLinks {
   String get privacy => '$site/privacy';
   String get terms => '$site/terms';
   String get deleteAccount => '$site/delete-account';
+  String get providerRules => '$site/provider-rules';
+  String get communityGuidelines => '$site/community-guidelines';
 
   /// Support address for Profile > Contact support.
   static const supportEmail = 'viv.anand@gmail.com';

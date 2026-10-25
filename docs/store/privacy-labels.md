@@ -59,3 +59,27 @@ do.
 | Precise location (iOS temporary) | If only approximate is shared | Crews need the exact spot |
 | Camera | When tapping Take photo | Photograph the problem |
 | Photos | None (system photo picker) | Pick a photo without library access |
+
+## Burghood additions (societies, channels, services)
+
+DRAFT: fold these into the tables above when the features ship to prod,
+and re-check them against the final privacy policy.
+
+| Data | Apple type | Play type | Linked | Optional | Purpose |
+|---|---|---|---|---|---|
+| Name and unit shown in a society | Name; Other user content | Personal info > Name; App activity > Other user-generated content | Yes | Yes (joining a society) | App functionality |
+| Channel posts, comments, reactions and their photos | Other user content; Photos | App activity > Other user-generated content; Photos | Yes | Yes | App functionality |
+| Service requests: text, photos, category details, address | Other user content; Photos; Precise location (if pinned) | App activity; Photos; Location | Yes | Yes | App functionality |
+| Completion photos and short video (providers) | Photos or videos | Photos and videos | Yes | Yes | App functionality |
+| Reviews and star ratings | Other user content | App activity > Other user-generated content | Yes | Yes | App functionality |
+| Provider phone number | Phone number | Personal info > Phone number | Yes | Yes (providers only) | App functionality |
+| Society claim: photo ID and proof of office | Other data types | Personal info > Other info | Yes | Yes (society admins only) | App functionality, Fraud prevention |
+| Provider licence, insurance, background-check and clearance documents | Other data types; Sensitive info (criminal record checks) | Personal info > Other info | Yes | Yes (providers only) | App functionality, Fraud prevention |
+| Journey analytics (step names, counts) | Product interaction | App activity > App interactions | No | No | Analytics |
+
+Not collected in the app: payment card or bank details. Listing fees and
+sponsorships are paid outside the app and recorded by staff, so they don't
+belong on the store forms; the privacy policy covers them.
+
+Sponsored listings are first-party placements that use no data about the
+viewer, so the app still collects no advertising data and does no tracking.

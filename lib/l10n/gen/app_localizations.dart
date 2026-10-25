@@ -3742,6 +3742,12 @@ abstract class AppLocalizations {
   /// **'I\'ll follow the provider rules, and my details and documents are true.'**
   String get providerAgree;
 
+  /// No description provided for @readProviderRules.
+  ///
+  /// In en, this message translates to:
+  /// **'Read the provider rules'**
+  String get readProviderRules;
+
   /// No description provided for @pickAService.
   ///
   /// In en, this message translates to:

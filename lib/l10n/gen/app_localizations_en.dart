@@ -2170,6 +2170,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'I\'ll follow the provider rules, and my details and documents are true.';
 
   @override
+  String get readProviderRules => 'Read the provider rules';
+
+  @override
   String get pickAService => 'Pick at least one service.';
 
   @override
