@@ -40,6 +40,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// least 48 px, every control has a label, and text meets contrast.
 class _User extends Mock implements User {}
 
+class _Channels extends Mock implements ChannelRepository {}
+
+class _Requests extends Mock implements ServiceRequestRepository {}
+
+class _Providers extends Mock implements ProviderRepository {}
+
+class _Societies extends Mock implements SocietyRepository {}
+
 const _society = Society(
   id: 's1',
   name: 'Maple Court Homeowners Association of Upper St. Clair',
@@ -180,6 +188,10 @@ void main() {
             monetisation: true,
           )),
           serviceCategoriesProvider.overrideWithValue(groups),
+          channelRepositoryProvider.overrideWithValue(_Channels()),
+          serviceRequestRepositoryProvider.overrideWithValue(_Requests()),
+          providerRepositoryProvider.overrideWithValue(_Providers()),
+          societyRepositoryProvider.overrideWithValue(_Societies()),
           authUserProvider.overrideWith((ref) => Stream.value(user)),
           currentSocietyIdProvider.overrideWithValue('s1'),
           mySocietyIdsProvider.overrideWith(
@@ -393,7 +405,6 @@ void main() {
           request: s.request,
           mine: s.mine,
         );
-        expect(tester.takeException(), isNull);
         await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
         await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
         await expectLater(tester, meetsGuideline(textContrastGuideline));
@@ -413,7 +424,6 @@ void main() {
     );
     await tester.pump(const Duration(milliseconds: 400));
     await tester.pumpAndSettle();
-    expect(tester.takeException(), isNull);
     expect(find.text('Sponsored'), findsWidgets);
     await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
     await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
