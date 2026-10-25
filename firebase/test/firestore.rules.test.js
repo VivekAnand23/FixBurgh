@@ -408,9 +408,6 @@ describe('notification settings', () => {
 
 describe('Burghood closed collections', () => {
   const paths = [
-    'serviceRequests/r1',
-    'providers/pr1',
-    'providers/pr1/reviews/v1',
     'sponsorships/sp1',
     'payments/pay1',
     'inviteCodes/ABCD2345',
@@ -906,5 +903,232 @@ describe('community channels', () => {
       setDoc(doc(account('meg'), 'users/meg'), { notify: { interactions: false, mentions: true, notices: true } }),
     );
     await assertFails(setDoc(doc(account('meg'), 'users/meg'), { notify: { interactions: 'off' } }));
+  });
+});
+
+describe('service providers', () => {
+  const provider = (uid, extra = {}) => ({
+    ownerUid: uid,
+    businessName: 'Steel City Plumbing',
+    description: 'Leaks, drains and water heaters.',
+    phone: '412-555-0100',
+    categories: ['plumbing'],
+    serviceArea: { lat: 40.44, lng: -79.99, geohash: 'dppn59kd3', radiusMiles: 10 },
+    documents: { license: `providerDocs/${uid}/license.pdf`, insurance: `providerDocs/${uid}/insurance.pdf` },
+    portfolio: [],
+    status: 'applied',
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+    ...extra,
+  });
+  const at = (uid) => `providers/${uid}`;
+
+  it('lets an account apply as a provider for themselves', async () => {
+    await assertSucceeds(setDoc(doc(account('pete'), at('pete')), provider('pete')));
+  });
+
+  it('refuses guests, others, pre-approved or bad applications', async () => {
+    await assertFails(setDoc(doc(db('guest'), at('guest')), provider('guest')));
+    await assertFails(setDoc(doc(account('pete'), at('bob')), provider('bob')));
+    await assertFails(setDoc(doc(account('pete'), at('pete')), provider('pete', { status: 'approved' })));
+    await assertFails(setDoc(doc(account('pete'), at('pete')), provider('pete', { rankScore: 5 })));
+    await assertFails(setDoc(doc(account('pete'), at('pete')), provider('pete', { categories: [] })));
+    await assertFails(setDoc(doc(account('pete'), at('pete')), provider('pete', {
+      documents: { license: 'providerDocs/bob/license.pdf' },
+    })));
+    await assertFails(setDoc(doc(account('pete'), at('pete')), provider('pete', {
+      serviceArea: { lat: 39.95, lng: -75.16, geohash: 'dr4e3d9x1', radiusMiles: 10 },
+    })));
+  });
+
+  it('shows approved providers to accounts, and the rest only to their owner', async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), at('live')), { ...provider('live'), status: 'approved', createdAt: new Date(), updatedAt: new Date() });
+      await setDoc(doc(ctx.firestore(), at('wait')), { ...provider('wait'), createdAt: new Date(), updatedAt: new Date() });
+    });
+    await assertSucceeds(getDoc(doc(account('nia'), at('live'))));
+    await assertFails(getDoc(doc(db('guest'), at('live'))));
+    await assertFails(getDoc(doc(account('nia'), at('wait'))));
+    await assertSucceeds(getDoc(doc(account('wait'), at('wait'))));
+    await assertSucceeds(getDoc(doc(account('admin', { platformAdmin: true }), at('wait'))));
+  });
+
+  it('shows the audit trail to platform admins only', async () => {
+    await env.withSecurityRulesDisabled((ctx) =>
+      setDoc(doc(ctx.firestore(), `${at('pete')}/audit/a1`), { action: 'approve', at: new Date() }),
+    );
+    await assertSucceeds(getDoc(doc(account('admin', { platformAdmin: true }), `${at('pete')}/audit/a1`)));
+    await assertFails(getDoc(doc(account('pete'), `${at('pete')}/audit/a1`)));
+    await assertFails(setDoc(doc(account('admin', { platformAdmin: true }), `${at('pete')}/audit/a2`), { action: 'x' }));
+  });
+
+  it('lets owners edit details but never their status, ratings or checks', async () => {
+    await env.withSecurityRulesDisabled((ctx) =>
+      setDoc(doc(ctx.firestore(), at('pete')), { ...provider('pete'), status: 'approved', ratingAvg: 4, createdAt: new Date(), updatedAt: new Date() }),
+    );
+    const edit = (data) => updateDoc(doc(account('pete'), at('pete')), { updatedAt: serverTimestamp(), ...data });
+    await assertSucceeds(edit({ description: 'Now with 24/7 call-outs.' }));
+    await assertFails(edit({ status: 'applied' }));
+    await assertFails(edit({ ratingAvg: 5 }));
+    await assertFails(edit({ backgroundCheck: { status: 'passed' } }));
+    await assertFails(edit({ categories: ['plumbing', 'electrical'] }));
+    await assertFails(updateDoc(doc(account('bob'), at('pete')), { description: 'x', updatedAt: serverTimestamp() }));
+  });
+
+  it('lets a rejected applicant send it again', async () => {
+    await env.withSecurityRulesDisabled((ctx) =>
+      setDoc(doc(ctx.firestore(), at('pete')), { ...provider('pete'), status: 'rejected', rejectReason: 'x', createdAt: new Date(), updatedAt: new Date() }),
+    );
+    await assertSucceeds(updateDoc(doc(account('pete'), at('pete')), {
+      status: 'applied', categories: ['plumbing', 'handyman'], updatedAt: serverTimestamp(),
+    }));
+  });
+});
+
+describe('service requests', () => {
+  const request = (uid, extra = {}) => ({
+    posterUid: uid,
+    posterName: 'Nia',
+    scope: 'home',
+    title: 'Kitchen tap leaking',
+    description: 'Under the sink, since Monday.',
+    category: 'plumbing',
+    group: 'home_repair',
+    details: { urgency: 'soon', access: 'Ring the bell' },
+    photos: [],
+    location: { lat: 40.44, lng: -79.99, geohash: 'dppn59kd3' },
+    providerId: null,
+    status: 'posted',
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+    ...extra,
+  });
+  const at = (id) => `serviceRequests/${id}`;
+
+  beforeEach(async () => {
+    await seedSociety();
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      const f = ctx.firestore();
+      await setDoc(doc(f, 'providers/pete'), { ownerUid: 'pete', status: 'approved' });
+      await setDoc(doc(f, 'providers/wanda'), { ownerUid: 'wanda', status: 'applied' });
+    });
+  });
+
+  /** Seeds request [id] in [status] (rules off). */
+  const seed = (id, data) =>
+    env.withSecurityRulesDisabled((ctx) =>
+      setDoc(doc(ctx.firestore(), at(id)), { ...request('nia'), createdAt: new Date(), updatedAt: new Date(), ...data }),
+    );
+
+  it('lets an account post a home request, open or for an approved provider', async () => {
+    await assertSucceeds(setDoc(doc(account('nia'), at('a')), request('nia')));
+    await assertSucceeds(setDoc(doc(account('nia'), at('b')), request('nia', { providerId: 'pete', status: 'assigned' })));
+    await assertSucceeds(setDoc(doc(account('nia'), at('c')), request('nia', {
+      photos: [{ path: 'serviceRequests/c/1.jpg', thumbPath: 'serviceRequests/c/1_thumb.jpg', thumbUrl: 'u' }],
+    })));
+  });
+
+  it('refuses guests, others, unapproved providers and odd starts', async () => {
+    await assertFails(setDoc(doc(db('guest'), at('a')), request('guest')));
+    await assertFails(setDoc(doc(account('nia'), at('a')), request('bob')));
+    await assertFails(setDoc(doc(account('nia'), at('a')), request('nia', { providerId: 'wanda', status: 'assigned' })));
+    await assertFails(setDoc(doc(account('nia'), at('a')), request('nia', { status: 'completed' })));
+    await assertFails(setDoc(doc(account('pete'), at('a')), request('pete', { providerId: 'pete', status: 'assigned' })));
+    await assertFails(setDoc(doc(account('nia'), at('a')), request('nia', {
+      photos: [{ path: 'serviceRequests/other/1.jpg', thumbPath: 't', thumbUrl: 'u' }],
+    })));
+  });
+
+  it('lets only members post common-area requests, which their admins can see', async () => {
+    await assertSucceeds(setDoc(doc(account('meg'), at('common')), request('meg', { scope: 'common', societyId: SID })));
+    await assertFails(setDoc(doc(account('nia'), at('common2')), request('nia', { scope: 'common', societyId: SID })));
+    await assertSucceeds(getDoc(doc(account('ann'), at('common'))));
+    await assertFails(getDoc(doc(account('cal'), at('common'))));
+  });
+
+  it('shows a request to its poster, its provider and platform admins only', async () => {
+    await seed('r', { providerId: 'pete', status: 'assigned' });
+    await assertSucceeds(getDoc(doc(account('nia'), at('r'))));
+    await assertSucceeds(getDoc(doc(account('pete'), at('r'))));
+    await assertSucceeds(getDoc(doc(account('admin', { platformAdmin: true }), at('r'))));
+    await assertFails(getDoc(doc(account('bob'), at('r'))));
+  });
+
+  const step = (uid, id, data) => updateDoc(doc(account(uid), at(id)), { updatedAt: serverTimestamp(), ...data });
+
+  it('walks a job from assigned to confirmed, each side only its own steps', async () => {
+    await seed('job', { providerId: 'pete', status: 'assigned' });
+    await assertFails(step('nia', 'job', { status: 'accepted' }));
+    await assertSucceeds(step('pete', 'job', { status: 'accepted' }));
+    await assertFails(step('pete', 'job', { status: 'confirmed', confirmedAt: serverTimestamp() }));
+    await assertSucceeds(step('pete', 'job', { status: 'in_progress' }));
+    const completion = { note: 'Replaced the washer.', photos: [{ path: 'serviceRequests/job/completion/a.jpg', thumbPath: 't', thumbUrl: 'u' }], video: null };
+    await assertFails(step('nia', 'job', { status: 'completed', completion, completedAt: serverTimestamp() }));
+    await assertSucceeds(step('pete', 'job', { status: 'completed', completion, completedAt: serverTimestamp() }));
+    await assertSucceeds(step('nia', 'job', { status: 'not_fixed', notFixedNote: 'Still dripping.' }));
+    await assertSucceeds(step('pete', 'job', { status: 'completed', completion, completedAt: serverTimestamp() }));
+    await assertFails(step('pete', 'job', { status: 'confirmed', confirmedAt: serverTimestamp() }));
+    await assertSucceeds(step('nia', 'job', { status: 'confirmed', confirmedAt: serverTimestamp() }));
+    await assertFails(step('nia', 'job', { status: 'posted' }));
+  });
+
+  it('lets providers decline, and posters pick another or cancel', async () => {
+    await seed('d', { providerId: 'pete', status: 'assigned' });
+    await assertSucceeds(step('pete', 'd', { status: 'declined', declineReason: 'Fully booked this week.' }));
+    await assertFails(step('nia', 'd', { status: 'assigned', providerId: 'wanda' }));
+    await assertSucceeds(step('nia', 'd', { status: 'cancelled' }));
+  });
+
+  it('lets a society admin assign a provider to a common-area request', async () => {
+    await seed('c', { posterUid: 'meg', scope: 'common', societyId: SID });
+    await assertFails(step('cal', 'c', { status: 'assigned', providerId: 'pete' }));
+    await assertSucceeds(step('ann', 'c', { status: 'assigned', providerId: 'pete' }));
+  });
+
+  it('refuses completion files outside the job folder, and edits to counts', async () => {
+    await seed('x', { providerId: 'pete', status: 'in_progress' });
+    await assertFails(step('pete', 'x', {
+      status: 'completed', completedAt: serverTimestamp(),
+      completion: { note: '', photos: [{ path: 'serviceRequests/other/completion/a.jpg' }], video: null },
+    }));
+    await assertFails(step('nia', 'x', { posterUid: 'bob' }));
+  });
+
+  describe('reviews', () => {
+    const review = (uid, extra = {}) => ({
+      stars: 5, comment: 'Quick and tidy.', authorUid: uid, authorName: 'Nia', category: 'plumbing',
+      createdAt: serverTimestamp(), ...extra,
+    });
+    const rv = (pid, rid) => `providers/${pid}/reviews/${rid}`;
+
+    it('come only from the poster of a confirmed job, once', async () => {
+      await seed('done', { providerId: 'pete', status: 'confirmed' });
+      await seed('open', { providerId: 'pete', status: 'completed' });
+      await assertFails(setDoc(doc(account('nia'), rv('pete', 'open')), review('nia')));
+      await assertFails(setDoc(doc(account('bob'), rv('pete', 'done')), review('bob')));
+      await assertFails(setDoc(doc(account('nia'), rv('wanda', 'done')), review('nia')));
+      await assertFails(setDoc(doc(account('nia'), rv('pete', 'done')), review('nia', { stars: 6 })));
+      await assertSucceeds(setDoc(doc(account('nia'), rv('pete', 'done')), review('nia')));
+      await assertFails(setDoc(doc(account('nia'), rv('pete', 'done')), review('nia', { stars: 1 })));
+    });
+
+    it('let the provider reply, and nobody change the stars', async () => {
+      await seed('done', { providerId: 'pete', status: 'confirmed' });
+      await env.withSecurityRulesDisabled((ctx) =>
+        setDoc(doc(ctx.firestore(), rv('pete', 'done')), { ...review('nia'), createdAt: new Date() }),
+      );
+      await assertSucceeds(updateDoc(doc(account('pete'), rv('pete', 'done')), { reply: 'Thanks, Nia!', replyAt: serverTimestamp() }));
+      await assertFails(updateDoc(doc(account('pete'), rv('pete', 'done')), { stars: 1 }));
+      await assertFails(updateDoc(doc(account('nia'), rv('pete', 'done')), { reply: 'x', replyAt: serverTimestamp() }));
+      await assertSucceeds(getDoc(doc(account('bob'), rv('pete', 'done'))));
+    });
+  });
+
+  it('lets society admins recommend providers to members', async () => {
+    const rec = (uid) => setDoc(doc(account(uid), `societies/${SID}/recommended/pete`), { by: uid, at: serverTimestamp() });
+    await assertFails(rec('meg'));
+    await assertSucceeds(rec('ann'));
+    await assertSucceeds(getDoc(doc(account('meg'), `societies/${SID}/recommended/pete`)));
+    await assertFails(getDoc(doc(account('nia'), `societies/${SID}/recommended/pete`)));
   });
 });

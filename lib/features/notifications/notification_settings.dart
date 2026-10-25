@@ -16,6 +16,7 @@ class NotifySettings {
     this.notices = true,
     this.interactions = true,
     this.mentions = true,
+    this.services = true,
     this.quietEnabled = false,
     this.quietStart = 22 * 60,
     this.quietEnd = 7 * 60,
@@ -30,6 +31,7 @@ class NotifySettings {
       notices: n['notices'] as bool? ?? true,
       interactions: n['interactions'] as bool? ?? true,
       mentions: n['mentions'] as bool? ?? true,
+      services: n['services'] as bool? ?? true,
       quietEnabled: q['enabled'] as bool? ?? false,
       quietStart: (q['start'] as num?)?.toInt() ?? 22 * 60,
       quietEnd: (q['end'] as num?)?.toInt() ?? 7 * 60,
@@ -51,6 +53,9 @@ class NotifySettings {
 
   /// @mentions in channels (only while [interactions] is on).
   final bool mentions;
+
+  /// Updates on service requests and jobs (Burghood Phase 3).
+  final bool services;
   final bool quietEnabled;
 
   /// Minutes after local midnight.
@@ -64,6 +69,7 @@ class NotifySettings {
       'notices': notices,
       'interactions': interactions,
       'mentions': mentions,
+      'services': services,
     },
     'quietHours': {
       'enabled': quietEnabled,
@@ -80,6 +86,7 @@ class NotifySettings {
     bool? notices,
     bool? interactions,
     bool? mentions,
+    bool? services,
     bool? quietEnabled,
     int? quietStart,
     int? quietEnd,
@@ -89,6 +96,7 @@ class NotifySettings {
     notices: notices ?? this.notices,
     interactions: interactions ?? this.interactions,
     mentions: mentions ?? this.mentions,
+    services: services ?? this.services,
     quietEnabled: quietEnabled ?? this.quietEnabled,
     quietStart: quietStart ?? this.quietStart,
     quietEnd: quietEnd ?? this.quietEnd,

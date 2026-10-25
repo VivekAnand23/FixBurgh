@@ -82,6 +82,8 @@ async function start() {
   $('claims-refresh').onclick = () => loadClaims();
   $('claim-close').onclick = () => $('claim-dialog').close();
   $('file-close').onclick = () => closeFile();
+  $('providers-refresh').onclick = () => loadProviders();
+  $('provider-close').onclick = () => $('provider-dialog').close();
 
   onAuthStateChanged(auth, async (user) => {
     $('who').hidden = !user;
@@ -92,7 +94,7 @@ async function start() {
     const { claims } = await user.getIdTokenResult(true);
     if (claims.platformAdmin !== true) return show('denied');
     show('console');
-    await loadClaims();
+    await Promise.all([loadClaims(), loadProviders()]);
   });
 }
 
@@ -260,27 +262,253 @@ async function openClaim(id) {
   );
 }
 
+// ---- Providers ----
+
+const DOCUMENTS = {
+  license: 'Contractor registration (HIC)',
+  insurance: 'Insurance',
+  background: 'Background check',
+};
+const PERSONAL_CARE = ['babysitting', 'nanny', 'elder_care_and_companionship', 'pet_sitting', 'dog_walking', 'pet_grooming', 'tutoring'];
+const CHILD_CARE = ['babysitting', 'nanny', 'tutoring'];
+
+async function loadProviders() {
+  $('providers-pending').replaceChildren(el('p', { class: 'meta' }, 'Loading…'));
+  $('providers-live').replaceChildren();
+  try {
+    const pending = await getDocs(
+      query(collection(db, 'providers'), where('status', '==', 'applied'), orderBy('createdAt', 'desc')),
+    );
+    const live = await getDocs(
+      query(collection(db, 'providers'), where('status', 'in', ['approved', 'suspended']), limit(100)),
+    );
+    $('providers-count').textContent = pending.size ? ` (${pending.size} waiting)` : '';
+    $('providers-pending').replaceChildren(
+      ...(pending.empty ? [el('p', { class: 'meta' }, 'No applications waiting.')] : pending.docs.map(providerRow)),
+    );
+    $('providers-live').replaceChildren(
+      ...(live.empty ? [el('p', { class: 'meta' }, 'None yet.')] : live.docs.map(providerRow)),
+    );
+  } catch (e) {
+    $('providers-pending').replaceChildren(el('p', { class: 'error' }, `Couldn't load providers: ${e.message}`));
+  }
+}
+
+function providerRow(snap) {
+  const p = snap.data();
+  const check = p.backgroundCheck?.status;
+  return el(
+    'button',
+    { type: 'button', class: 'row', onclick: () => openProvider(snap.id) },
+    el('strong', {}, p.businessName ?? '(no name)'),
+    el('span', { class: 'meta' }, ` · ${(p.categories ?? []).join(', ')}`),
+    el('br'),
+    el('span', { class: `pill ${p.status}` }, p.status),
+    el('span', { class: 'meta' }, ` ${p.serviceArea?.label ?? ''} · applied ${when(p.createdAt)}${check ? ` · check ${check}` : ''}`),
+  );
+}
+
+async function openProvider(id) {
+  const dialog = $('provider-dialog');
+  const body = $('provider-body');
+  if (!dialog.open) {
+    body.replaceChildren(el('p', { class: 'meta' }, 'Loading…'));
+    dialog.showModal();
+  }
+  const snap = await getDoc(doc(db, 'providers', id));
+  if (!snap.exists()) {
+    body.replaceChildren(el('p', {}, 'This provider no longer exists.'));
+    return;
+  }
+  const p = snap.data();
+  const cats = p.categories ?? [];
+  const needsCheck = cats.some((c) => PERSONAL_CARE.includes(c));
+  const needsClearances = cats.some((c) => CHILD_CARE.includes(c));
+  const check = p.backgroundCheck ?? {};
+  const audit = await getDocs(query(collection(db, 'providers', id, 'audit'), orderBy('at')));
+  const refresh = async () => {
+    await openProvider(id);
+    await loadProviders();
+  };
+
+  // Background check, for personal care.
+  const checkSection = el('section', {});
+  if (needsCheck) {
+    const passed = el('input', { type: 'radio', name: 'check', value: 'passed', checked: check.status !== 'failed' });
+    const failed = el('input', { type: 'radio', name: 'check', value: 'failed', checked: check.status === 'failed' });
+    const clearances = el('input', { type: 'checkbox', checked: check.clearances === true });
+    const note = el('input', { type: 'text', maxlength: 500, placeholder: 'Vendor, reference or date (optional)', value: check.note ?? '' });
+    const error = el('p', { class: 'error', hidden: true });
+    checkSection.append(
+      el('h3', {}, 'Background check'),
+      el('p', { class: 'meta' }, check.status ? `Recorded: ${check.status}${check.clearances ? ', clearances on file' : ''} on ${when(check.checkedAt)}` : 'Not recorded yet.'),
+      el(
+        'fieldset',
+        {},
+        el('label', {}, passed, ' Passed'),
+        el('label', {}, failed, ' Failed'),
+        needsClearances ? el('label', {}, clearances, ' PA child abuse clearances on file (needed for child care)') : null,
+        el('label', {}, 'Note ', note),
+      ),
+      error,
+      el(
+        'button',
+        {
+          type: 'button',
+          onclick: async (e) => {
+            e.target.disabled = true;
+            error.hidden = true;
+            try {
+              await httpsCallable(functions, 'recordBackgroundCheck')({
+                providerId: id,
+                status: failed.checked ? 'failed' : 'passed',
+                clearances: clearances.checked,
+                note: note.value,
+              });
+              await refresh();
+            } catch (err) {
+              error.textContent = err.message;
+              error.hidden = false;
+              e.target.disabled = false;
+            }
+          },
+        },
+        'Record check',
+      ),
+    );
+  }
+
+  // Approve, reject, suspend or reinstate.
+  const decide = el('section', {});
+  const choices = {
+    applied: [['approve', 'Approve', 'primary'], ['reject', 'Reject', 'danger']],
+    rejected: [['approve', 'Approve', 'primary']],
+    approved: [['suspend', 'Suspend', 'danger']],
+    suspended: [['reinstate', 'Reinstate', 'primary']],
+  }[p.status] ?? [];
+  if (choices.length) {
+    const reason = el('textarea', { rows: 3, maxlength: 500, placeholder: 'Reason (required to reject or suspend; shown to the provider)' });
+    const error = el('p', { class: 'error', hidden: true });
+    const actions = el('div', { class: 'actions' });
+    const run = async (decision) => {
+      for (const b of actions.querySelectorAll('button')) b.disabled = true;
+      error.hidden = true;
+      try {
+        await httpsCallable(functions, 'decideProvider')({ providerId: id, decision, reason: reason.value });
+        await refresh();
+      } catch (e) {
+        error.textContent = e.message;
+        error.hidden = false;
+        choose();
+      }
+    };
+    const choose = () =>
+      actions.replaceChildren(
+        ...choices.map(([decision, label, cls]) =>
+          el('button', { type: 'button', class: cls, onclick: () => ask(decision, label) }, label),
+        ),
+      );
+    // Confirms in the page; window.confirm() is blocked in some browsers.
+    const ask = (decision, label) => {
+      if ((decision === 'reject' || decision === 'suspend') && !reason.value.trim()) {
+        error.textContent = 'Say why, so the provider knows what to fix.';
+        error.hidden = false;
+        reason.focus();
+        return;
+      }
+      error.hidden = true;
+      actions.replaceChildren(
+        el('p', { class: 'confirm' }, `${label} ${p.businessName}?`),
+        el('button', { type: 'button', class: decision === 'approve' || decision === 'reinstate' ? 'primary' : 'danger', onclick: () => run(decision) }, `Yes, ${label.toLowerCase()}`),
+        el('button', { type: 'button', onclick: choose }, 'Cancel'),
+      );
+    };
+    choose();
+    decide.append(el('h3', {}, 'Decision'), reason, error, actions);
+  }
+
+  const documents = Object.keys(p.documents ?? {});
+  body.replaceChildren(
+    el('h2', {}, p.businessName ?? ''),
+    el(
+      'dl',
+      {},
+      el('dt', {}, 'Status'), el('dd', {}, el('span', { class: `pill ${p.status}` }, p.status), p.rejectReason ? ` (${p.rejectReason})` : ''),
+      el('dt', {}, 'Services'), el('dd', {}, cats.join(', ')),
+      el('dt', {}, 'Area'), el('dd', {}, `${p.serviceArea?.label ?? ''}, within ${p.serviceArea?.radiusMiles ?? '?'} mi (${p.serviceArea?.lat}, ${p.serviceArea?.lng})`),
+      el('dt', {}, 'Phone'), el('dd', {}, p.phone || '(none)'),
+      el('dt', {}, 'About'), el('dd', {}, p.description || '(none)'),
+      el('dt', {}, 'Rating'), el('dd', {}, p.ratingCount ? `${Number(p.ratingAvg).toFixed(2)} from ${p.ratingCount} reviews` : 'No reviews'),
+      el('dt', {}, 'Applied'), el('dd', {}, when(p.createdAt)),
+      el('dt', {}, 'Owner uid'), el('dd', {}, p.ownerUid ?? id),
+    ),
+    el('h3', {}, 'Documents'),
+    documents.length
+      ? el(
+          'div',
+          { class: 'actions' },
+          documents.map((which) =>
+            el('button', { type: 'button', onclick: () => viewProviderDocument(id, which) }, `View ${DOCUMENTS[which] ?? which}`),
+          ),
+        )
+      : el('p', { class: 'meta' }, 'None uploaded.'),
+    el('p', { class: 'meta' }, 'Files open here only and are never saved as links. Each view is recorded below.'),
+    checkSection,
+    decide,
+    el('h3', {}, 'Audit trail'),
+    audit.empty
+      ? el('p', { class: 'meta' }, 'Nothing yet.')
+      : el(
+          'ol',
+          { class: 'audit' },
+          audit.docs.map((a) => {
+            const e = a.data();
+            const what = e.action === 'viewed_document' ? `viewed ${DOCUMENTS[e.reason] ?? e.reason}` : e.action.replace('_', ' ');
+            const why = e.action === 'viewed_document' ? '' : e.reason ? ` (${e.reason})` : '';
+            return el('li', {}, `${when(e.at)}: ${what} by ${e.byEmail || e.by}${why}`);
+          }),
+        ),
+  );
+}
+
+async function viewProviderDocument(providerId, which) {
+  await showFile(
+    () => httpsCallable(functions, 'getProviderDocument')({ providerId, which }),
+    DOCUMENTS[which] ?? which,
+    () => openProvider(providerId),
+  );
+}
+
 let fileUrl;
 
-async function viewFile(claimId, which) {
+/** Opens a file returned as base64 by [load], then runs [after]. */
+async function showFile(load, title, after) {
   const dialog = $('file-dialog');
   const body = $('file-body');
   body.replaceChildren(el('p', { class: 'meta' }, 'Loading…'));
   dialog.showModal();
   try {
-    const { data } = await httpsCallable(functions, 'getClaimFile')({ claimId, which });
+    const { data } = await load();
     const bytes = Uint8Array.from(atob(data.data), (ch) => ch.charCodeAt(0));
     fileUrl = URL.createObjectURL(new Blob([bytes], { type: data.contentType }));
     body.replaceChildren(
       data.contentType === 'application/pdf'
-        ? el('iframe', { src: fileUrl, title: which === 'id' ? 'Photo ID' : 'Proof of office' })
-        : el('img', { src: fileUrl, alt: which === 'id' ? 'Photo ID' : 'Proof of office' }),
+        ? el('iframe', { src: fileUrl, title })
+        : el('img', { src: fileUrl, alt: title }),
     );
     // Refresh the audit trail behind this dialog.
-    void openClaim(claimId);
+    void after();
   } catch (e) {
     body.replaceChildren(el('p', { class: 'error' }, e.message));
   }
+}
+
+async function viewFile(claimId, which) {
+  await showFile(
+    () => httpsCallable(functions, 'getClaimFile')({ claimId, which }),
+    which === 'id' ? 'Photo ID' : 'Proof of office',
+    () => openClaim(claimId),
+  );
 }
 
 function closeFile() {

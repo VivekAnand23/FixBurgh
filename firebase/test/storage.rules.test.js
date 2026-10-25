@@ -34,6 +34,8 @@ before(async () => {
     await m('cal', 'committee', 'approved');
     await m('meg', 'member', 'approved');
     await m('pat', 'member', 'pending');
+    await setDoc(doc(f, 'serviceRequests/job'), { posterUid: 'nia', providerId: 'pete', status: 'in_progress' });
+    await uploadBytes(ref(ctx.storage(), 'providerDocs/pete/license.pdf'), pdf, { contentType: 'application/pdf' });
   });
 });
 
@@ -128,6 +130,35 @@ describe('channel post photos', () => {
     await assertFails(
       uploadBytes(ref(storage('meg'), `societies/${SID}/posts/p1/x.pdf`), pdf, { contentType: 'application/pdf' }),
     );
+  });
+});
+
+describe('provider documents', () => {
+  it('are written once by the applicant and read only by platform admins', async () => {
+    const put = (uid, name, type = 'application/pdf', data = pdf) =>
+      uploadBytes(ref(storage(uid), `providerDocs/pete/${name}`), data, { contentType: type });
+    await assertSucceeds(put('pete', 'insurance.pdf'));
+    await assertFails(put('bob', 'background.pdf'));
+    await assertFails(put('pete', 'selfie.jpg', 'image/jpeg', jpeg));
+    await assertFails(put('pete', 'license.pdf'));
+    await assertFails(getBytes(ref(storage('pete'), 'providerDocs/pete/license.pdf')));
+    await assertSucceeds(getBytes(ref(storage('admin', { platformAdmin: true }), 'providerDocs/pete/license.pdf')));
+  });
+});
+
+describe('service request photos', () => {
+  it('come from the poster, completion files from the provider; both can see them', async () => {
+    const put = (uid, path, type = 'image/jpeg') => uploadBytes(ref(storage(uid), path), jpeg, { contentType: type });
+    await assertSucceeds(put('nia', 'serviceRequests/job/a1.jpg'));
+    await assertFails(put('pete', 'serviceRequests/job/a2.jpg'));
+    await assertSucceeds(put('pete', 'serviceRequests/job/completion/b1.jpg'));
+    await assertSucceeds(put('pete', 'serviceRequests/job/completion/clip.mp4', 'video/mp4'));
+    await assertFails(put('nia', 'serviceRequests/job/completion/b2.jpg'));
+    // Before the request exists, its poster can upload photos for it.
+    await assertSucceeds(put('nia', 'serviceRequests/new1/a1.jpg'));
+    for (const uid of ['nia', 'pete']) await assertSucceeds(getBytes(ref(storage(uid), 'serviceRequests/job/a1.jpg')));
+    await assertFails(getBytes(ref(storage('bob'), 'serviceRequests/job/a1.jpg')));
+    await assertFails(getBytes(ref(storage('bob'), 'serviceRequests/job/completion/b1.jpg')));
   });
 });
 

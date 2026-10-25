@@ -22,6 +22,13 @@ service firebase.storage {
       return hasRole(sid, ['member', 'committee', 'admin']);
     }
 
+    function canSeeRequest(rid) {
+      let path = /databases/(default)/documents/serviceRequests/$(rid);
+      return isPlatformAdmin() || (request.auth != null && firestore.exists(path)
+        && (firestore.get(path).data.posterUid == request.auth.uid
+            || firestore.get(path).data.get('providerId', '') == request.auth.uid));
+    }
+
     match /reports/{uid}/{reportId}/{file} {
       // Photos are public once uploaded (blurred in Phase 2).
       allow read: if true;
@@ -70,6 +77,49 @@ service firebase.storage {
         && request.resource.contentType == 'image/jpeg'
         && request.resource.size < 2 * 1024 * 1024
         && file.matches('[0-9a-f-]+(_thumb)?[.]jpg');
+    }
+
+    // Provider licence, insurance and background-check documents (Phase 3):
+    // written once by the applicant, read only by platform admins.
+    match /providerDocs/{uid}/{file} {
+      allow read: if isPlatformAdmin();
+      allow create: if resource == null
+        && request.auth != null && request.auth.uid == uid
+        && request.auth.token.firebase.sign_in_provider != 'anonymous'
+        && file.matches('(license|insurance|background)[.](jpg|png|pdf)')
+        && request.resource.contentType in ['image/jpeg', 'image/png', 'application/pdf']
+        && request.resource.size < 5 * 1024 * 1024;
+    }
+
+    // Photos of past jobs on a provider's public profile.
+    match /providers/{uid}/portfolio/{file} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && request.auth.uid == uid
+        && request.resource.contentType == 'image/jpeg'
+        && request.resource.size < 2 * 1024 * 1024;
+      allow delete: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Service request photos from the poster, and completion photos or a
+    // short video from the assigned provider. Both, and platform admins,
+    // can see them.
+    match /serviceRequests/{rid}/{file} {
+      allow read: if canSeeRequest(rid);
+      allow create: if resource == null && request.auth != null
+        && request.auth.token.firebase.sign_in_provider != 'anonymous'
+        && request.resource.contentType == 'image/jpeg'
+        && request.resource.size < 2 * 1024 * 1024
+        // Uploaded before the request exists, or by its poster.
+        && (!firestore.exists(/databases/(default)/documents/serviceRequests/$(rid))
+            || firestore.get(/databases/(default)/documents/serviceRequests/$(rid)).data.posterUid == request.auth.uid);
+    }
+
+    match /serviceRequests/{rid}/completion/{file} {
+      allow read: if canSeeRequest(rid);
+      allow create: if resource == null && request.auth != null
+        && firestore.get(/databases/(default)/documents/serviceRequests/$(rid)).data.get('providerId', '') == request.auth.uid
+        && (request.resource.contentType == 'image/jpeg' && request.resource.size < 2 * 1024 * 1024
+            || request.resource.contentType == 'video/mp4' && request.resource.size < 30 * 1024 * 1024);
     }
 
     match /societies/{sid}/notices/{noticeId}/{file} {

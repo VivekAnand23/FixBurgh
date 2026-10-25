@@ -2013,4 +2013,561 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get done => 'Done';
+
+  @override
+  String get whereIsProblem => 'Where is the problem?';
+
+  @override
+  String get forkStreet => 'On the street';
+
+  @override
+  String get forkStreetBody =>
+      'Potholes, streetlights, trash. We send it to the city.';
+
+  @override
+  String get forkHome => 'In my home';
+
+  @override
+  String get forkHomeBody =>
+      'A leak, a broken appliance, or help you need. Find a local provider.';
+
+  @override
+  String get forkCommon => 'In my society\'s common areas';
+
+  @override
+  String get forkCommonBody =>
+      'Lobby, hallways, grounds. Your society admin picks the provider.';
+
+  @override
+  String get tabServices => 'Services';
+
+  @override
+  String get requestService => 'Request a service';
+
+  @override
+  String get commonRequests => 'Common areas';
+
+  @override
+  String get commonRequestsEmpty => 'No common-area requests yet.';
+
+  @override
+  String get servicesSearchHint => 'What do you need? e.g. kitchen tap leaking';
+
+  @override
+  String get clear => 'Clear';
+
+  @override
+  String get lookingFor => 'Looking for:';
+
+  @override
+  String get distanceFilter => 'Distance';
+
+  @override
+  String withinMiles(int miles) {
+    return 'Within $miles mi';
+  }
+
+  @override
+  String milesAway(String miles) {
+    return '$miles mi away';
+  }
+
+  @override
+  String get noProvidersFound =>
+      'No providers found yet. Try a wider distance or other words.';
+
+  @override
+  String get becomeProvider => 'Offer your services';
+
+  @override
+  String get becomeProviderBody =>
+      'Neighbors can find you and send you requests.';
+
+  @override
+  String get yourProviderProfile => 'Your provider profile';
+
+  @override
+  String get providerAppliedTitle => 'Application sent';
+
+  @override
+  String get providerApplied =>
+      'We\'re checking your details and documents. We aim to decide within 2 working days.';
+
+  @override
+  String get providerLiveTitle => 'You\'re live';
+
+  @override
+  String get providerLive => 'Neighbors can find you and send you requests.';
+
+  @override
+  String get providerRejected => 'We couldn\'t approve your application';
+
+  @override
+  String get providerSuspendedTitle => 'Your profile is paused';
+
+  @override
+  String get providerSuspended =>
+      'Neighbors can\'t find you right now. Contact support to find out more.';
+
+  @override
+  String rejectedBecause(String reason) {
+    return 'We couldn\'t approve it: $reason. Fix this and send it again.';
+  }
+
+  @override
+  String get becomeProviderIntro =>
+      'Tell neighbors what you do. We check every provider before they appear, and the documents you add are seen only by the Burghood team.';
+
+  @override
+  String get businessName => 'Business or your name';
+
+  @override
+  String get aboutYourWork => 'About your work';
+
+  @override
+  String get phoneLabel => 'Phone';
+
+  @override
+  String get phoneHelper =>
+      'Shown to a neighbor once you accept their request.';
+
+  @override
+  String get phoneInvalid => 'Enter a phone number';
+
+  @override
+  String get serviceAreaLabel => 'Where you\'re based';
+
+  @override
+  String get serviceAreaHint => 'Neighborhood, town or ZIP code';
+
+  @override
+  String get travelDistance => 'How far you travel';
+
+  @override
+  String get documentsNeeded => 'Documents';
+
+  @override
+  String get documentsPrivate => 'Only the Burghood team can see these.';
+
+  @override
+  String get docLicense => 'Pennsylvania contractor registration (HIC)';
+
+  @override
+  String get docInsurance => 'Proof of insurance';
+
+  @override
+  String get docBackground =>
+      'Background check, plus child abuse clearances if you care for children';
+
+  @override
+  String get docFormats => 'PDF, JPG or PNG, up to 5 MB';
+
+  @override
+  String get alreadyUploaded => 'Already uploaded';
+
+  @override
+  String get providerAgree =>
+      'I\'ll follow the provider rules, and my details and documents are true.';
+
+  @override
+  String get pickAService => 'Pick at least one service.';
+
+  @override
+  String get documentsMissing => 'Add the documents these services need.';
+
+  @override
+  String get agreeFirst => 'Please confirm the provider rules first.';
+
+  @override
+  String get areaNotFound =>
+      'We couldn\'t find that place in Allegheny County.';
+
+  @override
+  String get viewPublicProfile => 'View public profile';
+
+  @override
+  String get editDetails => 'Edit details';
+
+  @override
+  String get providerNotFound => 'This provider isn\'t available.';
+
+  @override
+  String get requestThisProvider => 'Request this provider';
+
+  @override
+  String get recommendToSociety => 'Recommend to your society';
+
+  @override
+  String get recommendToSocietyBody =>
+      'Shows a \"Recommended by your society\" tag to members.';
+
+  @override
+  String get recommendedBySociety => 'Recommended by your society';
+
+  @override
+  String get backgroundChecked => 'Background checked';
+
+  @override
+  String get providerServices => 'Services';
+
+  @override
+  String get serviceArea => 'Service area';
+
+  @override
+  String serviceAreaLine(String area, String miles) {
+    return '$area, within $miles mi';
+  }
+
+  @override
+  String get portfolio => 'Past work';
+
+  @override
+  String get noPortfolio => 'No photos yet.';
+
+  @override
+  String portfolioPhoto(int n) {
+    return 'Past work photo $n';
+  }
+
+  @override
+  String get addPortfolioPhoto => 'Add a photo of past work';
+
+  @override
+  String reviewsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count reviews',
+      one: '1 review',
+      zero: 'Reviews',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noReviewsYet => 'No reviews yet';
+
+  @override
+  String ratingSummary(String avg, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count reviews',
+      one: '1 review',
+    );
+    return 'Rated $avg out of 5 from $_temp0';
+  }
+
+  @override
+  String get providerReply => 'Reply from the provider';
+
+  @override
+  String get replyToReview => 'Reply';
+
+  @override
+  String starsLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count stars',
+      one: '1 star',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get newRequestTitle => 'New request';
+
+  @override
+  String get commonRequestTitle => 'Common-area request';
+
+  @override
+  String get commonRequestNote =>
+      'Your society admin will choose the provider and you\'ll get updates here.';
+
+  @override
+  String sendingTo(String name) {
+    return 'Sending to $name';
+  }
+
+  @override
+  String get requestTitleLabel => 'What\'s the problem?';
+
+  @override
+  String get requestTitleHint => 'e.g. Kitchen tap leaking';
+
+  @override
+  String get requestDescriptionLabel => 'Details';
+
+  @override
+  String get requestDescriptionHint =>
+      'Where it is, when it started, anything the provider should know';
+
+  @override
+  String get categoryLabel => 'Category';
+
+  @override
+  String get chooseCategory => 'Choose a category';
+
+  @override
+  String get pickCategoryFirst => 'Pick a category first.';
+
+  @override
+  String photosCount(int count, int max) {
+    return 'Photos ($count of $max)';
+  }
+
+  @override
+  String get sendRequest => 'Send request';
+
+  @override
+  String get requestQueued =>
+      'You\'re offline. Your request is saved and will send when you\'re back online.';
+
+  @override
+  String get requestWaiting =>
+      'Waiting to send. It goes when you\'re back online.';
+
+  @override
+  String get requestFailed =>
+      'Couldn\'t send this request. Try again, or cancel it.';
+
+  @override
+  String get tryAgain => 'Try again';
+
+  @override
+  String get detailUrgency => 'How urgent?';
+
+  @override
+  String get detailAccess => 'Access';
+
+  @override
+  String get detailAccessHint => 'e.g. Key with the front desk';
+
+  @override
+  String get detailTimeWindow => 'Best time';
+
+  @override
+  String get detailDate => 'Date';
+
+  @override
+  String get detailHours => 'Hours needed';
+
+  @override
+  String get detailChildrenAges => 'Children\'s ages';
+
+  @override
+  String get detailChildrenAgesHint => 'e.g. 3 and 6';
+
+  @override
+  String get detailPetType => 'Pet';
+
+  @override
+  String get detailPetSize => 'Size';
+
+  @override
+  String get detailBudget => 'Budget';
+
+  @override
+  String get detailBudgetHint => 'e.g. \$50 to \$100';
+
+  @override
+  String get urgencyEmergency => 'Emergency, today';
+
+  @override
+  String get urgencySoon => 'This week';
+
+  @override
+  String get urgencyFlexible => 'Flexible';
+
+  @override
+  String get windowMorning => 'Morning';
+
+  @override
+  String get windowAfternoon => 'Afternoon';
+
+  @override
+  String get windowEvening => 'Evening';
+
+  @override
+  String get windowAny => 'Any time';
+
+  @override
+  String get petDog => 'Dog';
+
+  @override
+  String get petCat => 'Cat';
+
+  @override
+  String get petOther => 'Other';
+
+  @override
+  String get sizeSmall => 'Small';
+
+  @override
+  String get sizeMedium => 'Medium';
+
+  @override
+  String get sizeLarge => 'Large';
+
+  @override
+  String get requestTitle => 'Service request';
+
+  @override
+  String get requestNotFound => 'This request isn\'t available.';
+
+  @override
+  String get commonArea => 'Common area';
+
+  @override
+  String get provider => 'Provider';
+
+  @override
+  String declinedBecause(String reason) {
+    return 'The provider declined: $reason';
+  }
+
+  @override
+  String notFixedBecause(String note) {
+    return 'Not fixed: $note';
+  }
+
+  @override
+  String get completionHeading => 'Work done';
+
+  @override
+  String get watchVideo => 'Watch video';
+
+  @override
+  String get timeline => 'Timeline';
+
+  @override
+  String get timelineEmpty => 'Updates appear here.';
+
+  @override
+  String get chooseProvider => 'Choose a provider';
+
+  @override
+  String get waitingForAdmin =>
+      'Waiting for your society admin to choose a provider.';
+
+  @override
+  String get waitingForProvider => 'Waiting for the provider to accept.';
+
+  @override
+  String get cancelRequest => 'Cancel request';
+
+  @override
+  String get confirmDone => 'Confirm it\'s done';
+
+  @override
+  String get notFixed => 'Not fixed';
+
+  @override
+  String get notFixedTitle => 'What\'s still wrong?';
+
+  @override
+  String get notFixedHint => 'The provider sees this and can come back to it.';
+
+  @override
+  String get rateProvider => 'How did it go?';
+
+  @override
+  String get reviewHint => 'Tell neighbors about the work (optional)';
+
+  @override
+  String get sendReview => 'Send review';
+
+  @override
+  String get acceptJob => 'Accept job';
+
+  @override
+  String get declineJob => 'Decline';
+
+  @override
+  String get declineHint => 'Reason (optional), e.g. fully booked this week';
+
+  @override
+  String get startJob => 'Start job';
+
+  @override
+  String get completeJob => 'Mark as done';
+
+  @override
+  String get completionNote => 'What you did';
+
+  @override
+  String get addVideo => 'Add short video';
+
+  @override
+  String get videoAdded => 'Video';
+
+  @override
+  String get videoTooLarge => 'That video is too large. The limit is 30 MB.';
+
+  @override
+  String get markDone => 'Send to neighbor';
+
+  @override
+  String get srPosted => 'Posted';
+
+  @override
+  String get srAssigned => 'Sent to provider';
+
+  @override
+  String get srAccepted => 'Accepted';
+
+  @override
+  String get srDeclined => 'Declined';
+
+  @override
+  String get srInProgress => 'In progress';
+
+  @override
+  String get srCompleted => 'Done, please check';
+
+  @override
+  String get srNotFixed => 'Not fixed';
+
+  @override
+  String get srConfirmed => 'Confirmed';
+
+  @override
+  String get srClosed => 'Closed';
+
+  @override
+  String get srCancelled => 'Cancelled';
+
+  @override
+  String get activityServiceRequests => 'Requests';
+
+  @override
+  String get activityJobs => 'Jobs';
+
+  @override
+  String get serviceRequestsEmpty =>
+      'Requests you make for your home or society show up here.';
+
+  @override
+  String get jobsEmpty => 'Requests neighbors send you show up here.';
+
+  @override
+  String openCount(int count) {
+    return 'Open ($count)';
+  }
+
+  @override
+  String doneCount(int count) {
+    return 'Done ($count)';
+  }
+
+  @override
+  String get notifyServices => 'Service requests and jobs';
+
+  @override
+  String get notifyServicesBody =>
+      'Updates on requests you made and jobs sent to you';
 }

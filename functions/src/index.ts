@@ -20,6 +20,7 @@ import {
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 
 import { categoryLabel, notifyUsers, placeOwnersNear } from './notify';
+import { deleteServiceData } from './services';
 import { deleteSocietyData } from './society';
 export {
   onChannelDeleted,
@@ -30,6 +31,16 @@ export {
   onSocietyCreated,
   sendReactionDigest,
 } from './channels';
+export {
+  closeStaleServiceRequests,
+  closeStaleServiceRequestsNow,
+  decideProvider,
+  getProviderDocument,
+  onProviderWritten,
+  onReviewWritten,
+  onServiceRequestWritten,
+  recordBackgroundCheck,
+} from './services';
 
 export {
   checkSocietyDuplicates,
@@ -205,6 +216,7 @@ export const deleteAccount = onCall({ timeoutSeconds: 60 }, async (request) => {
   await writer.close();
   // Burghood society memberships, claims and claim files.
   await deleteSocietyData(uid);
+  await deleteServiceData(uid);
   // The profile with its devices, saved places and notifications.
   await db.recursiveDelete(db.collection('users').doc(uid));
 
