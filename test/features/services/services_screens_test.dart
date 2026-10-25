@@ -448,6 +448,35 @@ void main() {
     );
   });
 
+  testWidgets('a provider asked for the fee sees how to pay', (tester) async {
+    final handle = tester.ensureSemantics();
+    await pump(
+      tester,
+      const BecomeProviderScreen(),
+      mine: ServiceProvider(
+        id: 'poster',
+        businessName: 'Pro poster',
+        categories: const ['plumbing'],
+        status: ProviderStatus.awaitingFee,
+        paymentRequest: (
+          amountUsd: 99.5,
+          periodMonths: 6,
+          instructions: 'Zelle to pay@fixburgh.example',
+          payLink: 'https://pay.example.com/burghood',
+          dueDate: DateTime(2026, 12),
+        ),
+      ),
+    );
+    expect(find.byKey(const Key('payment-request')), findsOneWidget);
+    expect(find.text(r'$99.50 for 6 months · due Dec 1, 2026'), findsOneWidget);
+    expect(find.text('Zelle to pay@fixburgh.example'), findsOneWidget);
+    expect(find.text(r'Pay $99.50 now'), findsOneWidget);
+    await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
+    await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
+    await expectLater(tester, meetsGuideline(textContrastGuideline));
+    handle.dispose();
+  });
+
   testWidgets('a live provider sees when the listing runs out', (tester) async {
     await pump(
       tester,

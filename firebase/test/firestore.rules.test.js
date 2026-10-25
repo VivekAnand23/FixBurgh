@@ -1276,3 +1276,33 @@ describe('listing fees', () => {
     await assertSucceeds(updateDoc(doc(account('wait'), 'providers/wait'), { description: 'Still here', updatedAt: serverTimestamp() }));
   });
 });
+
+describe('listing fee requests', () => {
+  it('only Cloud Functions ask a provider for the fee', async () => {
+    await env.withSecurityRulesDisabled((ctx) =>
+      setDoc(doc(ctx.firestore(), 'providers/wait'), {
+        ownerUid: 'wait', businessName: 'Waiting Co', description: '', phone: '', categories: ['plumbing'],
+        serviceArea: { lat: 40.44, lng: -79.99, geohash: 'dppn59kd3', radiusMiles: 10 },
+        documents: {}, portfolio: [], status: 'awaiting_fee', createdAt: new Date(), updatedAt: new Date(),
+        paymentRequest: { amountUsd: 150, periodMonths: 12, instructions: 'Pay by check', payLink: '', dueDate: null },
+      }),
+    );
+    await assertSucceeds(getDoc(doc(account('wait'), 'providers/wait')));
+    await assertFails(updateDoc(doc(account('wait'), 'providers/wait'), {
+      paymentRequest: { amountUsd: 1 }, updatedAt: serverTimestamp(),
+    }));
+  });
+
+  it('lets platform admins set how to pay, with an https link only', async () => {
+    const admin = account('admin', { platformAdmin: true });
+    const settings = (extra = {}) => ({
+      listingFeeUsd: 150, listingMonths: 12, sponsorshipWeeklyUsd: 25, maxSponsored: 2, reminderDays: 14,
+      paymentInstructions: 'Pay by check to FixBurgh.', payLink: 'https://pay.example.com/burghood',
+      updatedBy: 'admin', updatedAt: serverTimestamp(), ...extra,
+    });
+    await assertSucceeds(setDoc(doc(admin, 'config/monetisation'), settings()));
+    await assertSucceeds(setDoc(doc(admin, 'config/monetisation'), settings({ payLink: '' })));
+    await assertFails(setDoc(doc(admin, 'config/monetisation'), settings({ payLink: 'http://pay.example.com' })));
+    await assertFails(setDoc(doc(admin, 'config/monetisation'), settings({ payLink: 'javascript:alert(1)' })));
+  });
+});

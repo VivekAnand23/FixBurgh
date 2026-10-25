@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:fixburgh/app/router.dart';
 import 'package:fixburgh/app/theme/app_colors.dart';
+import 'package:fixburgh/features/auth/account_gate.dart';
+import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/providers/data/provider_repository.dart';
 import 'package:fixburgh/features/providers/domain/provider.dart';
 import 'package:fixburgh/features/services/data/service_request_repository.dart';
@@ -377,7 +379,14 @@ class BecomeProviderLink extends ConsumerWidget {
         ),
         subtitle: Text(subtitle),
         trailing: const Icon(Icons.chevron_right),
-        onTap: () => context.push(Routes.becomeProvider),
+        onTap: () async {
+          // Providers need a full account; guests sign in first.
+          if (!hasFullAccount(ref.read(authUserProvider).value) &&
+              !await requireFullAccount(context, ref)) {
+            return;
+          }
+          if (context.mounted) await context.push(Routes.becomeProvider);
+        },
       ),
     );
   }

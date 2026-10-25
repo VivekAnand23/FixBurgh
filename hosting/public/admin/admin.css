@@ -44,3 +44,4 @@ div.scroll { overflow-x: auto; }
   body.printing-report #report > *:not(#report-body), body.printing-report .no-print { display: none !important; }
   body.printing-report .panel { border: 0; padding: 0; }
 }
+.pill.awaiting_fee { color: #9C4221; border-color: #9C4221; }

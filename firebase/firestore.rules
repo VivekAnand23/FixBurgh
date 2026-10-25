@@ -674,7 +674,7 @@ service cloud.firestore {
         && request.resource.data.status == 'applied'
         && !request.resource.data.keys().hasAny(['keywords', 'ratingAvg', 'ratingCount',
              'rankScore', 'backgroundCheck', 'decidedBy', 'decidedAt', 'rejectReason', 'liveAt',
-             'listing'])
+             'listing', 'paymentRequest'])
         && request.resource.data.createdAt == request.time
         && request.resource.data.updatedAt == request.time;
       // Details any time; a rejected application can be sent again.
@@ -719,7 +719,7 @@ service cloud.firestore {
                                'status', 'createdAt', 'updatedAt',
                                'keywords', 'ratingAvg', 'ratingCount', 'rankScore',
                                'backgroundCheck', 'decidedBy', 'decidedAt', 'rejectReason',
-                               'liveAt', 'listing'])
+                               'liveAt', 'listing', 'paymentRequest'])
         && d.ownerUid == uid
         && d.businessName is string && d.businessName.size() >= 2 && d.businessName.size() <= 80
         && d.description is string && d.description.size() <= 1000
@@ -913,7 +913,13 @@ service cloud.firestore {
       allow write: if isPlatformAdmin()
         && request.resource.data.keys().hasOnly(['listingFeeUsd', 'listingMonths',
              'sponsorshipWeeklyUsd', 'maxSponsored', 'reminderDays', 'updatedBy', 'updatedAt',
-             'emulatorFlag'])
+             'emulatorFlag', 'paymentInstructions', 'payLink'])
+        && request.resource.data.get('paymentInstructions', '') is string
+        && request.resource.data.get('paymentInstructions', '').size() <= 1000
+        && request.resource.data.get('payLink', '') is string
+        && (request.resource.data.get('payLink', '') == ''
+            || (request.resource.data.payLink.matches('https://[^ ]+')
+                && request.resource.data.payLink.size() <= 500))
         // The emulator-only flag stays as tests set it.
         && (resource == null
             ? !('emulatorFlag' in request.resource.data)

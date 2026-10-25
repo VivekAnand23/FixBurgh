@@ -2629,4 +2629,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openInGoogleMaps => 'Google Maps';
+
+  @override
+  String get listingFeeDue => 'Listing fee';
+
+  @override
+  String feeForMonths(String amount, int months) {
+    return '$amount for $months months';
+  }
+
+  @override
+  String dueOn(String date) {
+    return 'due $date';
+  }
+
+  @override
+  String get howToPay => 'How to pay';
+
+  @override
+  String payNow(String amount) {
+    return 'Pay $amount now';
+  }
+
+  @override
+  String get goesLiveWhenRecorded =>
+      'Your profile goes live as soon as the Burghood team records your payment.';
+
+  @override
+  String get forProviders => 'For service providers';
 }

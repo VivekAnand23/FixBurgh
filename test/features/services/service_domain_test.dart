@@ -285,4 +285,23 @@ void main() {
       );
     });
   });
+
+  test('payment requests open only https links', () {
+    final r = parsePaymentRequest({
+      'amountUsd': 150,
+      'periodMonths': 12,
+      'instructions': 'Pay by check',
+      'payLink': 'https://pay.example.com',
+      'dueDate': '2026-11-08',
+    });
+    expect(r?.amountUsd, 150);
+    expect(r?.payLink, 'https://pay.example.com');
+    expect(r?.dueDate, DateTime(2026, 11, 8));
+    expect(
+      parsePaymentRequest({'amountUsd': 150, 'payLink': 'http://x'})?.payLink,
+      isNull,
+    );
+    expect(parsePaymentRequest({'amountUsd': 0}), isNull);
+    expect(parsePaymentRequest(null), isNull);
+  });
 }
