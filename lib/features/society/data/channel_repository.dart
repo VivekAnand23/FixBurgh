@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fixburgh/app/analytics.dart';
 import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/moderation/text_filter.dart';
 import 'package:fixburgh/features/society/data/society_repository.dart';
@@ -12,8 +13,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
 final channelRepositoryProvider = Provider<ChannelRepository>(
-  (ref) =>
-      ChannelRepository(FirebaseFirestore.instance, FirebaseStorage.instance),
+  (ref) => ChannelRepository(
+    FirebaseFirestore.instance,
+    FirebaseStorage.instance,
+    analytics: ref.watch(analyticsProvider),
+  ),
 );
 
 /// A society's open channels, General first.
@@ -107,10 +111,15 @@ DateTime? _neverRead(Channel c) =>
 /// Channels, posts, comments and reactions under `societies/{sid}`.
 /// Counts and pushes are handled by Cloud Functions (functions/src/channels.ts).
 class ChannelRepository {
-  ChannelRepository(this._db, this._storage);
+  ChannelRepository(
+    this._db,
+    this._storage, {
+    Analytics analytics = const NoAnalytics(),
+  }) : _analytics = analytics;
 
   final FirebaseFirestore _db;
   final FirebaseStorage _storage;
+  final Analytics _analytics;
 
   CollectionReference<Map<String, dynamic>> _channels(String sid) =>
       _db.collection('societies').doc(sid).collection('channels');
@@ -246,6 +255,7 @@ class ChannelRepository {
       'commentCount': 0,
       'createdAt': FieldValue.serverTimestamp(),
     });
+    await _analytics.channelPost(photos: uploaded.length);
   }
 
   Future<void> deletePost(String sid, String cid, String pid) =>
@@ -267,15 +277,18 @@ class ChannelRepository {
     required String text,
     required List<String> mentions,
     String? replyTo,
-  }) => _posts(sid, cid).doc(pid).collection('comments').doc().set({
-    'authorUid': uid,
-    'authorName': _take(authorName, 60),
-    'text': cleanUserText(text.trim()),
-    'replyTo': replyTo,
-    'mentions': mentions.take(20).toList(),
-    'reactionCounts': <String, int>{},
-    'createdAt': FieldValue.serverTimestamp(),
-  });
+  }) async {
+    await _posts(sid, cid).doc(pid).collection('comments').doc().set({
+      'authorUid': uid,
+      'authorName': _take(authorName, 60),
+      'text': cleanUserText(text.trim()),
+      'replyTo': replyTo,
+      'mentions': mentions.take(20).toList(),
+      'reactionCounts': <String, int>{},
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+    await _analytics.channelComment(reply: replyTo != null);
+  }
 
   Future<void> deleteComment(String sid, String cid, String pid, String id) =>
       _posts(sid, cid).doc(pid).collection('comments').doc(id).delete();
@@ -287,10 +300,11 @@ class ChannelRepository {
     String uid,
     String emoji, {
     String? current,
-  }) {
+  }) async {
     final ref = _db.doc('$path/reactions/$uid');
     if (current == emoji) return ref.delete();
-    return ref.set({'emoji': emoji, 'createdAt': FieldValue.serverTimestamp()});
+    await ref.set({'emoji': emoji, 'createdAt': FieldValue.serverTimestamp()});
+    await _analytics.channelReaction();
   }
 
   /// Clears the channel's unread badge for this member.

@@ -3,11 +3,13 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fixburgh/app/analytics.dart';
 import 'package:fixburgh/app/app.dart';
 import 'package:fixburgh/app/background.dart';
 import 'package:fixburgh/app/flavor.dart';
@@ -75,6 +77,9 @@ Future<void> bootstrap(Flavor flavor) async {
     ProviderScope(
       overrides: [
         flavorProvider.overrideWithValue(flavor),
+        analyticsProvider.overrideWithValue(
+          FirebaseJourneyAnalytics(FirebaseAnalytics.instance, crashlytics),
+        ),
         sharedPreferencesProvider.overrideWithValue(prefs),
       ],
       child: const FixBurghApp(),

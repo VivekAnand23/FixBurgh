@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart' hide GeoPoint;
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fixburgh/app/analytics.dart';
 import 'package:fixburgh/features/auth/auth_repository.dart';
 import 'package:fixburgh/features/moderation/text_filter.dart';
 import 'package:fixburgh/features/report/domain/geohash.dart';
@@ -20,6 +21,7 @@ final serviceRequestRepositoryProvider = Provider<ServiceRequestRepository>(
   (ref) => ServiceRequestRepository(
     FirebaseFirestore.instance,
     FirebaseStorage.instance,
+    analytics: ref.watch(analyticsProvider),
   ),
 );
 
@@ -76,10 +78,15 @@ typedef RequestDraft = ({
 /// Service requests at `serviceRequests/{id}`. Status pushes and the
 /// timeline come from Cloud Functions (functions/src/services.ts).
 class ServiceRequestRepository {
-  ServiceRequestRepository(this._db, this._storage);
+  ServiceRequestRepository(
+    this._db,
+    this._storage, {
+    Analytics analytics = const NoAnalytics(),
+  }) : _analytics = analytics;
 
   final FirebaseFirestore _db;
   final FirebaseStorage _storage;
+  final Analytics _analytics;
 
   CollectionReference<Map<String, dynamic>> get _requests =>
       _db.collection('serviceRequests');
@@ -184,12 +191,21 @@ class ServiceRequestRepository {
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
     });
+    await _analytics.serviceRequestPosted(
+      category: draft.category,
+      scope: draft.scope.name,
+      hasProvider: draft.providerId != null,
+    );
     return rid;
   }
 
-  Future<void> _step(String id, Map<String, Object?> data) => _requests
-      .doc(id)
-      .update({...data, 'updatedAt': FieldValue.serverTimestamp()});
+  Future<void> _step(String id, Map<String, Object?> data) async {
+    await _requests.doc(id).update({
+      ...data,
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+    await _analytics.serviceRequestStep(data['status']! as String);
+  }
 
   Future<void> assign(String id, String providerId) =>
       _step(id, {'providerId': providerId, 'status': 'assigned'});

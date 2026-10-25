@@ -35,6 +35,7 @@ Future<List<SocietyResult>> searchSocieties(
   for (final r in results.expand((l) => l)) {
     byId.putIfAbsent(r.society.id, () => r);
   }
+  await repo.logSearch(byId.length);
   return byId.values.toList()..sort(
     (a, b) => (a.distanceM ?? double.infinity).compareTo(
       b.distanceM ?? double.infinity,
