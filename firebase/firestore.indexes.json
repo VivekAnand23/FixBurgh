@@ -287,6 +287,20 @@
           "order": "ASCENDING"
         },
         {
+          "fieldPath": "rankScore",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "providers",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
           "fieldPath": "categories",
           "arrayConfig": "CONTAINS"
         },

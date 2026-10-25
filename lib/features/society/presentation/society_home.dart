@@ -68,6 +68,9 @@ class SocietyHome extends ConsumerWidget {
           ],
           bottom: TabBar(
             tabs: tabs,
+            // Five tabs don't fit a phone's width without cutting labels.
+            isScrollable: tabs.length > 4,
+            tabAlignment: tabs.length > 4 ? TabAlignment.start : null,
             labelStyle: const TextStyle(fontWeight: FontWeight.w700),
             indicatorWeight: 3,
             indicatorSize: TabBarIndicatorSize.label,

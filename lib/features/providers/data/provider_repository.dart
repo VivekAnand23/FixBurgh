@@ -89,14 +89,18 @@ class ProviderQuery {
 
 // ignore: specify_nonobvious_property_types, family type isn't exported.
 final providerSearchProvider = FutureProvider.autoDispose
-    .family<List<ProviderResult>, ProviderQuery>((ref, q) async {
-      final recommended = q.societyId == null
-          ? const <String>{}
-          : await ref.watch(recommendedProvider(q.societyId!).future);
-      return ref
-          .watch(providerRepositoryProvider)
-          .search(q, recommended: recommended);
-    });
+    .family<List<ProviderResult>, ProviderQuery>(
+      (ref, q) async {
+        final recommended = q.societyId == null
+            ? const <String>{}
+            : await ref.watch(recommendedProvider(q.societyId!).future);
+        return ref
+            .watch(providerRepositoryProvider)
+            .search(q, recommended: recommended);
+      },
+      // Show the error (e.g. a missing index) instead of retrying forever.
+      retry: (_, _) => null,
+    );
 
 /// Provider profiles, reviews and applications. Approval, ratings and
 /// keywords are handled by Cloud Functions (functions/src/services.ts).
