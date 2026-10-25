@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "test": "node --test firestore.rules.test.js",
-    "test:functions": "node --test functions.test.js society.functions.test.js",
+    "test:functions": "node --test functions.test.js society.functions.test.js services.functions.test.js",
     "test:storage": "node --test storage.rules.test.js"
   },
   "devDependencies": {

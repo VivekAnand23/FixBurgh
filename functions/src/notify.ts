@@ -18,16 +18,17 @@ export const DAILY_LIMIT = 5;
  * larger daily budget so a busy channel can't crowd out city updates. */
 export const SOCIETY_DAILY_LIMIT = 30;
 
-const SOCIETY_KINDS: NotificationKind[] = ['notice', 'society', 'interaction', 'mention'];
+const SOCIETY_KINDS: NotificationKind[] = ['notice', 'society', 'interaction', 'mention', 'service'];
 
 /** `status`: reports you made or said "Me too" to. `nearby`: urgent
  * reports near a saved place. `test`: the settings screen's test button.
  * `notice`: a notice from your society's admins. `society`: your own
  * membership and claims (requests, decisions), always sent.
  * `interaction`: comments, replies and reactions on what you posted.
- * `mention`: someone @mentioned you in a channel. */
+ * `mention`: someone @mentioned you in a channel. `service`: your service
+ * requests and, for providers, your jobs and reviews. */
 export type NotificationKind =
-  | 'status' | 'nearby' | 'test' | 'notice' | 'society' | 'interaction' | 'mention';
+  | 'status' | 'nearby' | 'test' | 'notice' | 'society' | 'interaction' | 'mention' | 'service';
 
 /** The `users/{uid}.notify` switches that must not be off for each kind.
  * `interactions` is the master switch for channel activity. */
@@ -37,6 +38,7 @@ const PREF: Partial<Record<NotificationKind, string[]>> = {
   notice: ['notices'],
   interaction: ['interactions'],
   mention: ['interactions', 'mentions'],
+  service: ['services'],
 };
 
 export interface Notice {
@@ -49,12 +51,13 @@ export interface Notice {
   claimId?: string;
   channelId?: string;
   postId?: string;
+  requestId?: string;
 }
 
 /** The ids a notification opens, for its data payload and record. */
 const targets = (n: Notice) =>
   Object.fromEntries(
-    (['reportId', 'societyId', 'noticeId', 'claimId', 'channelId', 'postId'] as const)
+    (['reportId', 'societyId', 'noticeId', 'claimId', 'channelId', 'postId', 'requestId'] as const)
       .filter((k) => n[k])
       .map((k) => [k, n[k] as string]),
   );

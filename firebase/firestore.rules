@@ -260,7 +260,8 @@ service cloud.firestore {
     // Notification choices and quiet hours (BRD FR-NTF-05).
     function validNotifySettings(d) {
       return (!('notify' in d) || (d.notify is map
-          && d.notify.keys().hasOnly(['status', 'nearby', 'notices', 'interactions', 'mentions'])
+          && d.notify.keys().hasOnly(['status', 'nearby', 'notices', 'interactions', 'mentions', 'services'])
+          && d.notify.get('services', true) is bool
           && d.notify.get('interactions', true) is bool
           && d.notify.get('mentions', true) is bool
           && d.notify.get('status', true) is bool
@@ -391,6 +392,16 @@ service cloud.firestore {
                + request.resource.data.get('commentId', '') + '_' + request.auth.uid
           && request.resource.data.reason in ['spam', 'offensive', 'private_info', 'other']
           && request.resource.data.createdAt == request.time;
+      }
+
+      // Providers the society's admins recommend to members (Phase 3).
+      match /recommended/{providerId} {
+        allow read: if isMember(sid);
+        allow create, update: if isSocietyAdmin(sid)
+          && request.resource.data.keys().hasOnly(['by', 'at'])
+          && request.resource.data.by == request.auth.uid
+          && request.resource.data.at == request.time;
+        allow delete: if isSocietyAdmin(sid);
       }
 
       // Reaction digests, kept by Cloud Functions to bundle pushes.
@@ -649,20 +660,209 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    // Phases 3 and 4: closed to all but platform admins until then.
-    match /serviceRequests/{requestId} {
-      allow read: if isPlatformAdmin();
-      allow write: if false;
+    // ---- Burghood service requests and providers (Phase 3) ----
+
+    // Provider profiles: the owner applies and edits their details; a
+    // platform admin approves (decideProvider), records background checks
+    // and suspends. Ratings, rank and keywords are kept by Cloud Functions.
+    match /providers/{providerId} {
+      allow read: if (fullAccount() && resource.data.status == 'approved')
+        || (signedIn() && request.auth.uid == providerId)
+        || isPlatformAdmin();
+      allow create: if fullAccount() && request.auth.uid == providerId
+        && validProvider(providerId, request.resource.data)
+        && request.resource.data.status == 'applied'
+        && !request.resource.data.keys().hasAny(['keywords', 'ratingAvg', 'ratingCount',
+             'rankScore', 'backgroundCheck', 'decidedBy', 'decidedAt', 'rejectReason', 'liveAt'])
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time;
+      // Details any time; a rejected application can be sent again.
+      allow update: if fullAccount() && request.auth.uid == providerId
+        && validProvider(providerId, request.resource.data)
+        && request.resource.data.updatedAt == request.time
+        && ((request.resource.data.diff(resource.data).affectedKeys()
+               .hasOnly(['businessName', 'description', 'phone', 'serviceArea',
+                         'portfolio', 'updatedAt']))
+            || (resource.data.status == 'rejected'
+                && request.resource.data.status == 'applied'
+                && request.resource.data.diff(resource.data).affectedKeys()
+                     .hasOnly(['businessName', 'description', 'phone', 'serviceArea',
+                               'portfolio', 'categories', 'documents', 'status',
+                               'updatedAt'])));
+      allow delete: if false;
+
+      // One review per confirmed job; the doc id is the request's id.
+      match /reviews/{requestId} {
+        allow read: if fullAccount() || isPlatformAdmin();
+        allow create: if fullAccount() && validReview(providerId, requestId);
+        allow update: if signedIn() && request.auth.uid == providerId
+          && request.resource.data.diff(resource.data).affectedKeys()
+               .hasOnly(['reply', 'replyAt'])
+          && request.resource.data.reply is string
+          && request.resource.data.reply.size() <= 500
+          && request.resource.data.replyAt == request.time;
+        allow delete: if false;
+      }
     }
 
-    match /providers/{providerId} {
-      allow read: if isPlatformAdmin();
-      allow write: if false;
+    function validProvider(uid, d) {
+      let docs = 'providerDocs/' + uid + '/';
+      return d.keys().hasOnly(['ownerUid', 'businessName', 'description', 'phone',
+                               'categories', 'serviceArea', 'documents', 'portfolio',
+                               'status', 'createdAt', 'updatedAt',
+                               'keywords', 'ratingAvg', 'ratingCount', 'rankScore',
+                               'backgroundCheck', 'decidedBy', 'decidedAt', 'rejectReason',
+                               'liveAt'])
+        && d.ownerUid == uid
+        && d.businessName is string && d.businessName.size() >= 2 && d.businessName.size() <= 80
+        && d.description is string && d.description.size() <= 1000
+        && d.get('phone', '') is string && d.get('phone', '').size() <= 20
+        && d.categories is list && d.categories.size() >= 1 && d.categories.size() <= 10
+        && d.serviceArea is map
+        && d.serviceArea.keys().hasOnly(['lat', 'lng', 'geohash', 'radiusMiles', 'label'])
+        && inCounty(d.serviceArea)
+        && d.serviceArea.geohash is string && d.serviceArea.geohash.size() == 9
+        && d.serviceArea.radiusMiles is number
+        && d.serviceArea.radiusMiles >= 1 && d.serviceArea.radiusMiles <= 25
+        && d.documents is map
+        && d.documents.keys().hasOnly(['license', 'insurance', 'background'])
+        && (!('license' in d.documents) || d.documents.license.matches(docs + 'license[.](jpg|png|pdf)'))
+        && (!('insurance' in d.documents) || d.documents.insurance.matches(docs + 'insurance[.](jpg|png|pdf)'))
+        && (!('background' in d.documents) || d.documents.background.matches(docs + 'background[.](jpg|png|pdf)'))
+        && d.get('portfolio', []) is list && d.get('portfolio', []).size() <= 12
+        && d.status in ['applied', 'approved', 'rejected', 'suspended'];
+    }
 
-      match /reviews/{reviewId} {
-        allow read: if isPlatformAdmin();
+    function validReview(providerId, requestId) {
+      let job = get(/databases/$(database)/documents/serviceRequests/$(requestId)).data;
+      let d = request.resource.data;
+      return job.posterUid == request.auth.uid
+        && job.providerId == providerId
+        && job.status == 'confirmed'
+        && d.keys().hasOnly(['stars', 'comment', 'authorUid', 'authorName', 'category', 'createdAt'])
+        && d.authorUid == request.auth.uid
+        && d.stars is int && d.stars >= 1 && d.stars <= 5
+        && d.comment is string && d.comment.size() <= 500
+        && d.get('authorName', '') is string && d.get('authorName', '').size() <= 60
+        && d.get('category', '') == job.category
+        && d.createdAt == request.time;
+    }
+
+    // Service requests: a resident posts one for their home or (as a
+    // member) for their society's common areas. The poster and the
+    // assigned provider each move it through only their own steps; a
+    // society admin assigns providers for common-area requests. Status
+    // history is written by Cloud Functions.
+    match /serviceRequests/{requestId} {
+      allow read: if (signedIn() && (resource.data.posterUid == request.auth.uid
+            || resource.data.get('providerId', null) == request.auth.uid))
+        || (resource.data.scope == 'common' && isSocietyAdmin(resource.data.societyId))
+        || isPlatformAdmin();
+      allow create: if fullAccount() && validNewRequest(requestId, request.resource.data);
+      allow update: if signedIn() && request.resource.data.updatedAt == request.time
+        && (posterStep() || providerStep() || societyAssigns());
+      allow delete: if false;
+
+      match /events/{eventId} {
+        allow read: if signedIn()
+          && (get(/databases/$(database)/documents/serviceRequests/$(requestId)).data.posterUid == request.auth.uid
+              || get(/databases/$(database)/documents/serviceRequests/$(requestId)).data.get('providerId', null) == request.auth.uid
+              || isPlatformAdmin());
         allow write: if false;
       }
+    }
+
+    function changes(keys) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
+    }
+
+    function moves(from, to) {
+      return resource.data.status in from && request.resource.data.status == to;
+    }
+
+    function approvedProvider(pid) {
+      return pid is string
+        && get(/databases/$(database)/documents/providers/$(pid)).data.status == 'approved';
+    }
+
+    // The poster: edit while open, pick a provider, cancel, confirm or
+    // send it back as not fixed.
+    function posterStep() {
+      let d = request.resource.data;
+      return resource.data.posterUid == request.auth.uid && (
+        (resource.data.status in ['posted', 'assigned']
+          && changes(['title', 'description', 'details', 'updatedAt'])
+          && d.title is string && d.title.size() >= 1 && d.title.size() <= 100
+          && d.description is string && d.description.size() <= 2000)
+        || (moves(['posted', 'declined'], 'assigned')
+          && changes(['providerId', 'status', 'updatedAt'])
+          && approvedProvider(d.providerId) && d.providerId != request.auth.uid)
+        || (moves(['posted', 'assigned', 'declined'], 'cancelled')
+          && changes(['status', 'updatedAt']))
+        || (moves(['completed'], 'confirmed')
+          && changes(['status', 'confirmedAt', 'updatedAt'])
+          && d.confirmedAt == request.time)
+        || (moves(['completed'], 'not_fixed')
+          && changes(['status', 'notFixedNote', 'updatedAt'])
+          && d.notFixedNote is string && d.notFixedNote.size() <= 500));
+    }
+
+    // The assigned provider: accept or decline, start, and complete with a
+    // note and photos or a short video.
+    function providerStep() {
+      let d = request.resource.data;
+      return resource.data.get('providerId', null) == request.auth.uid && (
+        (moves(['assigned'], 'accepted') && changes(['status', 'updatedAt']))
+        || (moves(['assigned'], 'declined')
+          && changes(['status', 'declineReason', 'updatedAt'])
+          && d.declineReason is string && d.declineReason.size() <= 300)
+        || (moves(['accepted', 'not_fixed'], 'in_progress') && changes(['status', 'updatedAt']))
+        || (moves(['accepted', 'in_progress', 'not_fixed'], 'completed')
+          && changes(['status', 'completion', 'completedAt', 'updatedAt'])
+          && d.completedAt == request.time
+          && validCompletion(d.completion)));
+    }
+
+    function validCompletion(c) {
+      let folder = 'serviceRequests/' + request.resource.id + '/completion/';
+      return c is map
+        && c.keys().hasOnly(['note', 'photos', 'video'])
+        && c.note is string && c.note.size() <= 1000
+        && c.photos is list && c.photos.size() <= 6
+        && (c.photos.size() == 0 || c.photos[0].path.matches(folder + '.+'))
+        && (c.get('video', null) == null || (c.video is map && c.video.path.matches(folder + '.+')));
+    }
+
+    // A society admin picks the provider for a common-area request.
+    function societyAssigns() {
+      let d = request.resource.data;
+      return resource.data.scope == 'common'
+        && isSocietyAdmin(resource.data.societyId)
+        && moves(['posted', 'declined'], 'assigned')
+        && changes(['providerId', 'status', 'updatedAt'])
+        && approvedProvider(d.providerId);
+    }
+
+    function validNewRequest(rid, d) {
+      return d.keys().hasOnly(['posterUid', 'posterName', 'scope', 'societyId', 'title',
+                               'description', 'category', 'group', 'details', 'photos',
+                               'location', 'providerId', 'status', 'createdAt', 'updatedAt'])
+        && d.posterUid == request.auth.uid
+        && d.get('posterName', '') is string && d.get('posterName', '').size() <= 60
+        && d.scope in ['home', 'common']
+        && (d.scope == 'home' || (d.societyId is string && isMember(d.societyId)))
+        && d.title is string && d.title.size() >= 1 && d.title.size() <= 100
+        && d.description is string && d.description.size() <= 2000
+        && d.category is string && d.category.size() <= 40
+        && d.group is string && d.group.size() <= 40
+        && d.details is map && d.details.size() <= 12
+        && d.photos is list && d.photos.size() <= 6
+        && (d.photos.size() == 0 || d.photos[0].path.matches('serviceRequests/' + rid + '/.+'))
+        && (d.get('location', null) == null || (d.location is map && inCounty(d.location)))
+        && ((d.get('providerId', null) == null && d.status == 'posted')
+            || (d.status == 'assigned' && approvedProvider(d.providerId)
+                && d.providerId != request.auth.uid))
+        && d.createdAt == request.time && d.updatedAt == request.time;
     }
 
     match /sponsorships/{sponsorshipId} {
