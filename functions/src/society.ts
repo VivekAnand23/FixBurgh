@@ -6,7 +6,7 @@
  * request, which a society admin approves, or instantly with an invite
  * code. Notices from admins and committee members go to every member.
  */
-import './options';
+import { appCallable } from './options';
 
 import { randomInt } from 'node:crypto';
 
@@ -259,7 +259,7 @@ export const purgeClaimFilesNow = onCall(async (request) => {
  * NEARBY_M of a point, so the create form can warn before a duplicate.
  * Pending claims are private, so only their name and distance come back.
  */
-export const checkSocietyDuplicates = onCall(async (request) => {
+export const checkSocietyDuplicates = onCall(appCallable, async (request) => {
   requireFullAccount(request);
   const lat = Number(request.data?.lat), lng = Number(request.data?.lng);
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
@@ -290,7 +290,7 @@ export const checkSocietyDuplicates = onCall(async (request) => {
  * joinWithCode: joins a society straight away with its invite code,
  * skipping the admin's approval.
  */
-export const joinWithCode = onCall(async (request) => {
+export const joinWithCode = onCall(appCallable, async (request) => {
   const auth = requireFullAccount(request);
   const code = normalizeCode(request.data?.code);
   const unit = typeof request.data?.unit === 'string' ? request.data.unit.trim().slice(0, 20) : '';
@@ -319,7 +319,7 @@ export const joinWithCode = onCall(async (request) => {
 });
 
 /** regenerateInviteCode: a society admin replaces the invite code. */
-export const regenerateInviteCode = onCall(async (request) => {
+export const regenerateInviteCode = onCall(appCallable, async (request) => {
   const auth = requireFullAccount(request);
   const societyId = request.data?.societyId;
   if (typeof societyId !== 'string' || !societyId) {
