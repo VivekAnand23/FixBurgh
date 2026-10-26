@@ -104,11 +104,15 @@ service firebase.storage {
     // short video from the assigned provider. Both, and platform admins,
     // can see them.
     match /serviceRequests/{rid}/{file} {
-      allow read: if canSeeRequest(rid);
+      // The poster uploads photos, and reads their links, before the
+      // request exists; the uploader tag says whose they are.
+      allow read: if canSeeRequest(rid)
+        || (request.auth != null && resource.metadata.get('uploader', '') == request.auth.uid);
       allow create: if resource == null && request.auth != null
         && request.auth.token.firebase.sign_in_provider != 'anonymous'
         && request.resource.contentType == 'image/jpeg'
         && request.resource.size < 2 * 1024 * 1024
+        && request.resource.metadata.get('uploader', '') == request.auth.uid
         // Uploaded before the request exists, or by its poster.
         && (!firestore.exists(/databases/(default)/documents/serviceRequests/$(rid))
             || firestore.get(/databases/(default)/documents/serviceRequests/$(rid)).data.posterUid == request.auth.uid);

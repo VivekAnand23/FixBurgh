@@ -163,7 +163,7 @@ class ServiceRequestRepository {
     final rid = id ?? newId();
     final photos = <Map<String, String>>[];
     for (final (i, f) in draft.photos.take(6).indexed) {
-      photos.add(await _uploadPhoto(f, 'serviceRequests/$rid', '$i'));
+      photos.add(await _uploadPhoto(f, 'serviceRequests/$rid', '$i', uid));
     }
     final loc = draft.location;
     await _requests.doc(rid).set({
@@ -230,7 +230,7 @@ class ServiceRequestRepository {
     final folder = 'serviceRequests/$id/completion';
     final uploaded = <Map<String, String>>[];
     for (final f in photos.take(6)) {
-      uploaded.add(await _uploadPhoto(f, folder, const Uuid().v4()));
+      uploaded.add(await _uploadPhoto(f, folder, const Uuid().v4(), null));
     }
     Map<String, String>? clip;
     if (video != null) {
@@ -262,12 +262,18 @@ class ServiceRequestRepository {
   /// A link to a request photo or the completion video.
   Future<String> fileUrl(String path) => _storage.ref(path).getDownloadURL();
 
+  /// Uploads a photo and its thumbnail. [uploader] tags a poster's photos,
+  /// so the Storage rules let them read the link before the request exists.
   Future<Map<String, String>> _uploadPhoto(
     File f,
     String folder,
     String name,
+    String? uploader,
   ) async {
-    final meta = SettableMetadata(contentType: 'image/jpeg');
+    final meta = SettableMetadata(
+      contentType: 'image/jpeg',
+      customMetadata: {'uploader': ?uploader},
+    );
     final full = _storage.ref('$folder/$name.jpg');
     final thumb = _storage.ref('$folder/${name}_thumb.jpg');
     await full.putData(await _compress(f, 1600, 80), meta);

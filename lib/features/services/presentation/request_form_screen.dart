@@ -316,8 +316,9 @@ class _RequestFormScreenState extends ConsumerState<RequestFormScreen> {
         content: Text(posted == null ? l10n.requestQueued : l10n.requestSent),
       ),
     );
-    context.pop();
-    if (posted != null) unawaited(context.push(Routes.serviceRequest(posted)));
+    // The router, not this screen's context, which closes with the pop.
+    final router = GoRouter.of(context)..pop();
+    if (posted != null) unawaited(router.push(Routes.serviceRequest(posted)));
   }
 }
 

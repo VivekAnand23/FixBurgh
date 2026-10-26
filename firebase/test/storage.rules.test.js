@@ -148,14 +148,19 @@ describe('provider documents', () => {
 
 describe('service request photos', () => {
   it('come from the poster, completion files from the provider; both can see them', async () => {
-    const put = (uid, path, type = 'image/jpeg') => uploadBytes(ref(storage(uid), path), jpeg, { contentType: type });
+    const put = (uid, path, type = 'image/jpeg', uploader = uid) =>
+      uploadBytes(ref(storage(uid), path), jpeg, { contentType: type, customMetadata: { uploader } });
     await assertSucceeds(put('nia', 'serviceRequests/job/a1.jpg'));
     await assertFails(put('pete', 'serviceRequests/job/a2.jpg'));
+    await assertFails(put('nia', 'serviceRequests/job/a3.jpg', 'image/jpeg', 'someone-else'));
     await assertSucceeds(put('pete', 'serviceRequests/job/completion/b1.jpg'));
     await assertSucceeds(put('pete', 'serviceRequests/job/completion/clip.mp4', 'video/mp4'));
     await assertFails(put('nia', 'serviceRequests/job/completion/b2.jpg'));
-    // Before the request exists, its poster can upload photos for it.
+    // Before the request exists, its poster can upload photos for it and
+    // read their links (the app needs them for the request), but no one else can.
     await assertSucceeds(put('nia', 'serviceRequests/new1/a1.jpg'));
+    await assertSucceeds(getBytes(ref(storage('nia'), 'serviceRequests/new1/a1.jpg')));
+    await assertFails(getBytes(ref(storage('bob'), 'serviceRequests/new1/a1.jpg')));
     for (const uid of ['nia', 'pete']) await assertSucceeds(getBytes(ref(storage(uid), 'serviceRequests/job/a1.jpg')));
     await assertFails(getBytes(ref(storage('bob'), 'serviceRequests/job/a1.jpg')));
     await assertFails(getBytes(ref(storage('bob'), 'serviceRequests/job/completion/b1.jpg')));
