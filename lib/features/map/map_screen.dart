@@ -227,7 +227,12 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           IconButton(
             tooltip: _list ? l10n.showMapView : l10n.showListView,
             icon: Icon(_list ? Icons.map_outlined : Icons.view_list),
-            onPressed: () => setState(() => _list = !_list),
+            onPressed: () => setState(() {
+              _list = !_list;
+              // The list replaces the map, which disposes its controller;
+              // forget it so pending camera calls don't use it.
+              if (_list) _map = null;
+            }),
           ),
         ],
       ),
