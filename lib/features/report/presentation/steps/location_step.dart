@@ -42,6 +42,11 @@ class _LocationStepState extends ConsumerState<LocationStep> {
   bool _pinFromSearch = false;
   final _search = TextEditingController();
 
+  /// Debug builds can hide the location dot for the walkthrough tests, as
+  /// the map does: `--dart-define=SKIP_LOCATION=true`.
+  static const bool _skipLocation =
+      !kReleaseMode && bool.fromEnvironment('SKIP_LOCATION');
+
   /// Set once the user moves the pin, so GPS updates stop overriding it.
   bool _pinMovedByUser = false;
 
@@ -274,7 +279,9 @@ class _LocationStepState extends ConsumerState<LocationStep> {
                   initialCameraPosition: CameraPosition(target: pin, zoom: 19),
                   mapType: _satellite ? MapType.hybrid : MapType.normal,
                   onMapCreated: (c) => _map = c,
-                  myLocationEnabled: !_denied,
+                  // Walkthrough tests turn the blue dot off, so the map
+                  // doesn't raise the system location prompt.
+                  myLocationEnabled: !_denied && !_skipLocation,
                   myLocationButtonEnabled: false,
                   // Our own zoom buttons; hide Android's built-in ones.
                   zoomControlsEnabled: false,

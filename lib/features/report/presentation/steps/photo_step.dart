@@ -7,6 +7,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
+/// Picks a report photo (without location metadata) and returns its path.
+/// Overridden in walkthrough tests, which can't drive the system picker.
+final pickReportPhotoProvider = Provider<Future<String?> Function(ImageSource)>(
+  (ref) => (source) async {
+    final file = await ImagePicker().pickImage(
+      source: source,
+      maxWidth: 2400,
+      requestFullMetadata: false,
+    );
+    return file?.path;
+  },
+);
+
 class PhotoStep extends ConsumerWidget {
   const PhotoStep({required this.onNext, this.header, super.key});
 
@@ -16,13 +29,9 @@ class PhotoStep extends ConsumerWidget {
   final Widget? header;
 
   Future<void> _pick(WidgetRef ref, ImageSource source) async {
-    final file = await ImagePicker().pickImage(
-      source: source,
-      maxWidth: 2400,
-      requestFullMetadata: false,
-    );
-    if (file != null) {
-      await ref.read(reportDraftProvider.notifier).addPhoto(file.path);
+    final path = await ref.read(pickReportPhotoProvider)(source);
+    if (path != null) {
+      await ref.read(reportDraftProvider.notifier).addPhoto(path);
     }
   }
 

@@ -1,0 +1,131 @@
+{
+  "title": "Burghood in three minutes",
+  "chapters": [
+    {
+      "id": "a",
+      "title": "Getting started",
+      "steps": [
+        [
+          "a1",
+          "Welcome to Burghood. The first time you open the app, tap Get started, then choose your month and year of birth, and tap Continue."
+        ],
+        [
+          "a2",
+          "Along the bottom are the five main sections: Map, Society, Report, Activity, and Profile."
+        ],
+        [
+          "a3",
+          "To join your community and follow your reports, sign in from Profile with Google, Apple, or your email address."
+        ]
+      ]
+    },
+    {
+      "id": "b",
+      "title": "The community map",
+      "steps": [
+        [
+          "b1",
+          "The map shows the problems your neighbors have reported, from potholes to broken streetlights. Use the chips to filter by type, or switch to a list."
+        ],
+        [
+          "b2",
+          "Open a report to see its photo, how serious it is, and who it was sent to. If it affects you too, tap Me too."
+        ]
+      ]
+    },
+    {
+      "id": "c",
+      "title": "Reporting a problem",
+      "steps": [
+        [
+          "c1",
+          "To report something, tap Report, and choose On the street."
+        ],
+        [
+          "c2",
+          "First, confirm that no one is in danger. If someone could get hurt, Burghood points you to 911. Then add a photo of the problem."
+        ],
+        [
+          "c3",
+          "Set the exact location, choose what it is and how serious it is, and add a short note."
+        ],
+        [
+          "c4",
+          "Burghood shows you who actually fixes it, with their contact details. Tap Submit report."
+        ],
+        [
+          "c5",
+          "You can follow your report in Activity, and you'll get updates as it moves along. Once it's repaired, open it and tap Mark fixed."
+        ]
+      ]
+    },
+    {
+      "id": "d",
+      "title": "Your society",
+      "steps": [
+        [
+          "d1",
+          "Society is your community's home. Tap its name to switch if you belong to more than one."
+        ],
+        [
+          "d2",
+          "Channels are group conversations for the whole community. Open one to react, reply, and post your own message."
+        ],
+        [
+          "d3",
+          "Notices are official announcements from your admins, and Docs keeps your bylaws, budgets and minutes."
+        ],
+        [
+          "d4",
+          "Admins approve new neighbors under Manage, and can share an invite code so others join straight away."
+        ]
+      ]
+    },
+    {
+      "id": "e",
+      "title": "Finding a provider",
+      "steps": [
+        [
+          "e1",
+          "In Services, just describe what you need. Type kitchen tap leaking, and Burghood finds plumbers near you."
+        ],
+        [
+          "e2",
+          "Providers your community recommends come first, background checks are badged, and sponsored listings are clearly marked."
+        ],
+        [
+          "e3",
+          "Open a profile to read reviews from real jobs, then tap Request this provider, describe the job, and add a photo."
+        ]
+      ]
+    },
+    {
+      "id": "f",
+      "title": "For service providers",
+      "steps": [
+        [
+          "f1",
+          "Providers see new work under Activity, in Jobs. They accept the job, start it, and mark it done with a note and photos."
+        ],
+        [
+          "f2",
+          "Anyone can offer their services from Profile, under For service providers. Once the Burghood team approves them, the listing fee and how to pay appear right here."
+        ]
+      ]
+    },
+    {
+      "id": "g",
+      "title": "Closing the loop",
+      "steps": [
+        [
+          "g1",
+          "Back as a resident, open the request, confirm the work is done, and leave a rating for your neighbors."
+        ],
+        [
+          "g2",
+          "Profile also has your theme, text size and notification settings. That's Burghood: fix your street, look after your home, and know your neighbors."
+        ]
+      ]
+    }
+  ]
+}
